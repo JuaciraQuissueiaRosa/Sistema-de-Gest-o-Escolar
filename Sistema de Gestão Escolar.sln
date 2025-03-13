@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sistema de Gestão Escolar", "Sistema de Gestão Escolar\Sistema de Gestão Escolar.csproj", "{F6172EC7-A81B-4C32-9898-F513BB4AEDCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bibilioteca Sistema de Gestão Escolar", "Bibilioteca Sistema de Gestão Escolar\Bibilioteca Sistema de Gestão Escolar.csproj", "{0CC54365-0BBB-49EF-B38B-1B46A870D31D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6172EC7-A81B-4C32-9898-F513BB4AEDCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6172EC7-A81B-4C32-9898-F513BB4AEDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6172EC7-A81B-4C32-9898-F513BB4AEDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6172EC7-A81B-4C32-9898-F513BB4AEDCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CC54365-0BBB-49EF-B38B-1B46A870D31D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CC54365-0BBB-49EF-B38B-1B46A870D31D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CC54365-0BBB-49EF-B38B-1B46A870D31D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CC54365-0BBB-49EF-B38B-1B46A870D31D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A9B3908-CAAB-4CD3-861F-E33E2836E5DE}
+	EndGlobalSection
+EndGlobal
