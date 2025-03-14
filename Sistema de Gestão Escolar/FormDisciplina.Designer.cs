@@ -33,12 +33,12 @@
             lblCargaHoraria = new Label();
             lblIdDisciplina = new Label();
             txtIdDisciplina = new TextBox();
-            txtNomeDisciplina = new TextBox();
-            txtCargaHoraria = new TextBox();
             txtProfessoresDisciplina = new TextBox();
             btnAdicionarDisciplina = new Button();
             btnRemoverDisciplina = new Button();
             lstDisciplinas = new ListBox();
+            cmbNomeDisciplina = new ComboBox();
+            cmbCargaHoraria = new ComboBox();
             SuspendLayout();
             // 
             // lblNomeDisciplina
@@ -64,9 +64,9 @@
             lblCargaHoraria.AutoSize = true;
             lblCargaHoraria.Location = new Point(62, 158);
             lblCargaHoraria.Name = "lblCargaHoraria";
-            lblCargaHoraria.Size = new Size(158, 20);
+            lblCargaHoraria.Size = new Size(219, 20);
             lblCargaHoraria.TabIndex = 2;
-            lblCargaHoraria.Text = "Carga Horária (Horas):";
+            lblCargaHoraria.Text = "Carga Horária Semanal (Horas):";
             // 
             // lblIdDisciplina
             // 
@@ -83,21 +83,6 @@
             txtIdDisciplina.Name = "txtIdDisciplina";
             txtIdDisciplina.Size = new Size(258, 27);
             txtIdDisciplina.TabIndex = 4;
-            // 
-            // txtNomeDisciplina
-            // 
-            txtNomeDisciplina.Location = new Point(227, 90);
-            txtNomeDisciplina.Name = "txtNomeDisciplina";
-            txtNomeDisciplina.Size = new Size(205, 27);
-            txtNomeDisciplina.TabIndex = 5;
-            txtNomeDisciplina.TextChanged += textBox2_TextChanged;
-            // 
-            // txtCargaHoraria
-            // 
-            txtCargaHoraria.Location = new Point(244, 151);
-            txtCargaHoraria.Name = "txtCargaHoraria";
-            txtCargaHoraria.Size = new Size(224, 27);
-            txtCargaHoraria.TabIndex = 6;
             // 
             // txtProfessoresDisciplina
             // 
@@ -134,17 +119,35 @@
             lstDisciplinas.Size = new Size(316, 404);
             lstDisciplinas.TabIndex = 10;
             // 
+            // cmbNomeDisciplina
+            // 
+            cmbNomeDisciplina.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbNomeDisciplina.FormattingEnabled = true;
+            cmbNomeDisciplina.Location = new Point(243, 105);
+            cmbNomeDisciplina.Name = "cmbNomeDisciplina";
+            cmbNomeDisciplina.Size = new Size(225, 28);
+            cmbNomeDisciplina.TabIndex = 11;
+            // 
+            // cmbCargaHoraria
+            // 
+            cmbCargaHoraria.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbCargaHoraria.FormattingEnabled = true;
+            cmbCargaHoraria.Location = new Point(304, 158);
+            cmbCargaHoraria.Name = "cmbCargaHoraria";
+            cmbCargaHoraria.Size = new Size(151, 28);
+            cmbCargaHoraria.TabIndex = 12;
+            // 
             // FormDisciplina
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1027, 639);
+            Controls.Add(cmbCargaHoraria);
+            Controls.Add(cmbNomeDisciplina);
             Controls.Add(lstDisciplinas);
             Controls.Add(btnRemoverDisciplina);
             Controls.Add(btnAdicionarDisciplina);
             Controls.Add(txtProfessoresDisciplina);
-            Controls.Add(txtCargaHoraria);
-            Controls.Add(txtNomeDisciplina);
             Controls.Add(txtIdDisciplina);
             Controls.Add(lblIdDisciplina);
             Controls.Add(lblCargaHoraria);
@@ -152,6 +155,7 @@
             Controls.Add(lblNomeDisciplina);
             Name = "FormDisciplina";
             Text = "FormDisciplina";
+            Load += FormDisciplina_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -163,11 +167,11 @@
         private Label lblCargaHoraria;
         private Label lblIdDisciplina;
         private TextBox txtIdDisciplina;
-        private TextBox txtNomeDisciplina;
-        private TextBox txtCargaHoraria;
         private TextBox txtProfessoresDisciplina;
         private Button btnAdicionarDisciplina;
         private Button btnRemoverDisciplina;
         private ListBox lstDisciplinas;
+        private ComboBox cmbNomeDisciplina;
+        private ComboBox cmbCargaHoraria;
     }
 }

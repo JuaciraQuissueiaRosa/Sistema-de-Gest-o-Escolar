@@ -209,7 +209,17 @@ public class GestorEscola
     /// </summary>
     public bool VerificarSePeriodoEncerrado(string periodoLetivo)
     {
-        return periodoLetivo != "Ativo";
+        // Extrair o ano do período letivo (se for no formato "2023/2024", pega "2024")
+        string[] partes = periodoLetivo.Split('/');
+        int anoFinal;
+
+        if (partes.Length > 1 && int.TryParse(partes[1], out anoFinal))
+        {
+            int anoAtual = DateTime.Now.Year;
+            return anoFinal < anoAtual; // Se o período terminou antes do ano atual, está encerrado
+        }
+
+        return false; // Se não conseguiu identificar um ano, assume que está ativo
     }
 
     /// <summary>
@@ -232,6 +242,33 @@ public class GestorEscola
         }
         return false;
     }
+
+    /// <summary>
+    /// Verifica se a área de ensino do professor é compatível com a disciplina.
+    /// </summary>
+    public bool ValidarAreaDeEnsino(string areaEnsino, string disciplina)
+    {
+        // Mapeamento das áreas de ensino e disciplinas correspondentes
+        Dictionary<string, List<string>> areaParaDisciplinas = new Dictionary<string, List<string>>()
+    {
+        { "Línguas e Humanidades", new List<string> { "Português", "Inglês", "Francês", "Espanhol", "Filosofia", "História" } },
+        { "Ciências e Tecnologias", new List<string> { "Matemática", "Física e Química", "Biologia e Geologia", "Geometria Descritiva" } },
+        { "Ciências Socioeconómicas", new List<string> { "Economia", "Geografia", "Sociologia", "Direito" } },
+        { "Artes Visuais", new List<string> { "Educação Visual", "Desenho", "História da Cultura e das Artes" } },
+        { "Educação Física e Desporto", new List<string> { "Educação Física", "Ciências do Desporto" } },
+        { "Informática e Tecnologias", new List<string> { "Tecnologias de Informação e Comunicação (TIC)", "Programação", "Robótica" } }
+    };
+
+        // Verifica se a área de ensino existe e se a disciplina pertence a ela
+        if (areaParaDisciplinas.ContainsKey(areaEnsino))
+        {
+            return areaParaDisciplinas[areaEnsino].Contains(disciplina);
+        }
+
+        return false; // Se a área de ensino não for encontrada, assume que não é válida
+    }
+
+
 
     /// <summary>
     /// Adiciona uma nova turma ao sistema.

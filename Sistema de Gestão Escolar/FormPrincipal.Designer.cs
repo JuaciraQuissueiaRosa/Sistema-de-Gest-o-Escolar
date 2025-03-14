@@ -38,7 +38,7 @@
             // 
             // btnDisciplinas
             // 
-            btnDisciplinas.Location = new Point(251, 83);
+            btnDisciplinas.Location = new Point(311, 87);
             btnDisciplinas.Name = "btnDisciplinas";
             btnDisciplinas.Size = new Size(116, 50);
             btnDisciplinas.TabIndex = 0;
@@ -48,7 +48,7 @@
             // 
             // btnNotas
             // 
-            btnNotas.Location = new Point(169, 167);
+            btnNotas.Location = new Point(229, 171);
             btnNotas.Name = "btnNotas";
             btnNotas.Size = new Size(116, 52);
             btnNotas.TabIndex = 1;
@@ -58,7 +58,7 @@
             // 
             // btnProfessores
             // 
-            btnProfessores.Location = new Point(104, 250);
+            btnProfessores.Location = new Point(164, 254);
             btnProfessores.Name = "btnProfessores";
             btnProfessores.Size = new Size(109, 54);
             btnProfessores.TabIndex = 2;
@@ -68,7 +68,7 @@
             // 
             // btnAlunos
             // 
-            btnAlunos.Location = new Point(251, 250);
+            btnAlunos.Location = new Point(311, 254);
             btnAlunos.Name = "btnAlunos";
             btnAlunos.Size = new Size(114, 51);
             btnAlunos.TabIndex = 3;
@@ -78,7 +78,7 @@
             // 
             // btnTurmas
             // 
-            btnTurmas.Location = new Point(94, 83);
+            btnTurmas.Location = new Point(154, 87);
             btnTurmas.Name = "btnTurmas";
             btnTurmas.Size = new Size(104, 50);
             btnTurmas.TabIndex = 4;
@@ -88,7 +88,7 @@
             // 
             // btnSair
             // 
-            btnSair.Location = new Point(191, 339);
+            btnSair.Location = new Point(251, 343);
             btnSair.Name = "btnSair";
             btnSair.Size = new Size(94, 44);
             btnSair.TabIndex = 5;
@@ -100,7 +100,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(469, 450);
+            ClientSize = new Size(620, 450);
             Controls.Add(btnSair);
             Controls.Add(btnTurmas);
             Controls.Add(btnAlunos);

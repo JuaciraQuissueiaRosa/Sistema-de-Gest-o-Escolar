@@ -37,10 +37,10 @@
             txtIdProfessor = new TextBox();
             txtEmailProfessor = new TextBox();
             txtContatoProfessor = new TextBox();
-            txtAreaEnsino = new TextBox();
             btnAdicionarProfessor = new Button();
             btnRemoverProfessor = new Button();
             lstProfessores = new ListBox();
+            cmbAreaEnsino = new ComboBox();
             SuspendLayout();
             // 
             // lblIdProfessor
@@ -116,13 +116,6 @@
             txtContatoProfessor.Size = new Size(125, 27);
             txtContatoProfessor.TabIndex = 8;
             // 
-            // txtAreaEnsino
-            // 
-            txtAreaEnsino.Location = new Point(233, 284);
-            txtAreaEnsino.Name = "txtAreaEnsino";
-            txtAreaEnsino.Size = new Size(125, 27);
-            txtAreaEnsino.TabIndex = 9;
-            // 
             // btnAdicionarProfessor
             // 
             btnAdicionarProfessor.Location = new Point(83, 375);
@@ -151,15 +144,24 @@
             lstProfessores.Size = new Size(298, 424);
             lstProfessores.TabIndex = 12;
             // 
+            // cmbAreaEnsino
+            // 
+            cmbAreaEnsino.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbAreaEnsino.FormattingEnabled = true;
+            cmbAreaEnsino.Location = new Point(233, 284);
+            cmbAreaEnsino.Name = "cmbAreaEnsino";
+            cmbAreaEnsino.Size = new Size(173, 28);
+            cmbAreaEnsino.TabIndex = 13;
+            // 
             // FormProfessor
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1145, 552);
+            Controls.Add(cmbAreaEnsino);
             Controls.Add(lstProfessores);
             Controls.Add(btnRemoverProfessor);
             Controls.Add(btnAdicionarProfessor);
-            Controls.Add(txtAreaEnsino);
             Controls.Add(txtContatoProfessor);
             Controls.Add(txtEmailProfessor);
             Controls.Add(txtIdProfessor);
@@ -171,6 +173,7 @@
             Controls.Add(lblIdProfessor);
             Name = "FormProfessor";
             Text = "FormProfessor";
+            Load += FormProfessor_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -186,9 +189,9 @@
         private TextBox txtIdProfessor;
         private TextBox txtEmailProfessor;
         private TextBox txtContatoProfessor;
-        private TextBox txtAreaEnsino;
         private Button btnAdicionarProfessor;
         private Button btnRemoverProfessor;
         private ListBox lstProfessores;
+        private ComboBox cmbAreaEnsino;
     }
 }

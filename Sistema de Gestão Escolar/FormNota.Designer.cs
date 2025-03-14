@@ -39,6 +39,8 @@
             btnRemoverNota = new Button();
             lstNotas = new ListBox();
             lblPeriodoNota = new Label();
+            lblProfessorResponsavel = new Label();
+            cmbProfessorNota = new ComboBox();
             SuspendLayout();
             // 
             // lblValorNota
@@ -133,11 +135,31 @@
             lblPeriodoNota.TabIndex = 10;
             lblPeriodoNota.Text = "Período Letivo:";
             // 
+            // lblProfessorResponsavel
+            // 
+            lblProfessorResponsavel.AutoSize = true;
+            lblProfessorResponsavel.Location = new Point(543, 381);
+            lblProfessorResponsavel.Name = "lblProfessorResponsavel";
+            lblProfessorResponsavel.Size = new Size(159, 20);
+            lblProfessorResponsavel.TabIndex = 11;
+            lblProfessorResponsavel.Text = "Professor Responsável:";
+            // 
+            // cmbProfessorNota
+            // 
+            cmbProfessorNota.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbProfessorNota.FormattingEnabled = true;
+            cmbProfessorNota.Location = new Point(725, 378);
+            cmbProfessorNota.Name = "cmbProfessorNota";
+            cmbProfessorNota.Size = new Size(172, 28);
+            cmbProfessorNota.TabIndex = 12;
+            // 
             // FormNota
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1045, 620);
+            Controls.Add(cmbProfessorNota);
+            Controls.Add(lblProfessorResponsavel);
             Controls.Add(lblPeriodoNota);
             Controls.Add(lstNotas);
             Controls.Add(btnRemoverNota);
@@ -151,6 +173,7 @@
             Controls.Add(lblValorNota);
             Name = "FormNota";
             Text = "FormNota";
+            Load += FormNota_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -168,5 +191,7 @@
         private Button btnRemoverNota;
         private ListBox lstNotas;
         private Label lblPeriodoNota;
+        private Label lblProfessorResponsavel;
+        private ComboBox cmbProfessorNota;
     }
 }

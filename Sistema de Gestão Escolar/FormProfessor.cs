@@ -30,23 +30,65 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnAdicionarProfessor_Click(object sender, EventArgs e)
         {
-            int id = int.Parse(txtIdProfessor.Text);
-            string nome = txtNomeProfessor.Text;
-            string contato = txtContatoProfessor.Text;
-            string email = txtEmailProfessor.Text;
-            string areaEnsino = txtAreaEnsino.Text;
+            try
+            {
+                int id = int.Parse(txtIdProfessor.Text);
+                string nome = txtNomeProfessor.Text;
+                string contato = txtContatoProfessor.Text;
+                string email = txtEmailProfessor.Text;
 
-            Professor novoProfessor = new Professor(id, nome, contato, email, areaEnsino);
-            gestor.AdicionarProfessor(novoProfessor);
-            AtualizarListaProfessores();
+                // Captura a área de ensino selecionada no ComboBox
+                string areaEnsino = cmbAreaEnsino.SelectedItem?.ToString();
+                if (string.IsNullOrEmpty(areaEnsino))
+                {
+                    MessageBox.Show("Selecione uma área de ensino!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                Professor novoProfessor = new Professor(id, nome, contato, email, areaEnsino);
+
+                gestor.AdicionarProfessor(novoProfessor);
+                AtualizarListaProfessores();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void AtualizarListaProfessores()
         {
             lstProfessores.Items.Clear();
             foreach (var professor in gestor.Professores)
             {
-                lstProfessores.Items.Add($"{professor.Id} - {professor.Nome} - {professor.AreaEnsino}");
+                // Buscar disciplinas associadas ao professor
+                List<string> disciplinasProfessor = new List<string>();
+                foreach (var disciplina in gestor.Disciplinas)
+                {
+                    if (disciplina.ProfessoresIds.Contains(professor.Id))
+                    {
+                        disciplinasProfessor.Add(disciplina.Nome);
+                    }
+                }
+
+                // Exibir todas as informações
+                lstProfessores.Items.Add(
+                    $"ID: {professor.Id} | Nome: {professor.Nome} | Contato: {professor.Contato} | " +
+                    $"Email: {professor.Email} | Área: {professor.AreaEnsino} | Disciplinas: {string.Join(", ", disciplinasProfessor)}");
             }
+        }
+
+        private void FormProfessor_Load(object sender, EventArgs e)
+        {
+            cmbAreaEnsino.Items.Add("Línguas e Humanidades");
+            cmbAreaEnsino.Items.Add("Ciências e Tecnologias");
+            cmbAreaEnsino.Items.Add("Ciências Socioeconómicas");
+            cmbAreaEnsino.Items.Add("Artes Visuais");
+            cmbAreaEnsino.Items.Add("Educação Física e Desporto");
+            cmbAreaEnsino.Items.Add("Informática e Tecnologias");
+            cmbAreaEnsino.Items.Add("Matemática e Física");
+            cmbAreaEnsino.Items.Add("Biologia e Geologia");
+            cmbAreaEnsino.Items.Add("História e Filosofia");
+            cmbAreaEnsino.Items.Add("Educação Especial");
         }
     }
 }

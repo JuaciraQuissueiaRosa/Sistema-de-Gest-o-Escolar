@@ -26,35 +26,29 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnAdicionarTurma_Click(object sender, EventArgs e)
         {
-            int id = int.Parse(txtIdTurma.Text);
-            string curso = txtCursoTurma.Text;
-            string anoLetivo = txtAnoLetivoTurma.Text;
-            string turno = cmbTurnoTurma.SelectedItem.ToString();
-
-            Turma novaTurma = new Turma(id, curso, anoLetivo, turno);
-
-            string[] alunosIds = txtAlunosTurma.Text.Split(',');
-            foreach (string idAluno in alunosIds)
+            try
             {
-                int alunoId;
-                if (int.TryParse(idAluno.Trim(), out alunoId))
-                {
-                    novaTurma.AlunosIds.Add(alunoId);
-                }
-            }
+                int id = int.Parse(txtIdTurma.Text);
+                string curso = txtCursoTurma.Text;
+                string anoLetivo = txtAnoLetivoTurma.Text;
 
-            string[] disciplinasIds = txtDisciplinasTurma.Text.Split(',');
-            foreach (string idDisciplina in disciplinasIds)
+                // Captura o turno selecionado no ComboBox
+                string turno = cmbTurnoTurma.SelectedItem?.ToString();
+                if (string.IsNullOrEmpty(turno))
+                {
+                    MessageBox.Show("Selecione um turno!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                Turma novaTurma = new Turma(id, curso, anoLetivo, turno);
+
+                gestor.AdicionarTurma(novaTurma);
+                AtualizarListaTurmas();
+            }
+            catch (Exception ex)
             {
-                int disciplinaId;
-                if (int.TryParse(idDisciplina.Trim(), out disciplinaId))
-                {
-                    novaTurma.DisciplinasIds.Add(disciplinaId);
-                }
+                MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            gestor.AdicionarTurma(novaTurma);
-            AtualizarListaTurmas();
         }
 
         private void AtualizarListaTurmas()
@@ -64,6 +58,12 @@ namespace Sistema_de_Gestão_Escolar
             {
                 lstTurmas.Items.Add($"{turma.Id} - {turma.Curso} - {turma.AnoLetivo} - {turma.Turno} - Alunos: {string.Join(",", turma.AlunosIds)} - Disciplinas: {string.Join(",", turma.DisciplinasIds)}");
             }
+        }
+
+        private void FormTurma_Load(object sender, EventArgs e)
+        {
+            cmbTurnoTurma.Items.Add("Diurno");
+            cmbTurnoTurma.Items.Add("Noturno");
         }
     }
 }

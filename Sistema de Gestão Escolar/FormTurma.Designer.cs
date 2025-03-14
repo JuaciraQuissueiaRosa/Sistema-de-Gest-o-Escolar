@@ -75,7 +75,7 @@
             // lblAlunosTurma
             // 
             lblAlunosTurma.AutoSize = true;
-            lblAlunosTurma.Location = new Point(26, 267);
+            lblAlunosTurma.Location = new Point(43, 236);
             lblAlunosTurma.Name = "lblAlunosTurma";
             lblAlunosTurma.Size = new Size(268, 20);
             lblAlunosTurma.TabIndex = 3;
@@ -84,7 +84,7 @@
             // lblTurnoTurma
             // 
             lblTurnoTurma.AutoSize = true;
-            lblTurnoTurma.Location = new Point(53, 381);
+            lblTurnoTurma.Location = new Point(53, 336);
             lblTurnoTurma.Name = "lblTurnoTurma";
             lblTurnoTurma.Size = new Size(50, 20);
             lblTurnoTurma.TabIndex = 4;
@@ -93,7 +93,7 @@
             // lblDisciplinasTurma
             // 
             lblDisciplinasTurma.AutoSize = true;
-            lblDisciplinasTurma.Location = new Point(43, 429);
+            lblDisciplinasTurma.Location = new Point(43, 397);
             lblDisciplinasTurma.Name = "lblDisciplinasTurma";
             lblDisciplinasTurma.Size = new Size(293, 20);
             lblDisciplinasTurma.TabIndex = 5;
@@ -115,14 +115,14 @@
             // 
             // txtAlunosTurma
             // 
-            txtAlunosTurma.Location = new Point(124, 299);
+            txtAlunosTurma.Location = new Point(53, 269);
             txtAlunosTurma.Name = "txtAlunosTurma";
             txtAlunosTurma.Size = new Size(253, 27);
             txtAlunosTurma.TabIndex = 8;
             // 
             // txtDisciplinasTurma
             // 
-            txtDisciplinasTurma.Location = new Point(70, 465);
+            txtDisciplinasTurma.Location = new Point(65, 432);
             txtDisciplinasTurma.Name = "txtDisciplinasTurma";
             txtDisciplinasTurma.Size = new Size(255, 27);
             txtDisciplinasTurma.TabIndex = 10;
@@ -137,7 +137,7 @@
             // cmbTurnoTurma
             // 
             cmbTurnoTurma.FormattingEnabled = true;
-            cmbTurnoTurma.Location = new Point(145, 381);
+            cmbTurnoTurma.Location = new Point(139, 336);
             cmbTurnoTurma.Name = "cmbTurnoTurma";
             cmbTurnoTurma.Size = new Size(268, 28);
             cmbTurnoTurma.TabIndex = 12;
@@ -193,6 +193,7 @@
             Controls.Add(lblIdTurma);
             Name = "FormTurma";
             Text = "FormTurma";
+            Load += FormTurma_Load;
             ResumeLayout(false);
             PerformLayout();
         }
