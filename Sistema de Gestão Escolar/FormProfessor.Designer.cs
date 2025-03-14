@@ -36,17 +36,17 @@
             txtNomeProfessor = new TextBox();
             txtIdProfessor = new TextBox();
             txtEmailProfessor = new TextBox();
-            txtContatoProfessor = new TextBox();
             btnAdicionarProfessor = new Button();
             btnRemoverProfessor = new Button();
             lstProfessores = new ListBox();
             cmbAreaEnsino = new ComboBox();
+            mtbContatoProfessor = new MaskedTextBox();
             SuspendLayout();
             // 
             // lblIdProfessor
             // 
             lblIdProfessor.AutoSize = true;
-            lblIdProfessor.Location = new Point(107, 33);
+            lblIdProfessor.Location = new Point(71, 44);
             lblIdProfessor.Name = "lblIdProfessor";
             lblIdProfessor.Size = new Size(114, 20);
             lblIdProfessor.TabIndex = 0;
@@ -55,7 +55,7 @@
             // lblNomeProfessor
             // 
             lblNomeProfessor.AutoSize = true;
-            lblNomeProfessor.Location = new Point(107, 104);
+            lblNomeProfessor.Location = new Point(71, 115);
             lblNomeProfessor.Name = "lblNomeProfessor";
             lblNomeProfessor.Size = new Size(140, 20);
             lblNomeProfessor.TabIndex = 1;
@@ -64,7 +64,7 @@
             // lblContatoProfessor
             // 
             lblContatoProfessor.AutoSize = true;
-            lblContatoProfessor.Location = new Point(107, 172);
+            lblContatoProfessor.Location = new Point(71, 183);
             lblContatoProfessor.Name = "lblContatoProfessor";
             lblContatoProfessor.Size = new Size(65, 20);
             lblContatoProfessor.TabIndex = 2;
@@ -73,7 +73,7 @@
             // lblEmailProfessor
             // 
             lblEmailProfessor.AutoSize = true;
-            lblEmailProfessor.Location = new Point(107, 223);
+            lblEmailProfessor.Location = new Point(71, 234);
             lblEmailProfessor.Name = "lblEmailProfessor";
             lblEmailProfessor.Size = new Size(49, 20);
             lblEmailProfessor.TabIndex = 3;
@@ -82,7 +82,7 @@
             // lblAreaEnsino
             // 
             lblAreaEnsino.AutoSize = true;
-            lblAreaEnsino.Location = new Point(107, 284);
+            lblAreaEnsino.Location = new Point(71, 295);
             lblAreaEnsino.Name = "lblAreaEnsino";
             lblAreaEnsino.Size = new Size(111, 20);
             lblAreaEnsino.TabIndex = 4;
@@ -90,35 +90,28 @@
             // 
             // txtNomeProfessor
             // 
-            txtNomeProfessor.Location = new Point(250, 104);
+            txtNomeProfessor.Location = new Point(214, 115);
             txtNomeProfessor.Name = "txtNomeProfessor";
             txtNomeProfessor.Size = new Size(125, 27);
             txtNomeProfessor.TabIndex = 5;
             // 
             // txtIdProfessor
             // 
-            txtIdProfessor.Location = new Point(250, 33);
+            txtIdProfessor.Location = new Point(214, 44);
             txtIdProfessor.Name = "txtIdProfessor";
             txtIdProfessor.Size = new Size(125, 27);
             txtIdProfessor.TabIndex = 6;
             // 
             // txtEmailProfessor
             // 
-            txtEmailProfessor.Location = new Point(172, 216);
+            txtEmailProfessor.Location = new Point(136, 227);
             txtEmailProfessor.Name = "txtEmailProfessor";
             txtEmailProfessor.Size = new Size(125, 27);
             txtEmailProfessor.TabIndex = 7;
             // 
-            // txtContatoProfessor
-            // 
-            txtContatoProfessor.Location = new Point(190, 165);
-            txtContatoProfessor.Name = "txtContatoProfessor";
-            txtContatoProfessor.Size = new Size(125, 27);
-            txtContatoProfessor.TabIndex = 8;
-            // 
             // btnAdicionarProfessor
             // 
-            btnAdicionarProfessor.Location = new Point(83, 375);
+            btnAdicionarProfessor.Location = new Point(47, 386);
             btnAdicionarProfessor.Name = "btnAdicionarProfessor";
             btnAdicionarProfessor.Size = new Size(129, 59);
             btnAdicionarProfessor.TabIndex = 10;
@@ -128,7 +121,7 @@
             // 
             // btnRemoverProfessor
             // 
-            btnRemoverProfessor.Location = new Point(233, 375);
+            btnRemoverProfessor.Location = new Point(197, 386);
             btnRemoverProfessor.Name = "btnRemoverProfessor";
             btnRemoverProfessor.Size = new Size(142, 59);
             btnRemoverProfessor.TabIndex = 11;
@@ -139,30 +132,38 @@
             // lstProfessores
             // 
             lstProfessores.FormattingEnabled = true;
-            lstProfessores.Location = new Point(566, 33);
+            lstProfessores.Location = new Point(527, 33);
             lstProfessores.Name = "lstProfessores";
-            lstProfessores.Size = new Size(298, 424);
+            lstProfessores.Size = new Size(766, 424);
             lstProfessores.TabIndex = 12;
             // 
             // cmbAreaEnsino
             // 
             cmbAreaEnsino.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbAreaEnsino.FormattingEnabled = true;
-            cmbAreaEnsino.Location = new Point(233, 284);
+            cmbAreaEnsino.Location = new Point(197, 295);
             cmbAreaEnsino.Name = "cmbAreaEnsino";
             cmbAreaEnsino.Size = new Size(173, 28);
             cmbAreaEnsino.TabIndex = 13;
+            // 
+            // mtbContatoProfessor
+            // 
+            mtbContatoProfessor.Location = new Point(142, 180);
+            mtbContatoProfessor.Mask = "+351 000 000 000";
+            mtbContatoProfessor.Name = "mtbContatoProfessor";
+            mtbContatoProfessor.Size = new Size(165, 27);
+            mtbContatoProfessor.TabIndex = 14;
             // 
             // FormProfessor
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1145, 552);
+            ClientSize = new Size(1353, 552);
+            Controls.Add(mtbContatoProfessor);
             Controls.Add(cmbAreaEnsino);
             Controls.Add(lstProfessores);
             Controls.Add(btnRemoverProfessor);
             Controls.Add(btnAdicionarProfessor);
-            Controls.Add(txtContatoProfessor);
             Controls.Add(txtEmailProfessor);
             Controls.Add(txtIdProfessor);
             Controls.Add(txtNomeProfessor);
@@ -188,10 +189,10 @@
         private TextBox txtNomeProfessor;
         private TextBox txtIdProfessor;
         private TextBox txtEmailProfessor;
-        private TextBox txtContatoProfessor;
         private Button btnAdicionarProfessor;
         private Button btnRemoverProfessor;
         private ListBox lstProfessores;
         private ComboBox cmbAreaEnsino;
+        private MaskedTextBox mtbContatoProfessor;
     }
 }

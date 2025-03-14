@@ -64,6 +64,22 @@ namespace Sistema_de_Gestão_Escolar
         {
             cmbTurnoTurma.Items.Add("Diurno");
             cmbTurnoTurma.Items.Add("Noturno");
+
+
+
+            cmbCursoTurma.Items.Clear();
+
+            // Adicionar cursos válidos no ComboBox
+            cmbCursoTurma.Items.Add("Ciências e Tecnologias");
+            cmbCursoTurma.Items.Add("Línguas e Humanidades");
+            cmbCursoTurma.Items.Add("Ciências Socioeconómicas");
+            cmbCursoTurma.Items.Add("Artes Visuais");
+            cmbCursoTurma.Items.Add("Técnico de Informática e Gestão");
+            cmbCursoTurma.Items.Add("Técnico de Eletrónica, Automação e Comando");
+            cmbCursoTurma.Items.Add("Técnico de Turismo");
+            cmbCursoTurma.Items.Add("Técnico de Cozinha e Pastelaria");
+            cmbCursoTurma.Items.Add("Técnico de Restaurante e Bar");
+            cmbCursoTurma.Items.Add("Técnico de Mecatrónica");
         }
     }
 }

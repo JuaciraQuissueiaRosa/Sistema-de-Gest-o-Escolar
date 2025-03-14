@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class GestorEscola
 {
@@ -355,6 +356,8 @@ public class GestorEscola
         // Se a disciplina não for encontrada, lança um erro
         throw new Exception("Disciplina não encontrada.");
     }
+
+  
 
 
 }

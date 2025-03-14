@@ -43,6 +43,7 @@
             btnRemoverTurma = new Button();
             btnAdicionarTurma = new Button();
             lstTurmas = new ListBox();
+            cmbCursoTurma = new ComboBox();
             SuspendLayout();
             // 
             // lblIdTurma
@@ -101,7 +102,7 @@
             // 
             // txtCursoTurma
             // 
-            txtCursoTurma.Location = new Point(139, 116);
+            txtCursoTurma.Location = new Point(406, 229);
             txtCursoTurma.Name = "txtCursoTurma";
             txtCursoTurma.Size = new Size(251, 27);
             txtCursoTurma.TabIndex = 6;
@@ -171,11 +172,21 @@
             lstTurmas.Size = new Size(369, 424);
             lstTurmas.TabIndex = 15;
             // 
+            // cmbCursoTurma
+            // 
+            cmbCursoTurma.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbCursoTurma.FormattingEnabled = true;
+            cmbCursoTurma.Location = new Point(147, 110);
+            cmbCursoTurma.Name = "cmbCursoTurma";
+            cmbCursoTurma.Size = new Size(151, 28);
+            cmbCursoTurma.TabIndex = 16;
+            // 
             // FormTurma
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(953, 628);
+            Controls.Add(cmbCursoTurma);
             Controls.Add(lstTurmas);
             Controls.Add(btnAdicionarTurma);
             Controls.Add(btnRemoverTurma);
@@ -215,5 +226,6 @@
         private Button btnRemoverTurma;
         private Button btnAdicionarTurma;
         private ListBox lstTurmas;
+        private ComboBox cmbCursoTurma;
     }
 }

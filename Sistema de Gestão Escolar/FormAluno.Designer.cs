@@ -51,6 +51,7 @@
             lblNomeAluno = new Label();
             txtIdAluno = new TextBox();
             lblIdAluno = new Label();
+            cmbNovaTurmaAluno = new ComboBox();
             SuspendLayout();
             // 
             // lstAlunos
@@ -103,7 +104,7 @@
             // 
             // txtNovaTurmaAluno
             // 
-            txtNovaTurmaAluno.Location = new Point(592, 35);
+            txtNovaTurmaAluno.Location = new Point(902, 81);
             txtNovaTurmaAluno.Name = "txtNovaTurmaAluno";
             txtNovaTurmaAluno.Size = new Size(214, 27);
             txtNovaTurmaAluno.TabIndex = 5;
@@ -245,11 +246,21 @@
             lblIdAluno.TabIndex = 22;
             lblIdAluno.Text = "ID do Aluno:";
             // 
+            // cmbNovaTurmaAluno
+            // 
+            cmbNovaTurmaAluno.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbNovaTurmaAluno.FormattingEnabled = true;
+            cmbNovaTurmaAluno.Location = new Point(592, 32);
+            cmbNovaTurmaAluno.Name = "cmbNovaTurmaAluno";
+            cmbNovaTurmaAluno.Size = new Size(214, 28);
+            cmbNovaTurmaAluno.TabIndex = 23;
+            // 
             // FormAluno
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1251, 783);
+            Controls.Add(cmbNovaTurmaAluno);
             Controls.Add(lblIdAluno);
             Controls.Add(txtIdAluno);
             Controls.Add(lblNomeAluno);
@@ -304,5 +315,6 @@
         private Label lblNomeAluno;
         private TextBox txtIdAluno;
         private Label lblIdAluno;
+        private ComboBox cmbNovaTurmaAluno;
     }
 }
