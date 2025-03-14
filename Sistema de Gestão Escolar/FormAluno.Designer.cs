@@ -61,6 +61,7 @@
             lstAlunos.Name = "lstAlunos";
             lstAlunos.Size = new Size(307, 404);
             lstAlunos.TabIndex = 0;
+            lstAlunos.SelectedIndexChanged += lstAlunos_SelectedIndexChanged;
             // 
             // btnAdicionarAluno
             // 

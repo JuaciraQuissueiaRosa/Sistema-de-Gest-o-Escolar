@@ -122,10 +122,32 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnMudarTurma_Click(object sender, EventArgs e)
         {
-            int alunoId = int.Parse(txtIdAluno.Text);
-            int novaTurmaId = int.Parse(txtNovaTurmaAluno.Text);
+            if (lstAlunos.SelectedIndex == -1)
+            {
+                MessageBox.Show("Erro: Selecione um aluno primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            gestor.MudarAlunoDeTurma(alunoId, novaTurmaId);
+            // Obter aluno selecionado
+            Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+
+            // Verificar se uma nova turma foi escolhida
+            if (cmbNovaTurmaAluno.SelectedItem == null)
+            {
+                MessageBox.Show("Erro: Selecione uma nova turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Obter o ID da nova turma a partir do texto selecionado
+            string textoSelecionado = cmbNovaTurmaAluno.SelectedItem.ToString();
+            int novoTurmaId = int.Parse(textoSelecionado.Split(' ')[1]); // Obtém o ID da turma
+
+            // Atualizar a turma do aluno
+            alunoSelecionado.TurmaId = novoTurmaId;
+
+            MessageBox.Show("Aluno transferido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Atualizar a exibição dos alunos
             AtualizarListaAlunos();
 
         }
@@ -143,6 +165,34 @@ namespace Sistema_de_Gestão_Escolar
         {
             string padraoEmail = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             return Regex.IsMatch(email, padraoEmail);
+        }
+
+        private void CarregarTurmasDisponiveis(int turmaAtualId)
+        {
+            cmbNovaTurmaAluno.Items.Clear(); // Limpa as opções antigas
+
+            for (int i = 0; i < gestor.Turmas.Count; i++)
+            {
+                Turma turma = gestor.Turmas[i];
+
+                // Adiciona apenas turmas diferentes da atual
+                if (turma.Id != turmaAtualId)
+                {
+                    cmbNovaTurmaAluno.Items.Add($"ID: {turma.Id} - {turma.Curso} ({turma.AnoLetivo})");
+                }
+            }
+        }
+
+        private void lstAlunos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstAlunos.SelectedIndex != -1)
+            {
+                // Obter aluno selecionado
+                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+
+                // Atualizar a lista de turmas disponíveis
+                CarregarTurmasDisponiveis(alunoSelecionado.TurmaId);
+            }
         }
     }
 }

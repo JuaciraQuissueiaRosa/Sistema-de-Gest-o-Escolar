@@ -34,7 +34,6 @@
             lblAlunosTurma = new Label();
             lblTurnoTurma = new Label();
             lblDisciplinasTurma = new Label();
-            txtCursoTurma = new TextBox();
             txtAnoLetivoTurma = new TextBox();
             txtAlunosTurma = new TextBox();
             txtDisciplinasTurma = new TextBox();
@@ -100,13 +99,6 @@
             lblDisciplinasTurma.TabIndex = 5;
             lblDisciplinasTurma.Text = "IDs das Disciplinas (separados por vírgula):";
             // 
-            // txtCursoTurma
-            // 
-            txtCursoTurma.Location = new Point(406, 229);
-            txtCursoTurma.Name = "txtCursoTurma";
-            txtCursoTurma.Size = new Size(251, 27);
-            txtCursoTurma.TabIndex = 6;
-            // 
             // txtAnoLetivoTurma
             // 
             txtAnoLetivoTurma.Location = new Point(145, 163);
@@ -146,7 +138,7 @@
             // 
             // btnRemoverTurma
             // 
-            btnRemoverTurma.Location = new Point(53, 524);
+            btnRemoverTurma.Location = new Point(65, 511);
             btnRemoverTurma.Name = "btnRemoverTurma";
             btnRemoverTurma.Size = new Size(139, 70);
             btnRemoverTurma.TabIndex = 13;
@@ -156,7 +148,7 @@
             // 
             // btnAdicionarTurma
             // 
-            btnAdicionarTurma.Location = new Point(273, 546);
+            btnAdicionarTurma.Location = new Point(273, 511);
             btnAdicionarTurma.Name = "btnAdicionarTurma";
             btnAdicionarTurma.Size = new Size(156, 70);
             btnAdicionarTurma.TabIndex = 14;
@@ -169,7 +161,7 @@
             lstTurmas.FormattingEnabled = true;
             lstTurmas.Location = new Point(531, 52);
             lstTurmas.Name = "lstTurmas";
-            lstTurmas.Size = new Size(369, 424);
+            lstTurmas.Size = new Size(569, 444);
             lstTurmas.TabIndex = 15;
             // 
             // cmbCursoTurma
@@ -185,7 +177,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(953, 628);
+            ClientSize = new Size(1222, 628);
             Controls.Add(cmbCursoTurma);
             Controls.Add(lstTurmas);
             Controls.Add(btnAdicionarTurma);
@@ -195,7 +187,6 @@
             Controls.Add(txtDisciplinasTurma);
             Controls.Add(txtAlunosTurma);
             Controls.Add(txtAnoLetivoTurma);
-            Controls.Add(txtCursoTurma);
             Controls.Add(lblDisciplinasTurma);
             Controls.Add(lblTurnoTurma);
             Controls.Add(lblAlunosTurma);
@@ -217,7 +208,6 @@
         private Label lblAlunosTurma;
         private Label lblTurnoTurma;
         private Label lblDisciplinasTurma;
-        private TextBox txtCursoTurma;
         private TextBox txtAnoLetivoTurma;
         private TextBox txtAlunosTurma;
         private TextBox txtDisciplinasTurma;
