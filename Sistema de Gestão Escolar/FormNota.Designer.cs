@@ -41,12 +41,14 @@
             lblPeriodoNota = new Label();
             lblProfessorResponsavel = new Label();
             cmbProfessorNota = new ComboBox();
+            cmbTipoAvaliacao = new ComboBox();
+            lblTipoAvaliacao = new Label();
             SuspendLayout();
             // 
             // lblValorNota
             // 
             lblValorNota.AutoSize = true;
-            lblValorNota.Location = new Point(88, 113);
+            lblValorNota.Location = new Point(88, 171);
             lblValorNota.Name = "lblValorNota";
             lblValorNota.Size = new Size(45, 20);
             lblValorNota.TabIndex = 0;
@@ -55,7 +57,7 @@
             // lblDisciplinaIdNota
             // 
             lblDisciplinaIdNota.AutoSize = true;
-            lblDisciplinaIdNota.Location = new Point(87, 175);
+            lblDisciplinaIdNota.Location = new Point(87, 233);
             lblDisciplinaIdNota.Name = "lblDisciplinaIdNota";
             lblDisciplinaIdNota.Size = new Size(117, 20);
             lblDisciplinaIdNota.TabIndex = 1;
@@ -64,7 +66,7 @@
             // lblAlunoIdNota
             // 
             lblAlunoIdNota.AutoSize = true;
-            lblAlunoIdNota.Location = new Point(88, 246);
+            lblAlunoIdNota.Location = new Point(88, 304);
             lblAlunoIdNota.Name = "lblAlunoIdNota";
             lblAlunoIdNota.Size = new Size(92, 20);
             lblAlunoIdNota.TabIndex = 2;
@@ -72,21 +74,21 @@
             // 
             // txtValorNota
             // 
-            txtValorNota.Location = new Point(296, 113);
+            txtValorNota.Location = new Point(296, 171);
             txtValorNota.Name = "txtValorNota";
             txtValorNota.Size = new Size(125, 27);
             txtValorNota.TabIndex = 3;
             // 
             // txtDisciplinaIdNota
             // 
-            txtDisciplinaIdNota.Location = new Point(296, 168);
+            txtDisciplinaIdNota.Location = new Point(296, 226);
             txtDisciplinaIdNota.Name = "txtDisciplinaIdNota";
             txtDisciplinaIdNota.Size = new Size(125, 27);
             txtDisciplinaIdNota.TabIndex = 4;
             // 
             // txtAlunoIdNota
             // 
-            txtAlunoIdNota.Location = new Point(296, 239);
+            txtAlunoIdNota.Location = new Point(296, 297);
             txtAlunoIdNota.Name = "txtAlunoIdNota";
             txtAlunoIdNota.Size = new Size(125, 27);
             txtAlunoIdNota.TabIndex = 5;
@@ -153,11 +155,31 @@
             cmbProfessorNota.Size = new Size(172, 28);
             cmbProfessorNota.TabIndex = 12;
             // 
+            // cmbTipoAvaliacao
+            // 
+            cmbTipoAvaliacao.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbTipoAvaliacao.FormattingEnabled = true;
+            cmbTipoAvaliacao.Location = new Point(260, 110);
+            cmbTipoAvaliacao.Name = "cmbTipoAvaliacao";
+            cmbTipoAvaliacao.Size = new Size(174, 28);
+            cmbTipoAvaliacao.TabIndex = 13;
+            // 
+            // lblTipoAvaliacao
+            // 
+            lblTipoAvaliacao.AutoSize = true;
+            lblTipoAvaliacao.Location = new Point(87, 118);
+            lblTipoAvaliacao.Name = "lblTipoAvaliacao";
+            lblTipoAvaliacao.Size = new Size(130, 20);
+            lblTipoAvaliacao.TabIndex = 14;
+            lblTipoAvaliacao.Text = "Tipo de avaliação:";
+            // 
             // FormNota
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1045, 620);
+            Controls.Add(lblTipoAvaliacao);
+            Controls.Add(cmbTipoAvaliacao);
             Controls.Add(cmbProfessorNota);
             Controls.Add(lblProfessorResponsavel);
             Controls.Add(lblPeriodoNota);
@@ -172,6 +194,7 @@
             Controls.Add(lblDisciplinaIdNota);
             Controls.Add(lblValorNota);
             Name = "FormNota";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormNota";
             Load += FormNota_Load;
             ResumeLayout(false);
@@ -193,5 +216,7 @@
         private Label lblPeriodoNota;
         private Label lblProfessorResponsavel;
         private ComboBox cmbProfessorNota;
+        private ComboBox cmbTipoAvaliacao;
+        private Label lblTipoAvaliacao;
     }
 }

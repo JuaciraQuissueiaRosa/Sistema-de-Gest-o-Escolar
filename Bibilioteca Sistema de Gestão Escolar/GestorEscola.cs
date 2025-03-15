@@ -299,7 +299,7 @@ public class GestorEscola
     /// <summary>
     /// Remove uma turma do sistema, verificando se há alunos matriculados.
     /// </summary>
-    public void RemoverTurma(int id)
+    public bool RemoverTurma(int id)
     {
         for (int i = 0; i < Turmas.Count; i++)
         {
@@ -308,16 +308,16 @@ public class GestorEscola
                 // Verificar se há alunos matriculados antes de remover a turma
                 if (Turmas[i].AlunosIds.Count > 0)
                 {
-                    throw new Exception("A turma não pode ser removida pois ainda tem alunos matriculados.");
+                    return false; // Retorna falso se houver alunos matriculados
                 }
 
                 // Remover a turma da lista
                 Turmas.RemoveAt(i);
-                return;
+                return true; // Retorna verdadeiro se a remoção for bem-sucedida
             }
         }
 
-        throw new Exception("Turma não encontrada.");
+        return false; // Retorna falso se a turma não for encontrada
     }
 
     /// <summary>

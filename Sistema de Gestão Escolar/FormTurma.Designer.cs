@@ -129,6 +129,7 @@
             // 
             // cmbTurnoTurma
             // 
+            cmbTurnoTurma.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbTurnoTurma.FormattingEnabled = true;
             cmbTurnoTurma.Location = new Point(139, 336);
             cmbTurnoTurma.Name = "cmbTurnoTurma";
@@ -159,9 +160,9 @@
             // lstTurmas
             // 
             lstTurmas.FormattingEnabled = true;
-            lstTurmas.Location = new Point(531, 52);
+            lstTurmas.Location = new Point(644, 54);
             lstTurmas.Name = "lstTurmas";
-            lstTurmas.Size = new Size(569, 444);
+            lstTurmas.Size = new Size(735, 444);
             lstTurmas.TabIndex = 15;
             // 
             // cmbCursoTurma
@@ -170,14 +171,14 @@
             cmbCursoTurma.FormattingEnabled = true;
             cmbCursoTurma.Location = new Point(147, 110);
             cmbCursoTurma.Name = "cmbCursoTurma";
-            cmbCursoTurma.Size = new Size(151, 28);
+            cmbCursoTurma.Size = new Size(373, 28);
             cmbCursoTurma.TabIndex = 16;
             // 
             // FormTurma
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1222, 628);
+            ClientSize = new Size(1409, 628);
             Controls.Add(cmbCursoTurma);
             Controls.Add(lstTurmas);
             Controls.Add(btnAdicionarTurma);

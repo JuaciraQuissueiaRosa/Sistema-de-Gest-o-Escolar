@@ -33,7 +33,6 @@
             btnRemoverAluno = new Button();
             btnMudarTurma = new Button();
             btnBuscarAluno = new Button();
-            txtNovaTurmaAluno = new TextBox();
             lblNovaTurmaAluno = new Label();
             txtBuscarAluno = new TextBox();
             lblBuscarAluno = new Label();
@@ -102,13 +101,6 @@
             btnBuscarAluno.Text = "Buscar aluno";
             btnBuscarAluno.UseVisualStyleBackColor = true;
             btnBuscarAluno.Click += btnBuscarAluno_Click;
-            // 
-            // txtNovaTurmaAluno
-            // 
-            txtNovaTurmaAluno.Location = new Point(902, 81);
-            txtNovaTurmaAluno.Name = "txtNovaTurmaAluno";
-            txtNovaTurmaAluno.Size = new Size(214, 27);
-            txtNovaTurmaAluno.TabIndex = 5;
             // 
             // lblNovaTurmaAluno
             // 
@@ -279,7 +271,6 @@
             Controls.Add(lblBuscarAluno);
             Controls.Add(txtBuscarAluno);
             Controls.Add(lblNovaTurmaAluno);
-            Controls.Add(txtNovaTurmaAluno);
             Controls.Add(btnBuscarAluno);
             Controls.Add(btnMudarTurma);
             Controls.Add(btnRemoverAluno);
@@ -287,6 +278,7 @@
             Controls.Add(lstAlunos);
             Name = "FormAluno";
             Text = "FormAluno";
+            Load += FormAluno_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -298,7 +290,6 @@
         private Button btnRemoverAluno;
         private Button btnMudarTurma;
         private Button btnBuscarAluno;
-        private TextBox txtNovaTurmaAluno;
         private Label lblNovaTurmaAluno;
         private TextBox txtBuscarAluno;
         private Label lblBuscarAluno;

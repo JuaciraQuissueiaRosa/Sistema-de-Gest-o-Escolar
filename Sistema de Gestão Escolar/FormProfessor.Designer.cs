@@ -143,7 +143,7 @@
             cmbAreaEnsino.FormattingEnabled = true;
             cmbAreaEnsino.Location = new Point(197, 295);
             cmbAreaEnsino.Name = "cmbAreaEnsino";
-            cmbAreaEnsino.Size = new Size(173, 28);
+            cmbAreaEnsino.Size = new Size(235, 28);
             cmbAreaEnsino.TabIndex = 13;
             // 
             // mtbContatoProfessor

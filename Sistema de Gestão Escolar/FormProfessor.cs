@@ -126,10 +126,7 @@ namespace Sistema_de_Gestão_Escolar
             cmbAreaEnsino.Items.Add("Artes Visuais");
             cmbAreaEnsino.Items.Add("Educação Física e Desporto");
             cmbAreaEnsino.Items.Add("Informática e Tecnologias");
-            cmbAreaEnsino.Items.Add("Matemática e Física");
-            cmbAreaEnsino.Items.Add("Biologia e Geologia");
-            cmbAreaEnsino.Items.Add("História e Filosofia");
-            cmbAreaEnsino.Items.Add("Educação Especial");
+           
         }
 
         private bool ValidarEmail(string email)

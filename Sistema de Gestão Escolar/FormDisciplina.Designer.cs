@@ -44,7 +44,7 @@
             // lblNomeDisciplina
             // 
             lblNomeDisciplina.AutoSize = true;
-            lblNomeDisciplina.Location = new Point(62, 97);
+            lblNomeDisciplina.Location = new Point(40, 94);
             lblNomeDisciplina.Name = "lblNomeDisciplina";
             lblNomeDisciplina.Size = new Size(143, 20);
             lblNomeDisciplina.TabIndex = 0;
@@ -53,7 +53,7 @@
             // lblProfessoresDisc
             // 
             lblProfessoresDisc.AutoSize = true;
-            lblProfessoresDisc.Location = new Point(42, 217);
+            lblProfessoresDisc.Location = new Point(20, 214);
             lblProfessoresDisc.Name = "lblProfessoresDisc";
             lblProfessoresDisc.Size = new Size(298, 20);
             lblProfessoresDisc.TabIndex = 1;
@@ -62,7 +62,7 @@
             // lblCargaHoraria
             // 
             lblCargaHoraria.AutoSize = true;
-            lblCargaHoraria.Location = new Point(62, 158);
+            lblCargaHoraria.Location = new Point(40, 155);
             lblCargaHoraria.Name = "lblCargaHoraria";
             lblCargaHoraria.Size = new Size(219, 20);
             lblCargaHoraria.TabIndex = 2;
@@ -71,7 +71,7 @@
             // lblIdDisciplina
             // 
             lblIdDisciplina.AutoSize = true;
-            lblIdDisciplina.Location = new Point(62, 45);
+            lblIdDisciplina.Location = new Point(40, 42);
             lblIdDisciplina.Name = "lblIdDisciplina";
             lblIdDisciplina.Size = new Size(117, 20);
             lblIdDisciplina.TabIndex = 3;
@@ -79,14 +79,14 @@
             // 
             // txtIdDisciplina
             // 
-            txtIdDisciplina.Location = new Point(210, 42);
+            txtIdDisciplina.Location = new Point(188, 39);
             txtIdDisciplina.Name = "txtIdDisciplina";
-            txtIdDisciplina.Size = new Size(258, 27);
+            txtIdDisciplina.Size = new Size(286, 27);
             txtIdDisciplina.TabIndex = 4;
             // 
             // txtProfessoresDisciplina
             // 
-            txtProfessoresDisciplina.Location = new Point(62, 254);
+            txtProfessoresDisciplina.Location = new Point(40, 251);
             txtProfessoresDisciplina.Name = "txtProfessoresDisciplina";
             txtProfessoresDisciplina.Size = new Size(253, 27);
             txtProfessoresDisciplina.TabIndex = 7;
@@ -114,25 +114,25 @@
             // lstDisciplinas
             // 
             lstDisciplinas.FormattingEnabled = true;
-            lstDisciplinas.Location = new Point(572, 12);
+            lstDisciplinas.Location = new Point(614, 42);
             lstDisciplinas.Name = "lstDisciplinas";
-            lstDisciplinas.Size = new Size(316, 404);
+            lstDisciplinas.Size = new Size(773, 404);
             lstDisciplinas.TabIndex = 10;
             // 
             // cmbNomeDisciplina
             // 
             cmbNomeDisciplina.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbNomeDisciplina.FormattingEnabled = true;
-            cmbNomeDisciplina.Location = new Point(243, 105);
+            cmbNomeDisciplina.Location = new Point(221, 102);
             cmbNomeDisciplina.Name = "cmbNomeDisciplina";
-            cmbNomeDisciplina.Size = new Size(225, 28);
+            cmbNomeDisciplina.Size = new Size(253, 28);
             cmbNomeDisciplina.TabIndex = 11;
             // 
             // cmbCargaHoraria
             // 
             cmbCargaHoraria.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbCargaHoraria.FormattingEnabled = true;
-            cmbCargaHoraria.Location = new Point(304, 158);
+            cmbCargaHoraria.Location = new Point(282, 155);
             cmbCargaHoraria.Name = "cmbCargaHoraria";
             cmbCargaHoraria.Size = new Size(151, 28);
             cmbCargaHoraria.TabIndex = 12;
@@ -141,7 +141,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1027, 639);
+            ClientSize = new Size(1412, 639);
             Controls.Add(cmbCargaHoraria);
             Controls.Add(cmbNomeDisciplina);
             Controls.Add(lstDisciplinas);

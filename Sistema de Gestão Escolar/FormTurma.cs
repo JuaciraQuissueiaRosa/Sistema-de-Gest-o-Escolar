@@ -19,9 +19,37 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnRemoverTurma_Click(object sender, EventArgs e)
         {
-            int id = int.Parse(txtIdTurma.Text);
-            gestor.RemoverTurma(id);
-            AtualizarListaTurmas();
+            try
+            {
+                // Verificar se o ID da turma é um número válido
+                if (!int.TryParse(txtIdTurma.Text, out int id))
+                {
+                    MessageBox.Show("Erro: O ID da turma deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Tentar remover a turma
+                bool removida = gestor.RemoverTurma(id);
+                if (removida)
+                {
+                    MessageBox.Show("Turma removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Erro: A turma não pode ser removida. Verifique se há alunos matriculados ou se o ID é válido!",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                // Atualizar a lista de turmas
+                AtualizarListaTurmas();
+
+                // Atualizar a lista de turmas no FormAluno (se estiver aberto)
+                AtualizarFormAluno();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnAdicionarTurma_Click(object sender, EventArgs e)
@@ -43,15 +71,16 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Verificar se o ano letivo foi preenchido
+                // Verificar se o ano letivo foi preenchido corretamente
                 string anoLetivo = txtAnoLetivoTurma.Text.Trim();
-                if (string.IsNullOrEmpty(anoLetivo))
+                if (!ValidarAnoLetivo(anoLetivo))
                 {
-                    MessageBox.Show("Erro: O ano letivo não pode estar vazio!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: O ano letivo deve estar no formato correto (exemplo: 2023/2024)!",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Captura o turno selecionado no ComboBox
+                // Capturar o turno selecionado no ComboBox
                 string turno = cmbTurnoTurma.SelectedItem?.ToString();
                 if (string.IsNullOrEmpty(turno))
                 {
@@ -65,8 +94,11 @@ namespace Sistema_de_Gestão_Escolar
                 // Adicionar a turma ao sistema
                 gestor.AdicionarTurma(novaTurma);
 
-                // Atualizar a lista de turmas na ListBox
+                // Atualizar a lista de turmas no próprio FormTurma
                 AtualizarListaTurmas();
+
+                // Atualizar a lista de turmas no FormAluno (se estiver aberto)
+                AtualizarFormAluno();
 
                 MessageBox.Show("Turma adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -76,21 +108,7 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-        private void CarregarTurmasDisponiveis(int turmaAtualId)
-        {
-            cmbCursoTurma.Items.Clear(); // Limpa as opções antigas
 
-            for (int i = 0; i < gestor.Turmas.Count; i++)
-            {
-                Turma turma = gestor.Turmas[i];
-
-                // Adiciona apenas turmas diferentes da atual
-                if (turma.Id != turmaAtualId)
-                {
-                    cmbCursoTurma.Items.Add($"ID: {turma.Id} - {turma.Curso} ({turma.AnoLetivo})");
-                }
-            }
-        }
         private void AtualizarListaTurmas()
         {
             lstTurmas.Items.Clear(); // Limpa a lista antes de atualizar
@@ -103,17 +121,26 @@ namespace Sistema_de_Gestão_Escolar
                 // Criar uma lista para armazenar os nomes das disciplinas associadas à turma
                 List<string> disciplinasNomes = new List<string>();
 
-                // Verificar se existem disciplinas e associá-las à turma
-                if (gestor.Disciplinas.Count > 0)
+                // Percorrer todas as disciplinas e encontrar as associadas à turma
+                for (int j = 0; j < gestor.Disciplinas.Count; j++)
                 {
-                    for (int j = 0; j < gestor.Disciplinas.Count; j++)
-                    {
-                        Disciplina disciplina = gestor.Disciplinas[j];
+                    Disciplina disciplina = gestor.Disciplinas[j];
 
-                        if (disciplina.TurmasIds == turma.Id) // Se a disciplina pertence à turma
+                    // Verificar manualmente se a turma está na lista TurmasIds da disciplina
+                    bool turmaEncontrada = false;
+                    for (int k = 0; k < disciplina.TurmasIds.Count; k++)
+                    {
+                        if (disciplina.TurmasIds[k] == turma.Id)
                         {
-                            disciplinasNomes.Add(disciplina.Nome);
+                            turmaEncontrada = true;
+                            break; // Paramos a busca quando encontramos a correspondência
                         }
+                    }
+
+                    // Se a disciplina pertence à turma, adicionamos o nome dela à lista
+                    if (turmaEncontrada)
+                    {
+                        disciplinasNomes.Add(disciplina.Nome);
                     }
                 }
 
@@ -134,6 +161,7 @@ namespace Sistema_de_Gestão_Escolar
                 lstTurmas.Items.Add(infoTurma);
             }
         }
+
 
         private void FormTurma_Load(object sender, EventArgs e)
         {
@@ -156,5 +184,37 @@ namespace Sistema_de_Gestão_Escolar
             cmbCursoTurma.Items.Add("Técnico de Restaurante e Bar");
             cmbCursoTurma.Items.Add("Técnico de Mecatrónica");
         }
+
+        private void AtualizarFormAluno()
+        {
+            // Verificar se o formulário FormAluno está aberto
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is FormAluno formAluno)
+                {
+                    formAluno.AtualizarComboBoxTurmas();
+                }
+            }
+        }
+
+        private bool ValidarAnoLetivo(string anoLetivo)
+        {
+            // Verificar se o formato está correto: "AAAA/AAAA"
+            string[] anos = anoLetivo.Split('/');
+
+            if (anos.Length != 2) return false; // Deve ter exatamente dois anos separados por "/"
+
+            // Verificar se ambos os anos são números inteiros
+            if (!int.TryParse(anos[0], out int anoInicio) || !int.TryParse(anos[1], out int anoFim))
+            {
+                return false;
+            }
+
+            // O primeiro ano deve ser menor que o segundo (exemplo: 2023/2024)
+            if (anoInicio >= anoFim) return false;
+
+            return true;
+        }
+
     }
 }
