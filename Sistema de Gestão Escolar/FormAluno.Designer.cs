@@ -162,7 +162,7 @@
             // lblMoradaAluno
             // 
             lblMoradaAluno.AutoSize = true;
-            lblMoradaAluno.Location = new Point(369, 281);
+            lblMoradaAluno.Location = new Point(463, 284);
             lblMoradaAluno.Name = "lblMoradaAluno";
             lblMoradaAluno.Size = new Size(64, 20);
             lblMoradaAluno.TabIndex = 13;
@@ -185,11 +185,12 @@
             // lblContatoAluno
             // 
             lblContatoAluno.AutoSize = true;
-            lblContatoAluno.Location = new Point(415, 346);
+            lblContatoAluno.Location = new Point(462, 345);
             lblContatoAluno.Name = "lblContatoAluno";
             lblContatoAluno.Size = new Size(65, 20);
             lblContatoAluno.TabIndex = 16;
             lblContatoAluno.Text = "Contato:";
+            lblContatoAluno.Click += lblContatoAluno_Click;
             // 
             // dtpNascimentoAluno
             // 
@@ -217,7 +218,7 @@
             // lblNomeAluno
             // 
             lblNomeAluno.AutoSize = true;
-            lblNomeAluno.Location = new Point(426, 456);
+            lblNomeAluno.Location = new Point(497, 456);
             lblNomeAluno.Name = "lblNomeAluno";
             lblNomeAluno.Size = new Size(118, 20);
             lblNomeAluno.TabIndex = 20;
@@ -233,7 +234,7 @@
             // lblIdAluno
             // 
             lblIdAluno.AutoSize = true;
-            lblIdAluno.Location = new Point(488, 510);
+            lblIdAluno.Location = new Point(550, 516);
             lblIdAluno.Name = "lblIdAluno";
             lblIdAluno.Size = new Size(92, 20);
             lblIdAluno.TabIndex = 22;

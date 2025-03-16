@@ -132,34 +132,60 @@ namespace Sistema_de_Gestão_Escolar
                 {
                     Professor professor = gestor.Professores[i];
 
-                    // Buscar disciplinas associadas ao professor
+                    // Lista para armazenar as disciplinas que o professor leciona
                     List<string> disciplinasProfessor = new List<string>();
 
+                    // Percorrer todas as disciplinas e verificar quais são lecionadas por esse professor
                     for (int j = 0; j < gestor.Disciplinas.Count; j++)
                     {
                         Disciplina disciplina = gestor.Disciplinas[j];
 
-                        // Verificar se o professor leciona essa disciplina
+                        // Verificar manualmente se o professor está associado à disciplina
+                        bool professorEncontrado = false;
                         for (int k = 0; k < disciplina.ProfessoresIds.Count; k++)
                         {
                             if (disciplina.ProfessoresIds[k] == professor.Id)
                             {
-                                disciplinasProfessor.Add(disciplina.Nome);
+                                professorEncontrado = true;
                                 break; // Para evitar múltiplas adições da mesma disciplina
                             }
+                        }
+
+                        // Se o professor leciona essa disciplina, adicionar à lista
+                        if (professorEncontrado)
+                        {
+                            disciplinasProfessor.Add(disciplina.Nome);
+                        }
+                    }
+
+                    // Criar a string de disciplinas sem `string.Join`
+                    string disciplinasTexto = "Nenhuma";
+                    if (disciplinasProfessor.Count > 0)
+                    {
+                        disciplinasTexto = "";
+                        for (int m = 0; m < disciplinasProfessor.Count; m++)
+                        {
+                            if (m > 0)
+                            {
+                                disciplinasTexto += ", ";
+                            }
+                            disciplinasTexto += disciplinasProfessor[m];
                         }
                     }
 
                     // Criar a string de exibição na ListBox
-                    string infoProfessor = $"ID: {professor.Id} | Nome: {professor.Nome} | Contato: {professor.Contato} | " +
-                                           $"Email: {professor.Email} | Área: {professor.AreaEnsino} | Disciplinas: {string.Join(", ", disciplinasProfessor)}";
+                    string infoProfessor = "ID: " + professor.Id + " | Nome: " + professor.Nome +
+                                           " | Contato: " + professor.Contato +
+                                           " | Email: " + professor.Email +
+                                           " | Área: " + professor.AreaEnsino +
+                                           " | Disciplinas: " + disciplinasTexto;
 
                     lstProfessores.Items.Add(infoProfessor);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao atualizar a lista de professores: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao atualizar a lista de professores: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

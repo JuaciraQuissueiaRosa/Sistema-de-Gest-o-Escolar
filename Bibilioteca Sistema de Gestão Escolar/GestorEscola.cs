@@ -199,7 +199,7 @@ public class GestorEscola
     /// <summary>
     /// Remove uma nota, verificando se o período letivo está encerrado.
     /// </summary>
-    public void RemoverNota(int alunoId, int disciplinaId, string periodoLetivo)
+    public bool RemoverNota(int alunoId, int disciplinaId, string periodoLetivo)
     {
         for (int i = 0; i < Notas.Count; i++)
         {
@@ -208,10 +208,11 @@ public class GestorEscola
                 Notas[i].PeriodoLetivo.Equals(periodoLetivo, StringComparison.OrdinalIgnoreCase))
             {
                 Notas.RemoveAt(i);
-                return;
+                return true; // Nota removida com sucesso
             }
         }
-        throw new Exception("Nota não encontrada.");
+
+        return false; // Nota não encontrada
     }
 
     // ----------------- MÉTODOS AUXILIARES ----------------- 
@@ -332,43 +333,46 @@ public class GestorEscola
     }
 
     /// <summary>
-    /// Remove uma disciplina do sistema, verificando se ela está associada a turmas ou notas.
+    /// Tenta remover uma disciplina do sistema, verificando se ela está associada a turmas ou notas.
+    /// Retorna true se a remoção for bem-sucedida e false se não puder ser removida.
     /// </summary>
-    public void RemoverDisciplina(int id)
+    public bool RemoverDisciplina(int id)
     {
         for (int i = 0; i < Disciplinas.Count; i++)
         {
             if (Disciplinas[i].Id == id)
             {
                 // Verificar se a disciplina está associada a turmas
-                foreach (var turma in Turmas)
+                for (int j = 0; j < Turmas.Count; j++)
                 {
-                    if (turma.DisciplinasIds.Contains(id))
+                    for (int k = 0; k < Turmas[j].DisciplinasIds.Count; k++)
                     {
-                        throw new Exception("A disciplina não pode ser removida pois está associada a uma ou mais turmas.");
+                        if (Turmas[j].DisciplinasIds[k] == id)
+                        {
+                            return false; // A disciplina não pode ser removida pois está associada a uma turma
+                        }
                     }
                 }
 
                 // Verificar se existem notas registradas para a disciplina
-                foreach (var nota in Notas)
+                for (int j = 0; j < Notas.Count; j++)
                 {
-                    if (nota.DisciplinaId == id)
+                    if (Notas[j].DisciplinaId == id)
                     {
-                        throw new Exception("A disciplina não pode ser removida pois há notas registradas para ela.");
+                        return false; // A disciplina não pode ser removida pois há notas registradas
                     }
                 }
 
                 // Remover a disciplina da lista
                 Disciplinas.RemoveAt(i);
-                return;
+                return true; // Disciplina removida com sucesso
             }
         }
 
-        // Se a disciplina não for encontrada, lança um erro
-        throw new Exception("Disciplina não encontrada.");
+        return false; // Disciplina não encontrada
     }
 
-  
+
 
 
 }

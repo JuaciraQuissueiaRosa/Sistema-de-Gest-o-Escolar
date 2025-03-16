@@ -39,9 +39,9 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Verificar se o contato foi preenchido corretamente (deve ter 9 dígitos e começar com 9 ou 2)
-                string contato = txtContatoAluno.Text.Trim().Replace(" ", "");
-                if (contato.Length != 9 || (contato[0] != '9' && contato[0] != '2'))
+                // Verificar se o contato foi preenchido corretamente
+                string contato = txtContatoAluno.Text.Trim().Replace(" ", ""); // Remover espaços extras
+                if (!ValidarContato(contato))
                 {
                     MessageBox.Show("Erro: O contato deve ter 9 dígitos e começar com '9' ou '2'.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -55,13 +55,16 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Verificar se o email é válido
+
+                // Verificar se o email foi preenchido
+                // Capturar e validar o email
                 string email = txtEmailAluno.Text.Trim();
                 if (!ValidarEmail(email))
                 {
-                    MessageBox.Show("Erro: O email inserido não é válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: O e-mail digitado não é válido! Exemplo: exemplo@email.com", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
 
                 // Verificar se o ID da turma é válido
                 if (!int.TryParse(txtTurmaAluno.Text, out int turmaId))
@@ -369,6 +372,46 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show($"Erro ao carregar formulário: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private bool ValidarContato(string contato)
+        {
+            try
+            {
+                contato = contato.Trim(); // Remover espaços
+
+                // Verificar se o contato tem exatamente 9 dígitos
+                if (contato.Length != 9)
+                {
+                    return false;
+                }
+
+                // Verificar se todos os caracteres são números
+                for (int i = 0; i < contato.Length; i++)
+                {
+                    if (!char.IsDigit(contato[i]))
+                    {
+                        return false;
+                    }
+                }
+
+                // Verificar se começa com '9' (telemóveis) ou '2' (fixos)
+                if (contato[0] != '9' && contato[0] != '2')
+                {
+                    return false;
+                }
+
+                return true; // Contato válido
+            }
+            catch (Exception)
+            {
+                return false; // Em caso de erro, retorna falso sem quebrar o sistema
+            }
+        }
+
+        private void lblContatoAluno_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

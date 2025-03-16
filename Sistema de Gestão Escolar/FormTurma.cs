@@ -111,109 +111,157 @@ namespace Sistema_de_Gestão_Escolar
 
         private void AtualizarListaTurmas()
         {
-            lstTurmas.Items.Clear(); // Limpa a lista antes de atualizar
-
-            // Percorre todas as turmas cadastradas
-            for (int i = 0; i < gestor.Turmas.Count; i++)
+            try
             {
-                Turma turma = gestor.Turmas[i];
+                lstTurmas.Items.Clear(); // Limpa a lista antes de atualizar
 
-                // Criar uma lista para armazenar os nomes das disciplinas associadas à turma
-                List<string> disciplinasNomes = new List<string>();
-
-                // Percorrer todas as disciplinas e encontrar as associadas à turma
-                for (int j = 0; j < gestor.Disciplinas.Count; j++)
+                // Percorre todas as turmas cadastradas
+                for (int i = 0; i < gestor.Turmas.Count; i++)
                 {
-                    Disciplina disciplina = gestor.Disciplinas[j];
+                    Turma turma = gestor.Turmas[i];
 
-                    // Verificar manualmente se a turma está na lista TurmasIds da disciplina
-                    bool turmaEncontrada = false;
-                    for (int k = 0; k < disciplina.TurmasIds.Count; k++)
+                    // Criar uma lista para armazenar os nomes das disciplinas associadas à turma
+                    List<string> disciplinasNomes = new List<string>();
+
+                    // Percorrer todas as disciplinas e encontrar as associadas à turma
+                    for (int j = 0; j < gestor.Disciplinas.Count; j++)
                     {
-                        if (disciplina.TurmasIds[k] == turma.Id)
+                        Disciplina disciplina = gestor.Disciplinas[j];
+
+                        // Verificar manualmente se a turma está na lista TurmasIds da disciplina
+                        for (int k = 0; k < disciplina.TurmasIds.Count; k++)
                         {
-                            turmaEncontrada = true;
-                            break; // Paramos a busca quando encontramos a correspondência
+                            if (disciplina.TurmasIds[k] == turma.Id)
+                            {
+                                disciplinasNomes.Add(disciplina.Nome);
+                                break; // Paramos a busca quando encontramos a correspondência
+                            }
                         }
                     }
 
-                    // Se a disciplina pertence à turma, adicionamos o nome dela à lista
-                    if (turmaEncontrada)
+                    // Criar a string formatada para exibir na ListBox
+                    string infoTurma = "ID: " + turma.Id + " | Curso: " + turma.Curso +
+                                       " | Ano Letivo: " + turma.AnoLetivo + " | Turno: " + turma.Turno;
+
+                    // Se houver disciplinas associadas, adicioná-las à exibição
+                    if (disciplinasNomes.Count > 0)
                     {
-                        disciplinasNomes.Add(disciplina.Nome);
+                        infoTurma += " | Disciplinas: ";
+                        for (int m = 0; m < disciplinasNomes.Count; m++)
+                        {
+                            if (m > 0)
+                            {
+                                infoTurma += ", ";
+                            }
+                            infoTurma += disciplinasNomes[m];
+                        }
                     }
-                }
+                    else
+                    {
+                        infoTurma += " | Disciplinas: Nenhuma";
+                    }
 
-                // Criar a string formatada para exibir na ListBox
-                string infoTurma = $"ID: {turma.Id} | Curso: {turma.Curso} | Ano Letivo: {turma.AnoLetivo} | Turno: {turma.Turno}";
-
-                // Se houver disciplinas associadas, adicioná-las à exibição
-                if (disciplinasNomes.Count > 0)
-                {
-                    infoTurma += $" | Disciplinas: {string.Join(", ", disciplinasNomes)}";
+                    // Adiciona a turma na ListBox
+                    lstTurmas.Items.Add(infoTurma);
                 }
-                else
-                {
-                    infoTurma += " | Disciplinas: Nenhuma";
-                }
-
-                // Adiciona a turma na ListBox
-                lstTurmas.Items.Add(infoTurma);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao atualizar a lista de turmas: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
 
         private void FormTurma_Load(object sender, EventArgs e)
         {
-            cmbTurnoTurma.Items.Add("Diurno");
-            cmbTurnoTurma.Items.Add("Noturno");
+            try
+            {
+                cmbTurnoTurma.Items.Clear();
+                cmbTurnoTurma.Items.Add("Diurno");
+                cmbTurnoTurma.Items.Add("Noturno");
 
+                cmbCursoTurma.Items.Clear();
 
+                // Adicionar cursos válidos no ComboBox
+                string[] cursos =
+                {
+            "Ciências e Tecnologias",
+            "Línguas e Humanidades",
+            "Ciências Socioeconómicas",
+            "Artes Visuais",
+            "Técnico de Informática e Gestão",
+            "Técnico de Eletrónica, Automação e Comando",
+            "Técnico de Turismo",
+            "Técnico de Cozinha e Pastelaria",
+            "Técnico de Restaurante e Bar",
+            "Técnico de Mecatrónica"
+        };
 
-            cmbCursoTurma.Items.Clear();
-
-            // Adicionar cursos válidos no ComboBox
-            cmbCursoTurma.Items.Add("Ciências e Tecnologias");
-            cmbCursoTurma.Items.Add("Línguas e Humanidades");
-            cmbCursoTurma.Items.Add("Ciências Socioeconómicas");
-            cmbCursoTurma.Items.Add("Artes Visuais");
-            cmbCursoTurma.Items.Add("Técnico de Informática e Gestão");
-            cmbCursoTurma.Items.Add("Técnico de Eletrónica, Automação e Comando");
-            cmbCursoTurma.Items.Add("Técnico de Turismo");
-            cmbCursoTurma.Items.Add("Técnico de Cozinha e Pastelaria");
-            cmbCursoTurma.Items.Add("Técnico de Restaurante e Bar");
-            cmbCursoTurma.Items.Add("Técnico de Mecatrónica");
+                for (int i = 0; i < cursos.Length; i++)
+                {
+                    cmbCursoTurma.Items.Add(cursos[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar formulário de turmas: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AtualizarFormAluno()
         {
-            // Verificar se o formulário FormAluno está aberto
-            foreach (Form form in Application.OpenForms)
+            try
             {
-                if (form is FormAluno formAluno)
+                // Verificar se o formulário FormAluno está aberto
+                for (int i = 0; i < Application.OpenForms.Count; i++)
                 {
-                    formAluno.AtualizarComboBoxTurmas();
+                    if (Application.OpenForms[i] is FormAluno)
+                    {
+                        FormAluno formAluno = (FormAluno)Application.OpenForms[i];
+                        formAluno.AtualizarComboBoxTurmas();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao atualizar formulário de alunos: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private bool ValidarAnoLetivo(string anoLetivo)
         {
-            // Verificar se o formato está correto: "AAAA/AAAA"
-            string[] anos = anoLetivo.Split('/');
-
-            if (anos.Length != 2) return false; // Deve ter exatamente dois anos separados por "/"
-
-            // Verificar se ambos os anos são números inteiros
-            if (!int.TryParse(anos[0], out int anoInicio) || !int.TryParse(anos[1], out int anoFim))
+            try
             {
-                return false;
+                // Verificar se o formato está correto: "AAAA/AAAA"
+                string[] anos = anoLetivo.Split('/');
+
+                if (anos.Length != 2)
+                {
+                    return false; // Deve ter exatamente dois anos separados por "/"
+                }
+
+                // Verificar se ambos os anos são números inteiros
+                int anoInicio = 0, anoFim = 0;
+                bool inicioValido = int.TryParse(anos[0], out anoInicio);
+                bool fimValido = int.TryParse(anos[1], out anoFim);
+
+                if (!inicioValido || !fimValido)
+                {
+                    return false;
+                }
+
+                // O primeiro ano deve ser menor que o segundo (exemplo: 2023/2024)
+                if (anoInicio >= anoFim)
+                {
+                    return false;
+                }
+
+                return true;
             }
-
-            // O primeiro ano deve ser menor que o segundo (exemplo: 2023/2024)
-            if (anoInicio >= anoFim) return false;
-
-            return true;
+            catch (Exception)
+            {
+                return false; // Em caso de erro, retorna falso sem quebrar o sistema
+            }
         }
 
     }

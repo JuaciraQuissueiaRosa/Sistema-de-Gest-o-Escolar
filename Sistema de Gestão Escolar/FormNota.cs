@@ -1,13 +1,4 @@
 ﻿using Bibilioteca_Sistema_de_Gestão_Escolar;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Sistema_de_Gestão_Escolar
 {
@@ -25,18 +16,53 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnRemoverNota_Click(object sender, EventArgs e)
         {
-            int alunoId = int.Parse(txtAlunoIdNota.Text);
-            int disciplinaId = int.Parse(txtDisciplinaIdNota.Text);
-            string periodo = txtPeriodoNota.Text;
-
-            if (gestor.VerificarSePeriodoEncerrado(periodo))
+            try
             {
-                MessageBox.Show("Erro: O período letivo já foi encerrado. Não é possível remover notas.");
-                return;
-            }
+                // Verificar se o ID do aluno é um número válido
+                if (!int.TryParse(txtAlunoIdNota.Text, out int alunoId))
+                {
+                    MessageBox.Show("Erro: O ID do aluno deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-            gestor.RemoverNota(alunoId, disciplinaId, periodo);
-            AtualizarListaNotas();
+                // Verificar se o ID da disciplina é um número válido
+                if (!int.TryParse(txtDisciplinaIdNota.Text, out int disciplinaId))
+                {
+                    MessageBox.Show("Erro: O ID da disciplina deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Verificar se o período letivo foi preenchido corretamente
+                string periodo = txtPeriodoNota.Text.Trim();
+                if (string.IsNullOrEmpty(periodo))
+                {
+                    MessageBox.Show("Erro: O período letivo não pode estar vazio!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Verificar se o período letivo já foi encerrado
+                if (gestor.VerificarSePeriodoEncerrado(periodo))
+                {
+                    MessageBox.Show("Erro: O período letivo já foi encerrado. Não é possível remover notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Tentar remover a nota
+                bool removida = gestor.RemoverNota(alunoId, disciplinaId, periodo);
+                if (removida)
+                {
+                    MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AtualizarListaNotas();
+                }
+                else
+                {
+                    MessageBox.Show("Erro: Nota não encontrada. Verifique os dados informados!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro inesperado ao remover nota: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnAdicionarNota_Click(object sender, EventArgs e)
@@ -90,40 +116,58 @@ namespace Sistema_de_Gestão_Escolar
         }
         private void AtualizarListaNotas()
         {
-            lstNotas.Items.Clear(); // Limpa a lista antes de atualizar
-
-            for (int i = 0; i < gestor.Notas.Count; i++)
+            try
             {
-                Nota nota = gestor.Notas[i];
+                lstNotas.Items.Clear(); // Limpa a lista antes de atualizar
 
-                // Recuperar o tipo de avaliação do dicionário (ou usar "Não Informado" se não existir)
-                string tipoAvaliacao = tiposAvaliacao.ContainsKey(i) ? tiposAvaliacao[i] : "Não Informado";
+                for (int i = 0; i < gestor.Notas.Count; i++)
+                {
+                    Nota nota = gestor.Notas[i];
 
-                // Criar a string formatada para exibição
-                string infoNota = $"Aluno ID: {nota.AlunoId} | Disciplina ID: {nota.DisciplinaId} | Nota: {nota.ValorNota} | Tipo: {tipoAvaliacao} | Período: {nota.PeriodoLetivo}";
+                    // Recuperar o tipo de avaliação do dicionário (ou usar "Não Informado" se não existir)
+                    string tipoAvaliacao = tiposAvaliacao.ContainsKey(i) ? tiposAvaliacao[i] : "Não Informado";
 
-                lstNotas.Items.Add(infoNota);
+                    // Criar a string formatada para exibição
+                    string infoNota = $"Aluno ID: {nota.AlunoId} | Disciplina ID: {nota.DisciplinaId} | Nota: {nota.ValorNota} | Tipo: {tipoAvaliacao} | Período: {nota.PeriodoLetivo}";
+
+                    lstNotas.Items.Add(infoNota);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar lista de notas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void FormNota_Load(object sender, EventArgs e)
         {
-            cmbProfessorNota.Items.Clear();
-            foreach (var professor in gestor.Professores)
+            try
             {
-                cmbProfessorNota.Items.Add($"{professor.Id} - {professor.Nome}");
+                // Limpar o ComboBox antes de preencher (evita duplicação ao abrir várias vezes)
+                cmbProfessorNota.Items.Clear();
+
+                // Adicionar professores ao ComboBox
+                for (int i = 0; i < gestor.Professores.Count; i++)
+                {
+                    Professor professor = gestor.Professores[i];
+                    cmbProfessorNota.Items.Add($"{professor.Id} - {professor.Nome}");
+                }
+
+                // Limpa o ComboBox antes de preencher (evita duplicação ao abrir várias vezes)
+                cmbTipoAvaliacao.Items.Clear();
+
+                // Adiciona os tipos de avaliação permitidos
+                cmbTipoAvaliacao.Items.Add("Teste");
+                cmbTipoAvaliacao.Items.Add("Trabalho");
+                cmbTipoAvaliacao.Items.Add("Exame");
+
+                // Define um valor padrão ao abrir o formulário
+                cmbTipoAvaliacao.SelectedIndex = 0; // Define "Teste" como valor inicial
             }
-
-            // Limpa o ComboBox antes de preencher (evita duplicação ao abrir várias vezes)
-            cmbTipoAvaliacao.Items.Clear();
-
-            // Adiciona os tipos de avaliação permitidos
-            cmbTipoAvaliacao.Items.Add("Teste");
-            cmbTipoAvaliacao.Items.Add("Trabalho");
-            cmbTipoAvaliacao.Items.Add("Exame");
-
-            // Define um valor padrão ao abrir o formulário
-            cmbTipoAvaliacao.SelectedIndex = 0; // Define "Teste" como valor inicial
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar formulário de notas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private string VerificarEstadoAnoLetivo(string anoLetivo)

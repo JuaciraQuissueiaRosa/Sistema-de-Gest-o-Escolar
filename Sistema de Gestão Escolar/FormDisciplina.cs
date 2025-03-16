@@ -13,11 +13,6 @@ namespace Sistema_de_Gestão_Escolar
             AtualizarListaDisciplinas();
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnAdicionarDisciplina_Click(object sender, EventArgs e)
         {
             try
@@ -117,27 +112,39 @@ namespace Sistema_de_Gestão_Escolar
         }
 
 
-
-
-
-
-
         private void btnRemoverDisciplina_Click(object sender, EventArgs e)
         {
             try
             {
-                int id = int.Parse(txtIdDisciplina.Text);
-                gestor.RemoverDisciplina(id);
-                AtualizarListaDisciplinas();
+                // Verificar se o ID da disciplina é um número válido
+                if (!int.TryParse(txtIdDisciplina.Text, out int id))
+                {
+                    MessageBox.Show("Erro: O ID da disciplina deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Tentar remover a disciplina
+                bool removida = gestor.RemoverDisciplina(id);
+                if (removida)
+                {
+                    MessageBox.Show("Disciplina removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AtualizarListaDisciplinas();
+                }
+                else
+                {
+                    MessageBox.Show("Erro: Disciplina não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro inesperado ao remover disciplina: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
        
             private void AtualizarListaDisciplinas()
+            {
+            try
             {
                 lstDisciplinas.Items.Clear();
 
@@ -163,61 +170,86 @@ namespace Sistema_de_Gestão_Escolar
                             }
                         }
 
-                        professoresNomes.Add($"{profId} - {nomeProfessor}");
+                        professoresNomes.Add(profId + " - " + nomeProfessor);
+                    }
+
+                    // Criar a string de exibição sem usar `string.Join`
+                    string professoresTexto = "Nenhum";
+                    if (professoresNomes.Count > 0)
+                    {
+                        professoresTexto = "";
+                        for (int m = 0; m < professoresNomes.Count; m++)
+                        {
+                            if (m > 0)
+                            {
+                                professoresTexto += ", ";
+                            }
+                            professoresTexto += professoresNomes[m];
+                        }
                     }
 
                     // Exibir disciplina com professores na lista
-                    lstDisciplinas.Items.Add($"ID: {disciplina.Id} | Nome: {disciplina.Nome} | Carga Horária: {disciplina.CargaHoraria}h/semana | Professores: {string.Join(", ", professoresNomes)}");
+                    string infoDisciplina = "ID: " + disciplina.Id + " | Nome: " + disciplina.Nome +
+                                            " | Carga Horária: " + disciplina.CargaHoraria + "h/semana" +
+                                            " | Professores: " + professoresTexto;
+
+                    lstDisciplinas.Items.Add(infoDisciplina);
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar lista de disciplinas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         
 
         private void FormDisciplina_Load(object sender, EventArgs e)
         {
 
-            // carga horaria
-            cmbCargaHoraria.Items.Clear();
+            try
+            {
+                // Carga horária
+                cmbCargaHoraria.Items.Clear();
+                string[] cargas = { "2", "3", "4", "5" };
+                for (int i = 0; i < cargas.Length; i++)
+                {
+                    cmbCargaHoraria.Items.Add(cargas[i]);
+                }
 
-            // Adicionar opções de carga horária
-            cmbCargaHoraria.Items.Add("2");
-            cmbCargaHoraria.Items.Add("3");
-            cmbCargaHoraria.Items.Add("4");
-            cmbCargaHoraria.Items.Add("5");
+                cmbNomeDisciplina.Items.Clear();
 
+                // Disciplinas organizadas por áreas
+                string[] disciplinas =
+                {
+            // Línguas e Humanidades
+            "Português", "Inglês", "Francês", "Espanhol", "Filosofia", "História",
 
+            // Ciências e Tecnologias
+            "Matemática", "Física e Química", "Biologia e Geologia", "Geometria Descritiva",
 
+            // Ciências Socioeconómicas
+            "Economia", "Geografia", "Sociologia", "Direito",
 
-            cmbNomeDisciplina.Items.Clear();
+            // Artes Visuais
+            "Educação Visual", "Desenho", "História da Cultura e das Artes",
 
-            // Adicionar disciplinas organizadas por áreas
-            cmbNomeDisciplina.Items.Add("Português");
-            cmbNomeDisciplina.Items.Add("Inglês");
-            cmbNomeDisciplina.Items.Add("Francês");
-            cmbNomeDisciplina.Items.Add("Espanhol");
-            cmbNomeDisciplina.Items.Add("Filosofia");
-            cmbNomeDisciplina.Items.Add("História");
+            // Educação Física e Desporto
+            "Educação Física", "Ciências do Desporto",
 
-            cmbNomeDisciplina.Items.Add("Matemática");
-            cmbNomeDisciplina.Items.Add("Física e Química");
-            cmbNomeDisciplina.Items.Add("Biologia e Geologia");
-            cmbNomeDisciplina.Items.Add("Geometria Descritiva");
+            // Informática e Tecnologias
+            "Tecnologias de Informação e Comunicação (TIC)", "Programação", "Robótica"
+        };
 
-            cmbNomeDisciplina.Items.Add("Economia");
-            cmbNomeDisciplina.Items.Add("Geografia");
-            cmbNomeDisciplina.Items.Add("Sociologia");
-            cmbNomeDisciplina.Items.Add("Direito");
-
-            cmbNomeDisciplina.Items.Add("Educação Visual");
-            cmbNomeDisciplina.Items.Add("Desenho");
-            cmbNomeDisciplina.Items.Add("História da Cultura e das Artes");
-
-            cmbNomeDisciplina.Items.Add("Educação Física");
-            cmbNomeDisciplina.Items.Add("Ciências do Desporto");
-
-            cmbNomeDisciplina.Items.Add("Tecnologias de Informação e Comunicação (TIC)");
-            cmbNomeDisciplina.Items.Add("Programação");
-            cmbNomeDisciplina.Items.Add("Robótica");
+                for (int i = 0; i < disciplinas.Length; i++)
+                {
+                    cmbNomeDisciplina.Items.Add(disciplinas[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar formulário de disciplinas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
