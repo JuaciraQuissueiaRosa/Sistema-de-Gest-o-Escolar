@@ -67,24 +67,27 @@ public class GestorEscola
     /// <summary>
     /// Remove um aluno apenas se ele não tiver notas registradas.
     /// </summary>
-    public void RemoverAluno(int id)
+    public bool RemoverAluno(int id)
     {
-        foreach (var aluno in Alunos)
+        for (int i = 0; i < Alunos.Count; i++)
         {
-            if (aluno.Id == id)
+            if (Alunos[i].Id == id)
             {
-                foreach (var nota in Notas)
+                // Verificar se o aluno tem notas registradas
+                for (int j = 0; j < Notas.Count; j++)
                 {
-                    if (nota.AlunoId == id)
+                    if (Notas[j].AlunoId == id)
                     {
-                        throw new Exception("O aluno não pode ser removido pois tem notas registradas.");
+                        return false; // Não pode remover se houver notas registradas
                     }
                 }
-                Alunos.Remove(aluno);
-                return;
+
+                Alunos.RemoveAt(i);
+                return true; // Aluno removido com sucesso
             }
         }
-        throw new Exception("Aluno não encontrado.");
+
+        return false; // Aluno não encontrado
     }
 
     /// <summary>
@@ -116,24 +119,32 @@ public class GestorEscola
     /// <summary>
     /// Remove um professor apenas se ele não estiver associado a disciplinas.
     /// </summary>
-    public void RemoverProfessor(int id)
+    public bool RemoverProfessor(int id)
     {
-        foreach (var professor in Professores)
+        // Verificar se o professor existe
+        for (int i = 0; i < Professores.Count; i++)
         {
-            if (professor.Id == id)
+            if (Professores[i].Id == id)
             {
-                foreach (var disciplina in Disciplinas)
+                // Verificar se o professor está associado a alguma disciplina
+                for (int j = 0; j < Disciplinas.Count; j++)
                 {
-                    if (disciplina.ProfessoresIds.Contains(id))
+                    for (int k = 0; k < Disciplinas[j].ProfessoresIds.Count; k++)
                     {
-                        throw new Exception("O professor não pode ser removido pois está associado a disciplinas.");
+                        if (Disciplinas[j].ProfessoresIds[k] == id)
+                        {
+                            return false; // O professor não pode ser removido
+                        }
                     }
                 }
-                Professores.Remove(professor);
-                return;
+
+                // Remover o professor da lista
+                Professores.RemoveAt(i);
+                return true; // Professor removido com sucesso
             }
         }
-        throw new Exception("Professor não encontrado.");
+
+        return false; // Professor não encontrado
     }
 
     // ----------------- CRUD PARA DISCIPLINAS ----------------- 

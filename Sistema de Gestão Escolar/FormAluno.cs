@@ -106,82 +106,169 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnRemoverAluno_Click(object sender, EventArgs e)
         {
-            int id = int.Parse(txtIdAluno.Text);
-            gestor.RemoverAluno(id);
-            AtualizarListaAlunos();
+            try
+            {
+                // Verificar se o ID do aluno é um número válido
+                if (!int.TryParse(txtIdAluno.Text, out int id))
+                {
+                    MessageBox.Show("Erro: O ID do aluno deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Tentar remover o aluno
+                bool removido = gestor.RemoverAluno(id);
+                if (removido)
+                {
+                    MessageBox.Show("Aluno removido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Erro: O aluno não pode ser removido. Verifique se ele possui notas registradas!",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                // Atualizar a lista de alunos
+                AtualizarListaAlunos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnBuscarAluno_Click(object sender, EventArgs e)
         {
-            string termo = txtBuscarAluno.Text;
-            List<Aluno> resultados = gestor.BuscarAlunos(termo);
-            lstAlunos.Items.Clear();
-            foreach (var aluno in resultados)
+            try
             {
-                lstAlunos.Items.Add($"{aluno.Id} - {aluno.Nome} - Turma: {aluno.TurmaId}");
+                // Verificar se o campo de busca não está vazio
+                string termo = txtBuscarAluno.Text.Trim();
+                if (string.IsNullOrEmpty(termo))
+                {
+                    MessageBox.Show("Erro: Digite um nome, ID ou número de turma para buscar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Buscar os alunos pelo termo digitado
+                List<Aluno> resultados = gestor.BuscarAlunos(termo);
+
+                // Limpar a lista antes de adicionar os resultados
+                lstAlunos.Items.Clear();
+
+                // Verificar se há resultados
+                if (resultados.Count == 0)
+                {
+                    MessageBox.Show("Nenhum aluno encontrado com esse termo de busca.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Adicionar os alunos encontrados à ListBox
+                foreach (var aluno in resultados)
+                {
+                    lstAlunos.Items.Add($"{aluno.Id} - {aluno.Nome} - Turma: {aluno.TurmaId}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro inesperado ao buscar aluno: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnMudarTurma_Click(object sender, EventArgs e)
         {
-            if (lstAlunos.SelectedIndex == -1)
+            try
             {
-                MessageBox.Show("Erro: Selecione um aluno primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                // Verificar se um aluno foi selecionado
+                if (lstAlunos.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Selecione um aluno primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Obter aluno selecionado
+                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+
+                // Verificar se uma nova turma foi escolhida
+                if (cmbNovaTurmaAluno.SelectedItem == null)
+                {
+                    MessageBox.Show("Erro: Selecione uma nova turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Obter o ID da nova turma a partir do texto selecionado (o ID sempre vem antes do "-")
+                string textoSelecionado = cmbNovaTurmaAluno.SelectedItem.ToString();
+                if (!int.TryParse(textoSelecionado.Split('-')[0].Trim(), out int novoTurmaId))
+                {
+                    MessageBox.Show("Erro: ID da nova turma inválido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Verificar se a nova turma é diferente da atual
+                if (alunoSelecionado.TurmaId == novoTurmaId)
+                {
+                    MessageBox.Show("Erro: O aluno já está nessa turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Verificar se a turma existe antes de mudar o aluno
+                bool turmaExiste = false;
+                for (int i = 0; i < gestor.Turmas.Count; i++)
+                {
+                    if (gestor.Turmas[i].Id == novoTurmaId)
+                    {
+                        turmaExiste = true;
+                        break;
+                    }
+                }
+
+                if (!turmaExiste)
+                {
+                    MessageBox.Show("Erro: A turma selecionada não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Atualizar a turma do aluno
+                alunoSelecionado.TurmaId = novoTurmaId;
+
+                MessageBox.Show("Aluno transferido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Atualizar a exibição dos alunos e turmas
+                AtualizarListaAlunos();
+                CarregarTurmasDisponiveis(novoTurmaId);
             }
-
-            // Obter aluno selecionado
-            Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
-
-            // Verificar se uma nova turma foi escolhida
-            if (cmbNovaTurmaAluno.SelectedItem == null)
+            catch (Exception ex)
             {
-                MessageBox.Show("Erro: Selecione uma nova turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                MessageBox.Show($"Erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            // Obter o ID da nova turma a partir do texto selecionado (o ID sempre vem antes do "-")
-            string textoSelecionado = cmbNovaTurmaAluno.SelectedItem.ToString();
-            int novoTurmaId = int.Parse(textoSelecionado.Split('-')[0].Trim()); // Obtém o ID da turma corretamente
-
-            // Verificar se a nova turma é diferente da atual
-            if (alunoSelecionado.TurmaId == novoTurmaId)
-            {
-                MessageBox.Show("Erro: O aluno já está nessa turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Atualizar a turma do aluno
-            alunoSelecionado.TurmaId = novoTurmaId;
-
-            MessageBox.Show("Aluno transferido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            // Atualizar a exibição dos alunos e turmas
-            AtualizarListaAlunos();
-            CarregarTurmasDisponiveis(novoTurmaId);
 
         }
 
         private void AtualizarListaAlunos()
         {
-            lstAlunos.Items.Clear(); // Limpa a ListBox antes de atualizar
-
-            foreach (var aluno in gestor.ListarAlunos())
+            try
             {
-                // Procurar o nome da turma correspondente ao ID da turma do aluno
-                string nomeTurma = "Turma não encontrada";
+                lstAlunos.Items.Clear(); // Limpa a ListBox antes de atualizar
 
-                foreach (var turma in gestor.Turmas)
+                foreach (var aluno in gestor.ListarAlunos())
                 {
-                    if (turma.Id == aluno.TurmaId)
-                    {
-                        nomeTurma = $"{turma.Id} - {turma.Curso}"; // Exibir ID e Nome da Turma
-                        break;
-                    }
-                }
+                    // Procurar o nome da turma correspondente ao ID da turma do aluno
+                    string nomeTurma = "Turma não encontrada";
 
-                // Adicionar o aluno à ListBox com o nome correto da turma
-                lstAlunos.Items.Add($"{aluno.Id} - {aluno.Nome} - Turma: {nomeTurma}");
+                    foreach (var turma in gestor.Turmas)
+                    {
+                        if (turma.Id == aluno.TurmaId)
+                        {
+                            nomeTurma = $"{turma.Id} - {turma.Curso}"; // Exibir ID e Nome da Turma
+                            break;
+                        }
+                    }
+
+                    // Adicionar o aluno à ListBox com o nome correto da turma
+                    lstAlunos.Items.Add($"{aluno.Id} - {aluno.Nome} - Turma: {nomeTurma}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar a lista de alunos: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -193,67 +280,95 @@ namespace Sistema_de_Gestão_Escolar
 
         private void CarregarTurmasDisponiveis(int turmaAtualId)
         {
-            cmbNovaTurmaAluno.Items.Clear(); // Limpa as opções anteriores
-
-            for (int i = 0; i < gestor.Turmas.Count; i++)
+            try
             {
-                Turma turma = gestor.Turmas[i];
+                cmbNovaTurmaAluno.Items.Clear(); // Limpa as opções anteriores
 
-                // Apenas adicionar turmas diferentes da turma atual do aluno
-                if (turma.Id != turmaAtualId)
+                for (int i = 0; i < gestor.Turmas.Count; i++)
                 {
-                    string itemTurma = $"{turma.Id} - {turma.Curso} ({turma.AnoLetivo})";
-                    cmbNovaTurmaAluno.Items.Add(itemTurma);
+                    Turma turma = gestor.Turmas[i];
+
+                    // Apenas adicionar turmas diferentes da turma atual do aluno
+                    if (turma.Id != turmaAtualId)
+                    {
+                        string itemTurma = $"{turma.Id} - {turma.Curso} ({turma.AnoLetivo})";
+                        cmbNovaTurmaAluno.Items.Add(itemTurma);
+                    }
+                }
+
+                // Seleciona o primeiro item automaticamente (caso exista)
+                if (cmbNovaTurmaAluno.Items.Count > 0)
+                {
+                    cmbNovaTurmaAluno.SelectedIndex = 0;
                 }
             }
-
-            // Seleciona o primeiro item automaticamente (caso exista)
-            if (cmbNovaTurmaAluno.Items.Count > 0)
+            catch (Exception ex)
             {
-                cmbNovaTurmaAluno.SelectedIndex = 0;
+                MessageBox.Show($"Erro ao carregar turmas disponíveis: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void lstAlunos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lstAlunos.SelectedIndex == -1)
+            try
             {
-                return; // Se nada estiver selecionado, não faz nada
+                if (lstAlunos.SelectedIndex == -1)
+                {
+                    return; // Se nada estiver selecionado, não faz nada
+                }
+
+                // Obter aluno selecionado
+                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+
+                // Exibir os dados do aluno nos campos de texto (se houver no formulário)
+                txtNomeAluno.Text = alunoSelecionado.Nome;
+                txtIdAluno.Text = alunoSelecionado.Id.ToString();
+                txtTurmaAluno.Text = alunoSelecionado.TurmaId.ToString(); // Mostra a turma atual
+
+                // Atualizar a lista de turmas disponíveis para transferência
+                CarregarTurmasDisponiveis(alunoSelecionado.TurmaId);
             }
-
-            // Obter aluno selecionado
-            Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
-
-            // Exibir os dados do aluno nos campos de texto (se houver no formulário)
-            txtNomeAluno.Text = alunoSelecionado.Nome;
-            txtIdAluno.Text = alunoSelecionado.Id.ToString();
-            txtTurmaAluno.Text = alunoSelecionado.TurmaId.ToString(); // Mostra a turma atual
-
-            // Atualizar a lista de turmas disponíveis para transferência
-            CarregarTurmasDisponiveis(alunoSelecionado.TurmaId);
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao selecionar um aluno: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public void AtualizarComboBoxTurmas()
         {
-            cmbNovaTurmaAluno.Items.Clear(); // Limpa as opções anteriores
-
-            for (int i = 0; i < gestor.Turmas.Count; i++)
+            try
             {
-                Turma turma = gestor.Turmas[i];
-                string itemTurma = $"{turma.Id} - {turma.Curso} ({turma.AnoLetivo})";
-                cmbNovaTurmaAluno.Items.Add(itemTurma);
+                cmbNovaTurmaAluno.Items.Clear(); // Limpa as opções anteriores
+
+                for (int i = 0; i < gestor.Turmas.Count; i++)
+                {
+                    Turma turma = gestor.Turmas[i];
+                    string itemTurma = $"{turma.Id} - {turma.Curso} ({turma.AnoLetivo})";
+                    cmbNovaTurmaAluno.Items.Add(itemTurma);
+                }
+
+                if (cmbNovaTurmaAluno.Items.Count > 0)
+                {
+                    cmbNovaTurmaAluno.SelectedIndex = 0;
+                }
             }
-
-            if (cmbNovaTurmaAluno.Items.Count > 0)
+            catch (Exception ex)
             {
-                cmbNovaTurmaAluno.SelectedIndex = 0;
+                MessageBox.Show($"Erro ao atualizar a lista de turmas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void FormAluno_Load(object sender, EventArgs e)
         {
-            AtualizarComboBoxTurmas();
-            AtualizarListaAlunos(); // Atualiza a lista ao abrir o formulário
+            try
+            {
+                AtualizarComboBoxTurmas();
+                AtualizarListaAlunos(); // Atualiza a lista ao abrir o formulário
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar formulário: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

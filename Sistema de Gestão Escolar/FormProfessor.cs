@@ -24,9 +24,34 @@ namespace Sistema_de_Gestão_Escolar
         }
         private void btnRemoverProfessor_Click(object sender, EventArgs e)
         {
-            int id = int.Parse(txtIdProfessor.Text);
-            gestor.RemoverProfessor(id);
-            AtualizarListaProfessores();
+            try
+            {
+                // Verificar se o ID do professor é um número válido
+                if (!int.TryParse(txtIdProfessor.Text, out int id))
+                {
+                    MessageBox.Show("Erro: O ID do professor deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Tentar remover o professor
+                bool removido = gestor.RemoverProfessor(id);
+                if (removido)
+                {
+                    MessageBox.Show("Professor removido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Erro: O professor não pode ser removido. Verifique se ele está associado a disciplinas!",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                // Atualizar a lista de professores
+                AtualizarListaProfessores();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro inesperado ao remover professor: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         
@@ -98,35 +123,76 @@ namespace Sistema_de_Gestão_Escolar
     }
         private void AtualizarListaProfessores()
         {
-            lstProfessores.Items.Clear();
-            foreach (var professor in gestor.Professores)
+            try
             {
-                // Buscar disciplinas associadas ao professor
-                List<string> disciplinasProfessor = new List<string>();
-                foreach (var disciplina in gestor.Disciplinas)
-                {
-                    if (disciplina.ProfessoresIds.Contains(professor.Id))
-                    {
-                        disciplinasProfessor.Add(disciplina.Nome);
-                    }
-                }
+                lstProfessores.Items.Clear();
 
-                // Exibir todas as informações
-                lstProfessores.Items.Add(
-                    $"ID: {professor.Id} | Nome: {professor.Nome} | Contato: {professor.Contato} | " +
-                    $"Email: {professor.Email} | Área: {professor.AreaEnsino} | Disciplinas: {string.Join(", ", disciplinasProfessor)}");
+                // Percorrer a lista de professores
+                for (int i = 0; i < gestor.Professores.Count; i++)
+                {
+                    Professor professor = gestor.Professores[i];
+
+                    // Buscar disciplinas associadas ao professor
+                    List<string> disciplinasProfessor = new List<string>();
+
+                    for (int j = 0; j < gestor.Disciplinas.Count; j++)
+                    {
+                        Disciplina disciplina = gestor.Disciplinas[j];
+
+                        // Verificar se o professor leciona essa disciplina
+                        for (int k = 0; k < disciplina.ProfessoresIds.Count; k++)
+                        {
+                            if (disciplina.ProfessoresIds[k] == professor.Id)
+                            {
+                                disciplinasProfessor.Add(disciplina.Nome);
+                                break; // Para evitar múltiplas adições da mesma disciplina
+                            }
+                        }
+                    }
+
+                    // Criar a string de exibição na ListBox
+                    string infoProfessor = $"ID: {professor.Id} | Nome: {professor.Nome} | Contato: {professor.Contato} | " +
+                                           $"Email: {professor.Email} | Área: {professor.AreaEnsino} | Disciplinas: {string.Join(", ", disciplinasProfessor)}";
+
+                    lstProfessores.Items.Add(infoProfessor);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar a lista de professores: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void FormProfessor_Load(object sender, EventArgs e)
         {
-            cmbAreaEnsino.Items.Add("Línguas e Humanidades");
-            cmbAreaEnsino.Items.Add("Ciências e Tecnologias");
-            cmbAreaEnsino.Items.Add("Ciências Socioeconómicas");
-            cmbAreaEnsino.Items.Add("Artes Visuais");
-            cmbAreaEnsino.Items.Add("Educação Física e Desporto");
-            cmbAreaEnsino.Items.Add("Informática e Tecnologias");
-           
+            try
+            {
+                // Limpar o ComboBox antes de adicionar novas opções
+                cmbAreaEnsino.Items.Clear();
+
+                // Adicionar áreas de ensino ao ComboBox
+                string[] areasEnsino =
+                {
+            "Línguas e Humanidades",
+            "Ciências e Tecnologias",
+            "Ciências Socioeconómicas",
+            "Artes Visuais",
+            "Educação Física e Desporto",
+            "Informática e Tecnologias"
+        };
+
+                foreach (string area in areasEnsino)
+                {
+                    cmbAreaEnsino.Items.Add(area);
+                }
+
+                // Atualizar lista de professores ao abrir o formulário
+                AtualizarListaProfessores();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar formulário de professores: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private bool ValidarEmail(string email)
