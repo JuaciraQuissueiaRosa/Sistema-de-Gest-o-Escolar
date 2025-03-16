@@ -39,6 +39,9 @@
             lstDisciplinas = new ListBox();
             cmbNomeDisciplina = new ComboBox();
             cmbCargaHoraria = new ComboBox();
+            btnConsultarDisciplina = new Button();
+            button2 = new Button();
+            btnEditarDisciplina = new Button();
             SuspendLayout();
             // 
             // lblNomeDisciplina
@@ -137,11 +140,43 @@
             cmbCargaHoraria.Size = new Size(151, 28);
             cmbCargaHoraria.TabIndex = 12;
             // 
+            // btnConsultarDisciplina
+            // 
+            btnConsultarDisciplina.Location = new Point(131, 498);
+            btnConsultarDisciplina.Name = "btnConsultarDisciplina";
+            btnConsultarDisciplina.Size = new Size(128, 51);
+            btnConsultarDisciplina.TabIndex = 13;
+            btnConsultarDisciplina.Text = "Consultar disciplina";
+            btnConsultarDisciplina.UseVisualStyleBackColor = true;
+            btnConsultarDisciplina.Click += btnConsultarDisciplina_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(0, 0);
+            button2.Name = "button2";
+            button2.Size = new Size(94, 29);
+            button2.TabIndex = 14;
+            button2.Text = "button2";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // btnEditarDisciplina
+            // 
+            btnEditarDisciplina.Location = new Point(416, 458);
+            btnEditarDisciplina.Name = "btnEditarDisciplina";
+            btnEditarDisciplina.Size = new Size(126, 67);
+            btnEditarDisciplina.TabIndex = 15;
+            btnEditarDisciplina.Text = "Editar disciplina";
+            btnEditarDisciplina.UseVisualStyleBackColor = true;
+            btnEditarDisciplina.Click += btnEditarDisciplina_Click;
+            // 
             // FormDisciplina
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1412, 639);
+            Controls.Add(btnEditarDisciplina);
+            Controls.Add(button2);
+            Controls.Add(btnConsultarDisciplina);
             Controls.Add(cmbCargaHoraria);
             Controls.Add(cmbNomeDisciplina);
             Controls.Add(lstDisciplinas);
@@ -173,5 +208,8 @@
         private ListBox lstDisciplinas;
         private ComboBox cmbNomeDisciplina;
         private ComboBox cmbCargaHoraria;
+        private Button btnConsultarDisciplina;
+        private Button button2;
+        private Button btnEditarDisciplina;
     }
 }

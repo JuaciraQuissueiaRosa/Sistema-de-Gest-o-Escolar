@@ -372,6 +372,38 @@ public class GestorEscola
         return false; // Disciplina não encontrada
     }
 
+    public bool ValidarAnoLetivo(string anoLetivo)
+    {
+        try
+        {
+            // Verificar se o formato está correto: "AAAA/AAAA"
+            string[] anos = anoLetivo.Split('/');
+
+            if (anos.Length != 2)
+            {
+                return false; // Deve ter exatamente dois anos separados por "/"
+            }
+
+            // Verificar se ambos os anos são números inteiros
+            if (!int.TryParse(anos[0], out int anoInicio) || !int.TryParse(anos[1], out int anoFim))
+            {
+                return false;
+            }
+
+            // O primeiro ano deve ser menor que o segundo (exemplo: 2023/2024)
+            if (anoInicio >= anoFim)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false; // Em caso de erro, retorna falso sem quebrar o sistema
+        }
+    }
+
 
 
 

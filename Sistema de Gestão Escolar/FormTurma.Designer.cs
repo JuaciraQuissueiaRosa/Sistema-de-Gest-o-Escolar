@@ -36,13 +36,15 @@
             lblDisciplinasTurma = new Label();
             txtAnoLetivoTurma = new TextBox();
             txtAlunosTurma = new TextBox();
-            txtDisciplinasTurma = new TextBox();
             txtIdTurma = new TextBox();
             cmbTurnoTurma = new ComboBox();
             btnRemoverTurma = new Button();
             btnAdicionarTurma = new Button();
             lstTurmas = new ListBox();
             cmbCursoTurma = new ComboBox();
+            cmbDisciplinasTurma = new ComboBox();
+            btnEditarTurma = new Button();
+            btnConsultarTurma = new Button();
             SuspendLayout();
             // 
             // lblIdTurma
@@ -95,9 +97,9 @@
             lblDisciplinasTurma.AutoSize = true;
             lblDisciplinasTurma.Location = new Point(43, 397);
             lblDisciplinasTurma.Name = "lblDisciplinasTurma";
-            lblDisciplinasTurma.Size = new Size(293, 20);
+            lblDisciplinasTurma.Size = new Size(161, 20);
             lblDisciplinasTurma.TabIndex = 5;
-            lblDisciplinasTurma.Text = "IDs das Disciplinas (separados por vírgula):";
+            lblDisciplinasTurma.Text = "Disciplinas disponíveis:";
             // 
             // txtAnoLetivoTurma
             // 
@@ -113,13 +115,6 @@
             txtAlunosTurma.Size = new Size(253, 27);
             txtAlunosTurma.TabIndex = 8;
             // 
-            // txtDisciplinasTurma
-            // 
-            txtDisciplinasTurma.Location = new Point(65, 432);
-            txtDisciplinasTurma.Name = "txtDisciplinasTurma";
-            txtDisciplinasTurma.Size = new Size(255, 27);
-            txtDisciplinasTurma.TabIndex = 10;
-            // 
             // txtIdTurma
             // 
             txtIdTurma.Location = new Point(170, 54);
@@ -131,7 +126,7 @@
             // 
             cmbTurnoTurma.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbTurnoTurma.FormattingEnabled = true;
-            cmbTurnoTurma.Location = new Point(139, 336);
+            cmbTurnoTurma.Location = new Point(121, 333);
             cmbTurnoTurma.Name = "cmbTurnoTurma";
             cmbTurnoTurma.Size = new Size(268, 28);
             cmbTurnoTurma.TabIndex = 12;
@@ -174,18 +169,49 @@
             cmbCursoTurma.Size = new Size(373, 28);
             cmbCursoTurma.TabIndex = 16;
             // 
+            // cmbDisciplinasTurma
+            // 
+            cmbDisciplinasTurma.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbDisciplinasTurma.FormattingEnabled = true;
+            cmbDisciplinasTurma.Location = new Point(232, 389);
+            cmbDisciplinasTurma.Name = "cmbDisciplinasTurma";
+            cmbDisciplinasTurma.Size = new Size(288, 28);
+            cmbDisciplinasTurma.TabIndex = 17;
+            // 
+            // btnEditarTurma
+            // 
+            btnEditarTurma.Location = new Point(532, 527);
+            btnEditarTurma.Name = "btnEditarTurma";
+            btnEditarTurma.Size = new Size(144, 54);
+            btnEditarTurma.TabIndex = 18;
+            btnEditarTurma.Text = "Editar turma";
+            btnEditarTurma.UseVisualStyleBackColor = true;
+            btnEditarTurma.Click += btnEditarTurma_Click;
+            // 
+            // btnConsultarTurma
+            // 
+            btnConsultarTurma.Location = new Point(756, 546);
+            btnConsultarTurma.Name = "btnConsultarTurma";
+            btnConsultarTurma.Size = new Size(144, 46);
+            btnConsultarTurma.TabIndex = 19;
+            btnConsultarTurma.Text = "Consultar turma";
+            btnConsultarTurma.UseVisualStyleBackColor = true;
+            btnConsultarTurma.Click += btnConsultarTurma_Click;
+            // 
             // FormTurma
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1409, 628);
+            Controls.Add(btnConsultarTurma);
+            Controls.Add(btnEditarTurma);
+            Controls.Add(cmbDisciplinasTurma);
             Controls.Add(cmbCursoTurma);
             Controls.Add(lstTurmas);
             Controls.Add(btnAdicionarTurma);
             Controls.Add(btnRemoverTurma);
             Controls.Add(cmbTurnoTurma);
             Controls.Add(txtIdTurma);
-            Controls.Add(txtDisciplinasTurma);
             Controls.Add(txtAlunosTurma);
             Controls.Add(txtAnoLetivoTurma);
             Controls.Add(lblDisciplinasTurma);
@@ -211,12 +237,14 @@
         private Label lblDisciplinasTurma;
         private TextBox txtAnoLetivoTurma;
         private TextBox txtAlunosTurma;
-        private TextBox txtDisciplinasTurma;
         private TextBox txtIdTurma;
         private ComboBox cmbTurnoTurma;
         private Button btnRemoverTurma;
         private Button btnAdicionarTurma;
         private ListBox lstTurmas;
         private ComboBox cmbCursoTurma;
+        private ComboBox cmbDisciplinasTurma;
+        private Button btnEditarTurma;
+        private Button btnConsultarTurma;
     }
 }

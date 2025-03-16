@@ -41,7 +41,7 @@ namespace Sistema_de_Gestão_Escolar
                 }
                 else
                 {
-                    MessageBox.Show("Erro: O professor não pode ser removido. Verifique se ele está associado a disciplinas!",
+                    MessageBox.Show("Erro: O professor não pode ser removido visto que se encontra associado a uma(s) disciplina(s) ativa(s)!",
                         "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
@@ -54,38 +54,38 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-        
-            private void btnAdicionarProfessor_Click(object sender, EventArgs e)
+
+        private void btnAdicionarProfessor_Click(object sender, EventArgs e)
+        {
+            try
             {
-                try
+                // Verificar se o ID do professor é um número válido
+                if (!int.TryParse(txtIdProfessor.Text, out int id))
                 {
-                    // Verificar se o ID do professor é um número válido
-                    if (!int.TryParse(txtIdProfessor.Text, out int id))
-                    {
-                        MessageBox.Show("Erro: O ID do professor deve ser um número inteiro.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                    MessageBox.Show("Erro: O ID do professor deve ser um número inteiro.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                    // Verificar se o nome foi preenchido
-                    string nome = txtNomeProfessor.Text.Trim();
-                    if (string.IsNullOrEmpty(nome))
-                    {
-                        MessageBox.Show("Erro: O nome do professor não pode estar vazio.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                // Verificar se o nome foi preenchido
+                string nome = txtNomeProfessor.Text.Trim();
+                if (string.IsNullOrEmpty(nome))
+                {
+                    MessageBox.Show("Erro: O nome do professor não pode estar vazio.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                    // Capturar o contato do MaskedTextBox
-                    string contato = mtbContatoProfessor.Text.Trim();
+                // Capturar o contato do MaskedTextBox
+                string contato = mtbContatoProfessor.Text.Trim();
 
-                    // Remover espaços extras do contato
-                    contato = contato.Replace(" ", "");
+                // Remover espaços extras do contato
+                contato = contato.Replace(" ", "");
 
-                    // Se o MaskedTextBox não estiver completamente preenchido, exibir erro
-                    if (contato.Length != 13 || !contato.StartsWith("+3519") && !contato.StartsWith("+3512"))
-                    {
-                        MessageBox.Show("Erro: O contato deve seguir o formato '+351 9XXXXXXXX' ou '+351 2XXXXXXXX'.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                // Se o MaskedTextBox não estiver completamente preenchido, exibir erro
+                if (contato.Length != 13 || !contato.StartsWith("+3519") && !contato.StartsWith("+3512"))
+                {
+                    MessageBox.Show("Erro: O contato deve seguir o formato '+351 9XXXXXXXX' ou '+351 2XXXXXXXX'.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 // Verificar se o email foi preenchido
                 // Capturar e validar o email
@@ -98,29 +98,29 @@ namespace Sistema_de_Gestão_Escolar
 
                 // Capturar a área de ensino do ComboBox
                 if (cmbAreaEnsino.SelectedItem == null)
-                    {
-                        MessageBox.Show("Erro: Selecione uma área de ensino!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    string areaEnsino = cmbAreaEnsino.SelectedItem.ToString();
-
-                    // Criar novo professor
-                    Professor novoProfessor = new Professor(id, nome, contato, email, areaEnsino);
-
-                    // Adicionar ao sistema
-                    gestor.AdicionarProfessor(novoProfessor);
-                    AtualizarListaProfessores();
-
-                    MessageBox.Show("Professor adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Selecione uma área de ensino!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-            
+                string areaEnsino = cmbAreaEnsino.SelectedItem.ToString();
+
+                // Criar novo professor
+                Professor novoProfessor = new Professor(id, nome, contato, email, areaEnsino);
+
+                // Adicionar ao sistema
+                gestor.AdicionarProfessor(novoProfessor);
+                AtualizarListaProfessores();
+
+                MessageBox.Show("Professor adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
 
-    }
+
+        }
         private void AtualizarListaProfessores()
         {
             try
@@ -229,8 +229,49 @@ namespace Sistema_de_Gestão_Escolar
             // Verifica se o e-mail corresponde ao padrão
             return Regex.IsMatch(email, padraoEmail);
         }
+
+        private void btnConsultarProfessor_Click(object sender, EventArgs e)
+        {
+            if (lstProfessores.SelectedIndex == -1)
+            {
+                MessageBox.Show("Erro: Selecione um professor para consultar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Professor professor = gestor.Professores[lstProfessores.SelectedIndex];
+
+            MessageBox.Show("ID: " + professor.Id + "\nNome: " + professor.Nome + "\nContato: " + professor.Contato +
+                            "\nEmail: " + professor.Email + "\nÁrea: " + professor.AreaEnsino,
+                            "Detalhes do Professor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnEditarProfessor_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstProfessores.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Selecione um professor primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Obter professor selecionado
+                Professor professorSelecionado = gestor.Professores[lstProfessores.SelectedIndex];
+
+                // Preencher os campos com os dados do professor
+                txtIdProfessor.Text = professorSelecionado.Id.ToString();
+                txtNomeProfessor.Text = professorSelecionado.Nome;
+                mtbContatoProfessor.Text = professorSelecionado.Contato;
+                txtEmailProfessor.Text = professorSelecionado.Email;
+                cmbAreaEnsino.SelectedItem = professorSelecionado.AreaEnsino;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao editar professor: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 
-    
+
 
 }

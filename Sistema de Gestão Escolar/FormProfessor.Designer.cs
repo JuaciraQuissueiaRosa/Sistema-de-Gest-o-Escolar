@@ -41,6 +41,8 @@
             lstProfessores = new ListBox();
             cmbAreaEnsino = new ComboBox();
             mtbContatoProfessor = new MaskedTextBox();
+            btnEditarProfessor = new Button();
+            btnConsultarProfessor = new Button();
             SuspendLayout();
             // 
             // lblIdProfessor
@@ -154,11 +156,33 @@
             mtbContatoProfessor.Size = new Size(165, 27);
             mtbContatoProfessor.TabIndex = 14;
             // 
+            // btnEditarProfessor
+            // 
+            btnEditarProfessor.Location = new Point(197, 470);
+            btnEditarProfessor.Name = "btnEditarProfessor";
+            btnEditarProfessor.Size = new Size(142, 59);
+            btnEditarProfessor.TabIndex = 16;
+            btnEditarProfessor.Text = "Editar professor selecionado";
+            btnEditarProfessor.UseVisualStyleBackColor = true;
+            btnEditarProfessor.Click += btnEditarProfessor_Click;
+            // 
+            // btnConsultarProfessor
+            // 
+            btnConsultarProfessor.Location = new Point(47, 470);
+            btnConsultarProfessor.Name = "btnConsultarProfessor";
+            btnConsultarProfessor.Size = new Size(129, 59);
+            btnConsultarProfessor.TabIndex = 15;
+            btnConsultarProfessor.Text = "Consultar professor";
+            btnConsultarProfessor.UseVisualStyleBackColor = true;
+            btnConsultarProfessor.Click += btnConsultarProfessor_Click;
+            // 
             // FormProfessor
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1353, 552);
+            Controls.Add(btnEditarProfessor);
+            Controls.Add(btnConsultarProfessor);
             Controls.Add(mtbContatoProfessor);
             Controls.Add(cmbAreaEnsino);
             Controls.Add(lstProfessores);
@@ -194,5 +218,7 @@
         private ListBox lstProfessores;
         private ComboBox cmbAreaEnsino;
         private MaskedTextBox mtbContatoProfessor;
+        private Button btnEditarProfessor;
+        private Button btnConsultarProfessor;
     }
 }

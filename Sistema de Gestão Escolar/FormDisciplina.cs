@@ -141,9 +141,9 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-       
-            private void AtualizarListaDisciplinas()
-            {
+
+        private void AtualizarListaDisciplinas()
+        {
             try
             {
                 lstDisciplinas.Items.Clear();
@@ -202,7 +202,7 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-        
+
 
         private void FormDisciplina_Load(object sender, EventArgs e)
         {
@@ -250,6 +250,45 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show($"Erro ao carregar formulário de disciplinas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnConsultarDisciplina_Click(object sender, EventArgs e)
+        {
+            if (lstDisciplinas.SelectedIndex == -1)
+            {
+                MessageBox.Show("Erro: Selecione uma disciplina para consultar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Disciplina disciplina = gestor.Disciplinas[lstDisciplinas.SelectedIndex];
+
+            MessageBox.Show("ID: " + disciplina.Id + "\nNome: " + disciplina.Nome + "\nCarga Horária: " + disciplina.CargaHoraria + "h",
+                            "Detalhes da Disciplina", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnEditarDisciplina_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstDisciplinas.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Selecione uma disciplina primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Obter disciplina selecionada
+                Disciplina disciplinaSelecionada = gestor.Disciplinas[lstDisciplinas.SelectedIndex];
+
+                // Preencher os campos com os dados da disciplina
+                txtIdDisciplina.Text = disciplinaSelecionada.Id.ToString();
+                cmbNomeDisciplina.SelectedItem = disciplinaSelecionada.Nome;
+                cmbCargaHoraria.SelectedItem = disciplinaSelecionada.CargaHoraria.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao editar disciplina: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
     }
 }

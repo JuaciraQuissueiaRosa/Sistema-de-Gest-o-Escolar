@@ -251,27 +251,38 @@ namespace Sistema_de_Gestão_Escolar
             {
                 lstAlunos.Items.Clear(); // Limpa a ListBox antes de atualizar
 
-                foreach (var aluno in gestor.ListarAlunos())
+                if (gestor.Alunos.Count == 0)
                 {
+                    lstAlunos.Items.Add("Nenhum aluno cadastrado.");
+                    return;
+                }
+
+                for (int i = 0; i < gestor.Alunos.Count; i++)
+                {
+                    Aluno aluno = gestor.Alunos[i];
+
                     // Procurar o nome da turma correspondente ao ID da turma do aluno
                     string nomeTurma = "Turma não encontrada";
 
-                    foreach (var turma in gestor.Turmas)
+                    for (int j = 0; j < gestor.Turmas.Count; j++)
                     {
-                        if (turma.Id == aluno.TurmaId)
+                        if (gestor.Turmas[j].Id == aluno.TurmaId)
                         {
-                            nomeTurma = $"{turma.Id} - {turma.Curso}"; // Exibir ID e Nome da Turma
+                            nomeTurma = gestor.Turmas[j].Id + " - " + gestor.Turmas[j].Curso; // Exibir ID e Nome da Turma
                             break;
                         }
                     }
 
-                    // Adicionar o aluno à ListBox com o nome correto da turma
-                    lstAlunos.Items.Add($"{aluno.Id} - {aluno.Nome} - Turma: {nomeTurma}");
+                    // Criar a string formatada para exibição
+                    string infoAluno = aluno.Id + " - " + aluno.Nome + " | Turma: " + nomeTurma;
+
+                    // Adicionar o aluno à ListBox
+                    lstAlunos.Items.Add(infoAluno);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao atualizar a lista de alunos: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao atualizar a lista de alunos: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

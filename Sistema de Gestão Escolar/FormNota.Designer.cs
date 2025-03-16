@@ -43,6 +43,8 @@
             cmbProfessorNota = new ComboBox();
             cmbTipoAvaliacao = new ComboBox();
             lblTipoAvaliacao = new Label();
+            btnConsultarNota = new Button();
+            btnEditarNota = new Button();
             SuspendLayout();
             // 
             // lblValorNota
@@ -173,11 +175,33 @@
             lblTipoAvaliacao.TabIndex = 14;
             lblTipoAvaliacao.Text = "Tipo de avaliação:";
             // 
+            // btnConsultarNota
+            // 
+            btnConsultarNota.Location = new Point(353, 508);
+            btnConsultarNota.Name = "btnConsultarNota";
+            btnConsultarNota.Size = new Size(127, 48);
+            btnConsultarNota.TabIndex = 15;
+            btnConsultarNota.Text = "Consultar nota";
+            btnConsultarNota.UseVisualStyleBackColor = true;
+            btnConsultarNota.Click += btnConsultarNota_Click;
+            // 
+            // btnEditarNota
+            // 
+            btnEditarNota.Location = new Point(108, 508);
+            btnEditarNota.Name = "btnEditarNota";
+            btnEditarNota.Size = new Size(136, 48);
+            btnEditarNota.TabIndex = 16;
+            btnEditarNota.Text = "Editar Nota";
+            btnEditarNota.UseVisualStyleBackColor = true;
+            btnEditarNota.Click += btnEditarNota_Click;
+            // 
             // FormNota
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1045, 620);
+            Controls.Add(btnEditarNota);
+            Controls.Add(btnConsultarNota);
             Controls.Add(lblTipoAvaliacao);
             Controls.Add(cmbTipoAvaliacao);
             Controls.Add(cmbProfessorNota);
@@ -218,5 +242,7 @@
         private ComboBox cmbProfessorNota;
         private ComboBox cmbTipoAvaliacao;
         private Label lblTipoAvaliacao;
+        private Button btnConsultarNota;
+        private Button btnEditarNota;
     }
 }
