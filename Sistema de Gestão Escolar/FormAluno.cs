@@ -261,14 +261,14 @@ namespace Sistema_de_Gestão_Escolar
                 {
                     Aluno aluno = gestor.Alunos[i];
 
-                    // Procurar o nome da turma correspondente ao ID da turma do aluno
+                    // Procurar o nome da turma correspondente
                     string nomeTurma = "Turma não encontrada";
 
                     for (int j = 0; j < gestor.Turmas.Count; j++)
                     {
                         if (gestor.Turmas[j].Id == aluno.TurmaId)
                         {
-                            nomeTurma = gestor.Turmas[j].Id + " - " + gestor.Turmas[j].Curso; // Exibir ID e Nome da Turma
+                            nomeTurma = gestor.Turmas[j].Id + " - " + gestor.Turmas[j].Curso;
                             break;
                         }
                     }
@@ -423,6 +423,107 @@ namespace Sistema_de_Gestão_Escolar
         private void lblContatoAluno_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnSalvarAlteracoesAluno_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstAlunos.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Selecione um aluno para salvar as alterações!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Obter aluno selecionado
+                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+
+                // Validar ID
+                if (!int.TryParse(txtIdAluno.Text, out int novoId))
+                {
+                    MessageBox.Show("Erro: O ID do aluno deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Validar nome
+                string novoNome = txtNomeAluno.Text.Trim();
+                if (string.IsNullOrEmpty(novoNome))
+                {
+                    MessageBox.Show("Erro: O nome do aluno não pode estar vazio!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Validar data de nascimento
+                DateTime novaDataNascimento = dtpNascimentoAluno.Value;
+
+                // Validar contato
+                string novoContato = txtContatoAluno.Text.Trim();
+                if (novoContato.Length != 9 || (novoContato[0] != '9' && novoContato[0] != '2'))
+                {
+                    MessageBox.Show("Erro: O contato deve ter 9 dígitos e começar com '9' ou '2'.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Validar morada
+                string novaMorada = txtMoradaAluno.Text.Trim();
+                if (string.IsNullOrEmpty(novaMorada))
+                {
+                    MessageBox.Show("Erro: A morada do aluno não pode estar vazia.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Validar email
+                string novoEmail = txtEmailAluno.Text.Trim();
+                if (!ValidarEmail(novoEmail))
+                {
+                    MessageBox.Show("Erro: O e-mail inserido não é válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Validar ID da turma
+                if (!int.TryParse(txtTurmaAluno.Text, out int novaTurmaId))
+                {
+                    MessageBox.Show("Erro: O ID da turma deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Verificar se a turma existe
+                bool turmaExiste = false;
+                for (int i = 0; i < gestor.Turmas.Count; i++)
+                {
+                    if (gestor.Turmas[i].Id == novaTurmaId)
+                    {
+                        turmaExiste = true;
+                        break;
+                    }
+                }
+                if (!turmaExiste)
+                {
+                    MessageBox.Show("Erro: A turma selecionada não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Aplicar as alterações ao aluno selecionado
+                alunoSelecionado.Id = novoId;
+                alunoSelecionado.Nome = novoNome;
+                alunoSelecionado.DataNascimento = novaDataNascimento;
+                alunoSelecionado.Contato = novoContato;
+                alunoSelecionado.Morada = novaMorada;
+                alunoSelecionado.Email = novoEmail;
+                alunoSelecionado.TurmaId = novaTurmaId;
+
+                // Atualizar a lista de alunos
+                AtualizarListaAlunos();
+
+                // Limpar a listBox de edição
+                lstEdicaoAluno.Items.Clear();
+
+                MessageBox.Show("Aluno atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao salvar alterações: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
