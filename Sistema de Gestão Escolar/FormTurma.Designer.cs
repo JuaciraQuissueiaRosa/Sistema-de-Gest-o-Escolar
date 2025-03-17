@@ -47,6 +47,7 @@
             btnConsultarTurma = new Button();
             cmbProfessorTurma = new ComboBox();
             label1 = new Label();
+            btnSalvarEdicaoTurma = new Button();
             SuspendLayout();
             // 
             // lblIdTurma
@@ -183,9 +184,9 @@
             // 
             // btnEditarTurma
             // 
-            btnEditarTurma.Location = new Point(445, 665);
+            btnEditarTurma.Location = new Point(457, 657);
             btnEditarTurma.Name = "btnEditarTurma";
-            btnEditarTurma.Size = new Size(144, 54);
+            btnEditarTurma.Size = new Size(149, 70);
             btnEditarTurma.TabIndex = 18;
             btnEditarTurma.Text = "Editar turma";
             btnEditarTurma.UseVisualStyleBackColor = true;
@@ -193,9 +194,9 @@
             // 
             // btnConsultarTurma
             // 
-            btnConsultarTurma.Location = new Point(714, 657);
+            btnConsultarTurma.Location = new Point(991, 561);
             btnConsultarTurma.Name = "btnConsultarTurma";
-            btnConsultarTurma.Size = new Size(144, 46);
+            btnConsultarTurma.Size = new Size(144, 59);
             btnConsultarTurma.TabIndex = 19;
             btnConsultarTurma.Text = "Consultar turma";
             btnConsultarTurma.UseVisualStyleBackColor = true;
@@ -219,11 +220,22 @@
             label1.TabIndex = 21;
             label1.Text = "Professores disponíveis:";
             // 
+            // btnSalvarEdicaoTurma
+            // 
+            btnSalvarEdicaoTurma.Location = new Point(1177, 561);
+            btnSalvarEdicaoTurma.Name = "btnSalvarEdicaoTurma";
+            btnSalvarEdicaoTurma.Size = new Size(135, 59);
+            btnSalvarEdicaoTurma.TabIndex = 22;
+            btnSalvarEdicaoTurma.Text = "Salvar edição turma";
+            btnSalvarEdicaoTurma.UseVisualStyleBackColor = true;
+            btnSalvarEdicaoTurma.Click += btnSalvarEdicaoTurma_Click;
+            // 
             // FormTurma
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1409, 788);
+            Controls.Add(btnSalvarEdicaoTurma);
             Controls.Add(label1);
             Controls.Add(cmbProfessorTurma);
             Controls.Add(btnConsultarTurma);
@@ -271,5 +283,6 @@
         private Button btnConsultarTurma;
         private ComboBox cmbProfessorTurma;
         private Label label1;
+        private Button btnSalvarEdicaoTurma;
     }
 }

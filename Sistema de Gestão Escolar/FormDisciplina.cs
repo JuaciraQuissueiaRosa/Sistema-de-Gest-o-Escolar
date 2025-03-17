@@ -272,7 +272,7 @@ namespace Sistema_de_Gestão_Escolar
             {
                 if (lstDisciplinas.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Erro: Selecione uma disciplina primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Selecione uma disciplina primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -286,9 +286,62 @@ namespace Sistema_de_Gestão_Escolar
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao editar disciplina: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao carregar disciplina para edição: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void btnSalvarEdicaoDisciplina_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstDisciplinas.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Nenhuma disciplina selecionada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Obter disciplina selecionada
+                Disciplina disciplinaSelecionada = gestor.Disciplinas[lstDisciplinas.SelectedIndex];
+
+                // Validar ID da disciplina
+                if (!int.TryParse(txtIdDisciplina.Text, out int novoId))
+                {
+                    MessageBox.Show("Erro: O ID da disciplina deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string novoNome = cmbNomeDisciplina.SelectedItem?.ToString();
+                int novaCargaHoraria;
+
+                if (string.IsNullOrEmpty(novoNome) || !int.TryParse(cmbCargaHoraria.SelectedItem?.ToString(), out novaCargaHoraria))
+                {
+                    MessageBox.Show("Erro: Preencha todos os campos corretamente!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Capturar professores associados
+                List<int> novosProfessoresIds = new List<int>();
+                if (txtProfessoresDisciplina.Text != null)
+                {
+                    string professorSelecionado = txtProfessoresDisciplina.Text.ToString();
+                    int professorId = int.Parse(professorSelecionado.Split(' ')[0]);
+                    novosProfessoresIds.Add(professorId);
+                }
+
+                if (!gestor.EditarDisciplina(disciplinaSelecionada.Id, novoNome, novaCargaHoraria, novosProfessoresIds))
+                {
+                    MessageBox.Show("Erro ao editar a disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                AtualizarListaDisciplinas();
+                MessageBox.Show("Disciplina editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao editar disciplina: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -403,7 +403,6 @@ public class GestorEscola
             return false; // Em caso de erro, retorna falso sem quebrar o sistema
         }
     }
-
     public bool EditarProfessor(int id, string novoNome, string novaAreaEnsino, string novoContato, string novoEmail)
     {
         for (int i = 0; i < Professores.Count; i++)
@@ -416,17 +415,19 @@ public class GestorEscola
                     return false;
                 }
 
+                // Atualizar informações do professor
                 Professores[i].Nome = novoNome;
                 Professores[i].AreaEnsino = novaAreaEnsino;
                 Professores[i].Contato = novoContato;
                 Professores[i].Email = novoEmail;
+
                 return true;
             }
         }
-        return false;
+        return false; // Retorna falso se o professor não for encontrado
     }
 
-    public bool EditarNota(int alunoId, int disciplinaId, string periodoLetivo, double novoValorNota)
+    public bool EditarNota(int alunoId, int disciplinaId, string periodoLetivo, double novoValorNota, string novoTipoAvaliacao)
     {
         for (int i = 0; i < Notas.Count; i++)
         {
@@ -439,14 +440,17 @@ public class GestorEscola
                     return false;
                 }
 
+                // Atualizar a nota e o tipo de avaliação
                 Notas[i].ValorNota = novoValorNota;
+                Notas[i].TipoAvaliacao = novoTipoAvaliacao;
+
                 return true;
             }
         }
         return false;
     }
 
-    public bool EditarDisciplina(int id, string novoNome, int novaCargaHoraria)
+    public bool EditarDisciplina(int id, string novoNome, int novaCargaHoraria, List<int> novosProfessoresIds)
     {
         for (int i = 0; i < Disciplinas.Count; i++)
         {
@@ -459,6 +463,8 @@ public class GestorEscola
 
                 Disciplinas[i].Nome = novoNome;
                 Disciplinas[i].CargaHoraria = novaCargaHoraria;
+                Disciplinas[i].ProfessoresIds = novosProfessoresIds; // Adicionando os professores
+
                 return true;
             }
         }

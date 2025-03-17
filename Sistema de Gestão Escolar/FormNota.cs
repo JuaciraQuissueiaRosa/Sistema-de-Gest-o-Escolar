@@ -116,7 +116,7 @@ namespace Sistema_de_Gestão_Escolar
                 }
 
                 // Criar a nova nota
-                Nota novaNota = new Nota(alunoId, disciplinaId, valorNota, periodoLetivo);
+                Nota novaNota = new Nota(alunoId, disciplinaId, valorNota, periodoLetivo, tipoAvaliacao);
 
                 // Adicionar a nota ao sistema
                 gestor.AdicionarNota(novaNota);
@@ -267,7 +267,7 @@ namespace Sistema_de_Gestão_Escolar
             {
                 if (lstNotas.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Erro: Selecione uma nota primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Selecione uma nota primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -282,8 +282,9 @@ namespace Sistema_de_Gestão_Escolar
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao editar nota: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao carregar nota para edição: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
         }
 
         private void btnConsultarNota_Click(object sender, EventArgs e)
@@ -342,6 +343,48 @@ namespace Sistema_de_Gestão_Escolar
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao consultar nota: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnSalvarEdicaoNota_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstNotas.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Nenhuma nota selecionada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Obter nota selecionada
+                Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
+
+                if (!double.TryParse(txtValorNota.Text, out double novoValorNota) || novoValorNota < 0 || novoValorNota > 20)
+                {
+                    MessageBox.Show("Erro: A nota deve ser um número entre 0 e 20!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Capturar o tipo de avaliação selecionado
+                string novoTipoAvaliacao = cmbTipoAvaliacao.SelectedItem?.ToString();
+                if (string.IsNullOrEmpty(novoTipoAvaliacao))
+                {
+                    MessageBox.Show("Erro: Selecione um tipo de avaliação!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (!gestor.EditarNota(notaSelecionada.AlunoId, notaSelecionada.DisciplinaId, notaSelecionada.PeriodoLetivo, novoValorNota, novoTipoAvaliacao))
+                {
+                    MessageBox.Show("Erro ao editar a nota!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                AtualizarListaNotas();
+                MessageBox.Show("Nota editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao editar nota: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

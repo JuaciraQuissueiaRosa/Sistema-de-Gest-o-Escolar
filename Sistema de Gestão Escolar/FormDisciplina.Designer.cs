@@ -42,6 +42,7 @@
             btnConsultarDisciplina = new Button();
             button2 = new Button();
             btnEditarDisciplina = new Button();
+            btnSalvarEdicaoDisciplina = new Button();
             SuspendLayout();
             // 
             // lblNomeDisciplina
@@ -169,11 +170,22 @@
             btnEditarDisciplina.UseVisualStyleBackColor = true;
             btnEditarDisciplina.Click += btnEditarDisciplina_Click;
             // 
+            // btnSalvarEdicaoDisciplina
+            // 
+            btnSalvarEdicaoDisciplina.Location = new Point(815, 509);
+            btnSalvarEdicaoDisciplina.Name = "btnSalvarEdicaoDisciplina";
+            btnSalvarEdicaoDisciplina.Size = new Size(132, 76);
+            btnSalvarEdicaoDisciplina.TabIndex = 16;
+            btnSalvarEdicaoDisciplina.Text = "Salvar disciplina editada";
+            btnSalvarEdicaoDisciplina.UseVisualStyleBackColor = true;
+            btnSalvarEdicaoDisciplina.Click += btnSalvarEdicaoDisciplina_Click;
+            // 
             // FormDisciplina
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1412, 639);
+            Controls.Add(btnSalvarEdicaoDisciplina);
             Controls.Add(btnEditarDisciplina);
             Controls.Add(button2);
             Controls.Add(btnConsultarDisciplina);
@@ -211,5 +223,6 @@
         private Button btnConsultarDisciplina;
         private Button button2;
         private Button btnEditarDisciplina;
+        private Button btnSalvarEdicaoDisciplina;
     }
 }

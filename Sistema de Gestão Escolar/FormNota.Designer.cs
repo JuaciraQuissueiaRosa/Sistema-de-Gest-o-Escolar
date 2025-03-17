@@ -45,6 +45,7 @@
             lblTipoAvaliacao = new Label();
             btnConsultarNota = new Button();
             btnEditarNota = new Button();
+            btnSalvarEdicaoNota = new Button();
             SuspendLayout();
             // 
             // lblValorNota
@@ -195,11 +196,22 @@
             btnEditarNota.UseVisualStyleBackColor = true;
             btnEditarNota.Click += btnEditarNota_Click;
             // 
+            // btnSalvarEdicaoNota
+            // 
+            btnSalvarEdicaoNota.Location = new Point(658, 480);
+            btnSalvarEdicaoNota.Name = "btnSalvarEdicaoNota";
+            btnSalvarEdicaoNota.Size = new Size(147, 76);
+            btnSalvarEdicaoNota.TabIndex = 17;
+            btnSalvarEdicaoNota.Text = "Salvar edição da nota";
+            btnSalvarEdicaoNota.UseVisualStyleBackColor = true;
+            btnSalvarEdicaoNota.Click += btnSalvarEdicaoNota_Click;
+            // 
             // FormNota
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1045, 620);
+            Controls.Add(btnSalvarEdicaoNota);
             Controls.Add(btnEditarNota);
             Controls.Add(btnConsultarNota);
             Controls.Add(lblTipoAvaliacao);
@@ -244,5 +256,6 @@
         private Label lblTipoAvaliacao;
         private Button btnConsultarNota;
         private Button btnEditarNota;
+        private Button btnSalvarEdicaoNota;
     }
 }

@@ -251,7 +251,7 @@ namespace Sistema_de_Gestão_Escolar
             {
                 if (lstProfessores.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Erro: Selecione um professor primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Selecione um professor primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -267,7 +267,7 @@ namespace Sistema_de_Gestão_Escolar
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao editar professor: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao carregar professor para edição: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

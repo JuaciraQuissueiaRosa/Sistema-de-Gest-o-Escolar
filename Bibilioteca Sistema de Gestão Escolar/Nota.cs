@@ -7,12 +7,15 @@
         public double ValorNota { get; set; }
         public string PeriodoLetivo { get; set; } // Ex: "1º Trimestre"
 
-        public Nota(int alunoId, int disciplinaId, double valorNota, string periodoLetivo)
+        public string TipoAvaliacao { get; set; } // Novo campo
+
+        public Nota(int alunoId, int disciplinaId, double valorNota, string periodoLetivo, string tipoAvaliacao)
         {
             AlunoId = alunoId;
             DisciplinaId = disciplinaId;
             ValorNota = valorNota;
             PeriodoLetivo = periodoLetivo;
+            TipoAvaliacao = tipoAvaliacao;
         }
     }
 
