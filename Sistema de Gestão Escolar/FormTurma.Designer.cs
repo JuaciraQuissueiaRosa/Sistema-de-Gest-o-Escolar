@@ -45,6 +45,8 @@
             cmbDisciplinasTurma = new ComboBox();
             btnEditarTurma = new Button();
             btnConsultarTurma = new Button();
+            cmbProfessorTurma = new ComboBox();
+            label1 = new Label();
             SuspendLayout();
             // 
             // lblIdTurma
@@ -134,7 +136,7 @@
             // 
             // btnRemoverTurma
             // 
-            btnRemoverTurma.Location = new Point(65, 511);
+            btnRemoverTurma.Location = new Point(53, 657);
             btnRemoverTurma.Name = "btnRemoverTurma";
             btnRemoverTurma.Size = new Size(139, 70);
             btnRemoverTurma.TabIndex = 13;
@@ -144,7 +146,7 @@
             // 
             // btnAdicionarTurma
             // 
-            btnAdicionarTurma.Location = new Point(273, 511);
+            btnAdicionarTurma.Location = new Point(233, 657);
             btnAdicionarTurma.Name = "btnAdicionarTurma";
             btnAdicionarTurma.Size = new Size(156, 70);
             btnAdicionarTurma.TabIndex = 14;
@@ -159,6 +161,7 @@
             lstTurmas.Name = "lstTurmas";
             lstTurmas.Size = new Size(735, 444);
             lstTurmas.TabIndex = 15;
+            lstTurmas.SelectedIndexChanged += lstTurmas_SelectedIndexChanged;
             // 
             // cmbCursoTurma
             // 
@@ -180,7 +183,7 @@
             // 
             // btnEditarTurma
             // 
-            btnEditarTurma.Location = new Point(532, 527);
+            btnEditarTurma.Location = new Point(445, 665);
             btnEditarTurma.Name = "btnEditarTurma";
             btnEditarTurma.Size = new Size(144, 54);
             btnEditarTurma.TabIndex = 18;
@@ -190,7 +193,7 @@
             // 
             // btnConsultarTurma
             // 
-            btnConsultarTurma.Location = new Point(756, 546);
+            btnConsultarTurma.Location = new Point(714, 657);
             btnConsultarTurma.Name = "btnConsultarTurma";
             btnConsultarTurma.Size = new Size(144, 46);
             btnConsultarTurma.TabIndex = 19;
@@ -198,11 +201,31 @@
             btnConsultarTurma.UseVisualStyleBackColor = true;
             btnConsultarTurma.Click += btnConsultarTurma_Click;
             // 
+            // cmbProfessorTurma
+            // 
+            cmbProfessorTurma.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbProfessorTurma.FormattingEnabled = true;
+            cmbProfessorTurma.Location = new Point(238, 456);
+            cmbProfessorTurma.Name = "cmbProfessorTurma";
+            cmbProfessorTurma.Size = new Size(204, 28);
+            cmbProfessorTurma.TabIndex = 20;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(39, 461);
+            label1.Name = "label1";
+            label1.Size = new Size(165, 20);
+            label1.TabIndex = 21;
+            label1.Text = "Professores disponíveis:";
+            // 
             // FormTurma
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1409, 628);
+            ClientSize = new Size(1409, 788);
+            Controls.Add(label1);
+            Controls.Add(cmbProfessorTurma);
             Controls.Add(btnConsultarTurma);
             Controls.Add(btnEditarTurma);
             Controls.Add(cmbDisciplinasTurma);
@@ -246,5 +269,7 @@
         private ComboBox cmbDisciplinasTurma;
         private Button btnEditarTurma;
         private Button btnConsultarTurma;
+        private ComboBox cmbProfessorTurma;
+        private Label label1;
     }
 }

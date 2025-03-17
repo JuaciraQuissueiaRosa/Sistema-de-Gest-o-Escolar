@@ -404,6 +404,91 @@ public class GestorEscola
         }
     }
 
+    public bool EditarProfessor(int id, string novoNome, string novaAreaEnsino, string novoContato, string novoEmail)
+    {
+        for (int i = 0; i < Professores.Count; i++)
+        {
+            if (Professores[i].Id == id)
+            {
+                if (string.IsNullOrEmpty(novoNome) || string.IsNullOrEmpty(novaAreaEnsino) ||
+                    string.IsNullOrEmpty(novoContato) || string.IsNullOrEmpty(novoEmail))
+                {
+                    return false;
+                }
+
+                Professores[i].Nome = novoNome;
+                Professores[i].AreaEnsino = novaAreaEnsino;
+                Professores[i].Contato = novoContato;
+                Professores[i].Email = novoEmail;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool EditarNota(int alunoId, int disciplinaId, string periodoLetivo, double novoValorNota)
+    {
+        for (int i = 0; i < Notas.Count; i++)
+        {
+            if (Notas[i].AlunoId == alunoId &&
+                Notas[i].DisciplinaId == disciplinaId &&
+                Notas[i].PeriodoLetivo.Equals(periodoLetivo, StringComparison.OrdinalIgnoreCase))
+            {
+                if (novoValorNota < 0 || novoValorNota > 20) // Notas entre 0 e 20
+                {
+                    return false;
+                }
+
+                Notas[i].ValorNota = novoValorNota;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool EditarDisciplina(int id, string novoNome, int novaCargaHoraria)
+    {
+        for (int i = 0; i < Disciplinas.Count; i++)
+        {
+            if (Disciplinas[i].Id == id)
+            {
+                if (string.IsNullOrEmpty(novoNome) || novaCargaHoraria <= 0)
+                {
+                    return false; // Validação dos campos
+                }
+
+                Disciplinas[i].Nome = novoNome;
+                Disciplinas[i].CargaHoraria = novaCargaHoraria;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool EditarTurma(int id, string novoCurso, string novoAnoLetivo, string novoTurno)
+    {
+        for (int i = 0; i < Turmas.Count; i++)
+        {
+            if (Turmas[i].Id == id)
+            {
+                // Validar se os novos dados são válidos
+                if (string.IsNullOrEmpty(novoCurso) || string.IsNullOrEmpty(novoAnoLetivo) || string.IsNullOrEmpty(novoTurno))
+                {
+                    return false; // Retorna falso se algum campo estiver inválido
+                }
+
+                Turmas[i].Curso = novoCurso;
+                Turmas[i].AnoLetivo = novoAnoLetivo;
+                Turmas[i].Turno = novoTurno;
+                return true; // Retorna verdadeiro indicando sucesso
+            }
+        }
+        return false; // Retorna falso se a turma não for encontrada
+    }
+
+
+
+
 
 
 
