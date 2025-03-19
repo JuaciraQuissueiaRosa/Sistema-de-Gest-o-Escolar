@@ -206,9 +206,9 @@
             // 
             cmbProfessorTurma.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProfessorTurma.FormattingEnabled = true;
-            cmbProfessorTurma.Location = new Point(238, 456);
+            cmbProfessorTurma.Location = new Point(233, 458);
             cmbProfessorTurma.Name = "cmbProfessorTurma";
-            cmbProfessorTurma.Size = new Size(204, 28);
+            cmbProfessorTurma.Size = new Size(287, 28);
             cmbProfessorTurma.TabIndex = 20;
             // 
             // label1

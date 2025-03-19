@@ -152,9 +152,20 @@ public class GestorEscola
     /// <summary>
     /// Adiciona uma disciplina à lista de disciplinas.
     /// </summary>
-    public void AdicionarDisciplina(Disciplina disciplina)
+    public bool AdicionarDisciplina(Disciplina disciplina)
     {
+        // Verificar se já existe uma disciplina com o mesmo nome
+        for (int i = 0; i < Disciplinas.Count; i++)
+        {
+            if (Disciplinas[i].Nome.Equals(disciplina.Nome, StringComparison.OrdinalIgnoreCase))
+            {
+                return false; // Retorna falso caso a disciplina já exista
+            }
+        }
+
+        // Se não existir, adiciona normalmente
         Disciplinas.Add(disciplina);
+        return true;
     }
 
     /// <summary>

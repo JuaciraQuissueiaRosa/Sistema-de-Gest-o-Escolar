@@ -200,22 +200,36 @@ namespace Sistema_de_Gestão_Escolar
                 cmbProfessorNota.Items.Clear();
                 cmbTipoAvaliacao.Items.Clear();
 
-                // Adicionar professores ao ComboBox
-                for (int i = 0; i < gestor.Professores.Count; i++)
+                // ----------------- Professores -----------------
+                if (gestor.Professores.Count == 0)
                 {
-                    Professor professor = gestor.Professores[i];
-                    cmbProfessorNota.Items.Add(professor.Id + " - " + professor.Nome);
+                    cmbProfessorNota.Items.Add("Nenhum professor disponível");
+                    cmbProfessorNota.SelectedIndex = 0;
+                    return;
+
+                   
+                }
+                else
+                {
+                    for (int i = 0; i < gestor.Professores.Count; i++)
+                    {
+                        Professor professor = gestor.Professores[i];
+                        cmbProfessorNota.Items.Add(professor.Id + " - " + professor.Nome);
+                    }
+
+                    // Selecionar o primeiro professor disponível por padrão
+                    cmbProfessorNota.SelectedIndex = 0;
                 }
 
-                // Adicionar tipos de avaliação ao ComboBox
+                // ----------------- Tipos de Avaliação -----------------
                 cmbTipoAvaliacao.Items.Add("Teste");
                 cmbTipoAvaliacao.Items.Add("Trabalho");
                 cmbTipoAvaliacao.Items.Add("Exame");
 
-                // Define um valor padrão ao abrir o formulário
-                cmbTipoAvaliacao.SelectedIndex = 0; // Define "Teste" como valor inicial
+                // Define "Teste" como opção inicial
+                cmbTipoAvaliacao.SelectedIndex = 0;
 
-                // Atualizar lista de notas ao abrir o formulário
+                // ----------------- Atualizar Notas -----------------
                 AtualizarListaNotas();
             }
             catch (Exception ex)

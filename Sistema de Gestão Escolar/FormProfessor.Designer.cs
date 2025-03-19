@@ -43,6 +43,7 @@
             mtbContatoProfessor = new MaskedTextBox();
             btnEditarProfessor = new Button();
             btnConsultarProfessor = new Button();
+            btnSalvarEdicaoProfessor = new Button();
             SuspendLayout();
             // 
             // lblIdProfessor
@@ -176,11 +177,22 @@
             btnConsultarProfessor.UseVisualStyleBackColor = true;
             btnConsultarProfessor.Click += btnConsultarProfessor_Click;
             // 
+            // btnSalvarEdicaoProfessor
+            // 
+            btnSalvarEdicaoProfessor.Location = new Point(527, 494);
+            btnSalvarEdicaoProfessor.Name = "btnSalvarEdicaoProfessor";
+            btnSalvarEdicaoProfessor.Size = new Size(151, 73);
+            btnSalvarEdicaoProfessor.TabIndex = 17;
+            btnSalvarEdicaoProfessor.Text = "Salvar edição do professor selecionado";
+            btnSalvarEdicaoProfessor.UseVisualStyleBackColor = true;
+            btnSalvarEdicaoProfessor.Click += btnSalvarEdicaoProfessor_Click;
+            // 
             // FormProfessor
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1353, 552);
+            ClientSize = new Size(1353, 604);
+            Controls.Add(btnSalvarEdicaoProfessor);
             Controls.Add(btnEditarProfessor);
             Controls.Add(btnConsultarProfessor);
             Controls.Add(mtbContatoProfessor);
@@ -220,5 +232,6 @@
         private MaskedTextBox mtbContatoProfessor;
         private Button btnEditarProfessor;
         private Button btnConsultarProfessor;
+        private Button btnSalvarEdicaoProfessor;
     }
 }

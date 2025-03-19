@@ -273,10 +273,40 @@ namespace Sistema_de_Gestão_Escolar
                         }
                     }
 
-                    // Criar a string formatada para exibição
-                    string infoAluno = aluno.Id + " - " + aluno.Nome + " | Turma: " + nomeTurma;
+                    // Construir o histórico de notas do aluno
+                    string historicoNotas = "Sem notas registradas";
+                    List<string> notasLista = new List<string>();
 
-                    // Adicionar o aluno à ListBox
+                    for (int j = 0; j < aluno.Notas.Count; j++)
+                    {
+                        Nota nota = aluno.Notas[j];
+
+                        // Buscar o nome da disciplina associada à nota
+                        string nomeDisciplina = "Disciplina não encontrada";
+                        for (int k = 0; k < gestor.Disciplinas.Count; k++)
+                        {
+                            if (gestor.Disciplinas[k].Id == nota.DisciplinaId)
+                            {
+                                nomeDisciplina = gestor.Disciplinas[k].Nome;
+                                break;
+                            }
+                        }
+
+                        // Adicionar a nota ao histórico do aluno
+                        notasLista.Add($"{nomeDisciplina}: {nota.ValorNota}");
+                    }
+
+                    if (notasLista.Count > 0)
+                    {
+                        historicoNotas = string.Join(" | ", notasLista);
+                    }
+
+                    // Criar a string formatada para exibição
+                    string infoAluno = $"ID: {aluno.Id} | Nome: {aluno.Nome} | Turma: {nomeTurma} | " +
+                                       $"Contato: {aluno.Contato} | Morada: {aluno.Morada} | " +
+                                       $"Nascimento: {aluno.DataNascimento.ToShortDateString()} | Notas: {historicoNotas}";
+
+                    // Adicionar o aluno na ListBox
                     lstAlunos.Items.Add(infoAluno);
                 }
             }
@@ -297,6 +327,7 @@ namespace Sistema_de_Gestão_Escolar
             try
             {
                 cmbNovaTurmaAluno.Items.Clear(); // Limpa as opções anteriores
+                bool encontrouTurma = false;
 
                 for (int i = 0; i < gestor.Turmas.Count; i++)
                 {
@@ -307,14 +338,18 @@ namespace Sistema_de_Gestão_Escolar
                     {
                         string itemTurma = $"{turma.Id} - {turma.Curso} ({turma.AnoLetivo})";
                         cmbNovaTurmaAluno.Items.Add(itemTurma);
+                        encontrouTurma = true;
                     }
                 }
 
-                // Seleciona o primeiro item automaticamente (caso exista)
-                if (cmbNovaTurmaAluno.Items.Count > 0)
+                // Se não houver turmas diferentes da atual, exibir mensagem na ComboBox
+                if (!encontrouTurma)
                 {
-                    cmbNovaTurmaAluno.SelectedIndex = 0;
+                    cmbNovaTurmaAluno.Items.Add("Nenhuma disponível para transferência");
                 }
+
+                // Sempre manter a ComboBox ativa e selecionar o primeiro item
+                cmbNovaTurmaAluno.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -354,17 +389,23 @@ namespace Sistema_de_Gestão_Escolar
             {
                 cmbNovaTurmaAluno.Items.Clear(); // Limpa as opções anteriores
 
-                for (int i = 0; i < gestor.Turmas.Count; i++)
+                // Se não houver turmas cadastradas
+                if (gestor.Turmas.Count == 0)
                 {
-                    Turma turma = gestor.Turmas[i];
-                    string itemTurma = $"{turma.Id} - {turma.Curso} ({turma.AnoLetivo})";
-                    cmbNovaTurmaAluno.Items.Add(itemTurma);
+                    cmbNovaTurmaAluno.Items.Add("Nenhuma disponível para transferência");
+                }
+                else
+                {
+                    for (int i = 0; i < gestor.Turmas.Count; i++)
+                    {
+                        Turma turma = gestor.Turmas[i];
+                        string itemTurma = $"{turma.Id} - {turma.Curso} ({turma.AnoLetivo})";
+                        cmbNovaTurmaAluno.Items.Add(itemTurma);
+                    }
                 }
 
-                if (cmbNovaTurmaAluno.Items.Count > 0)
-                {
-                    cmbNovaTurmaAluno.SelectedIndex = 0;
-                }
+                // Sempre manter a ComboBox ativa e selecionar o primeiro item
+                cmbNovaTurmaAluno.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -515,14 +556,75 @@ namespace Sistema_de_Gestão_Escolar
                 // Atualizar a lista de alunos
                 AtualizarListaAlunos();
 
-                // Limpar a listBox de edição
-                lstEdicaoAluno.Items.Clear();
-
                 MessageBox.Show("Aluno atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Desativar botão de salvar alterações até que um novo aluno seja editado
+                btnSalvarAlteracoesAluno.Enabled = false;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao salvar alterações: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnConsultarAluno_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstAlunos.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Selecione um aluno para consultar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Obter aluno selecionado
+                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+
+                // Exibir os dados do aluno em um MessageBox
+                string infoAluno = $"ID: {alunoSelecionado.Id}\n" +
+                                   $"Nome: {alunoSelecionado.Nome}\n" +
+                                   $"Data de Nascimento: {alunoSelecionado.DataNascimento.ToShortDateString()}\n" +
+                                   $"Contato: {alunoSelecionado.Contato}\n" +
+                                   $"Morada: {alunoSelecionado.Morada}\n" +
+                                   $"E-mail: {alunoSelecionado.Email}\n" +
+                                   $"Turma: {alunoSelecionado.TurmaId}";
+
+                MessageBox.Show(infoAluno, "Detalhes do Aluno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao consultar aluno: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnEditarAluno_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstAlunos.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Selecione um aluno para editar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Obter aluno selecionado
+                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+
+                // Preencher os campos de texto com os dados do aluno para edição
+                txtIdAluno.Text = alunoSelecionado.Id.ToString();
+                txtNomeAluno.Text = alunoSelecionado.Nome;
+                dtpNascimentoAluno.Value = alunoSelecionado.DataNascimento;
+                txtContatoAluno.Text = alunoSelecionado.Contato;
+                txtMoradaAluno.Text = alunoSelecionado.Morada;
+                txtEmailAluno.Text = alunoSelecionado.Email;
+                txtTurmaAluno.Text = alunoSelecionado.TurmaId.ToString();
+
+                // Ativar o botão "Salvar Alterações"
+                btnSalvarAlteracoesAluno.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar os dados do aluno para edição: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

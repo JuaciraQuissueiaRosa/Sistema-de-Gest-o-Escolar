@@ -264,10 +264,77 @@ namespace Sistema_de_Gestão_Escolar
                 mtbContatoProfessor.Text = professorSelecionado.Contato;
                 txtEmailProfessor.Text = professorSelecionado.Email;
                 cmbAreaEnsino.SelectedItem = professorSelecionado.AreaEnsino;
+
+                // Habilitar o botão "Salvar Alterações"
+                btnSalvarEdicaoProfessor.Enabled = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar professor para edição: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao editar professor: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnSalvarEdicaoProfessor_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstProfessores.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Erro: Nenhum professor selecionado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Obter professor selecionado
+                Professor professorSelecionado = gestor.Professores[lstProfessores.SelectedIndex];
+
+                // Capturar os novos dados
+                string novoNome = txtNomeProfessor.Text.Trim();
+                string novoEmail = txtEmailProfessor.Text.Trim();
+                string novaAreaEnsino = cmbAreaEnsino.SelectedItem?.ToString();
+
+                // Capturar contato da MaskedTextBox
+                string novoContato = mtbContatoProfessor.Text.Trim().Replace(" ", "");
+
+                // Verificações de preenchimento
+                if (string.IsNullOrEmpty(novoNome) || string.IsNullOrEmpty(novaAreaEnsino) ||
+                    string.IsNullOrEmpty(novoContato) || string.IsNullOrEmpty(novoEmail))
+                {
+                    MessageBox.Show("Erro: Preencha todos os campos corretamente!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Validar e-mail
+                if (!ValidarEmail(novoEmail))
+                {
+                    MessageBox.Show("Erro: O e-mail informado não é válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Validar contato (deve conter exatamente 13 caracteres e seguir o padrão "+351 9XXXXXXXX" ou "+351 2XXXXXXXX")
+                if (novoContato.Length != 13 || (!novoContato.StartsWith("+3519") && !novoContato.StartsWith("+3512")))
+                {
+                    MessageBox.Show("Erro: O contato deve seguir o formato '+351 9XXXXXXXX' ou '+351 2XXXXXXXX'.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Editar professor no sistema
+                if (!gestor.EditarProfessor(professorSelecionado.Id, novoNome, novaAreaEnsino, novoContato, novoEmail))
+                {
+                    MessageBox.Show("Erro ao editar o professor!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Atualizar lista de professores
+                AtualizarListaProfessores();
+
+                // Desabilitar o botão após salvar
+                btnSalvarEdicaoProfessor.Enabled = false;
+
+                MessageBox.Show("Professor editado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao salvar alterações do professor: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

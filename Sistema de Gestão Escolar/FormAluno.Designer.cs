@@ -51,8 +51,9 @@
             txtIdAluno = new TextBox();
             lblIdAluno = new Label();
             cmbNovaTurmaAluno = new ComboBox();
-            lstEdicaoAluno = new ListBox();
             btnSalvarAlteracoesAluno = new Button();
+            btnEditarAluno = new Button();
+            btnConsultarAluno = new Button();
             SuspendLayout();
             // 
             // lstAlunos
@@ -60,13 +61,13 @@
             lstAlunos.FormattingEnabled = true;
             lstAlunos.Location = new Point(12, 12);
             lstAlunos.Name = "lstAlunos";
-            lstAlunos.Size = new Size(380, 424);
+            lstAlunos.Size = new Size(675, 424);
             lstAlunos.TabIndex = 0;
             lstAlunos.SelectedIndexChanged += lstAlunos_SelectedIndexChanged;
             // 
             // btnAdicionarAluno
             // 
-            btnAdicionarAluno.Location = new Point(35, 454);
+            btnAdicionarAluno.Location = new Point(23, 456);
             btnAdicionarAluno.Name = "btnAdicionarAluno";
             btnAdicionarAluno.Size = new Size(188, 53);
             btnAdicionarAluno.TabIndex = 1;
@@ -76,7 +77,7 @@
             // 
             // btnRemoverAluno
             // 
-            btnRemoverAluno.Location = new Point(35, 513);
+            btnRemoverAluno.Location = new Point(211, 544);
             btnRemoverAluno.Name = "btnRemoverAluno";
             btnRemoverAluno.Size = new Size(201, 53);
             btnRemoverAluno.TabIndex = 2;
@@ -86,7 +87,7 @@
             // 
             // btnMudarTurma
             // 
-            btnMudarTurma.Location = new Point(35, 625);
+            btnMudarTurma.Location = new Point(509, 545);
             btnMudarTurma.Name = "btnMudarTurma";
             btnMudarTurma.Size = new Size(148, 52);
             btnMudarTurma.TabIndex = 3;
@@ -96,7 +97,7 @@
             // 
             // btnBuscarAluno
             // 
-            btnBuscarAluno.Location = new Point(35, 572);
+            btnBuscarAluno.Location = new Point(45, 544);
             btnBuscarAluno.Name = "btnBuscarAluno";
             btnBuscarAluno.Size = new Size(109, 47);
             btnBuscarAluno.TabIndex = 4;
@@ -107,7 +108,7 @@
             // lblNovaTurmaAluno
             // 
             lblNovaTurmaAluno.AutoSize = true;
-            lblNovaTurmaAluno.Location = new Point(398, 52);
+            lblNovaTurmaAluno.Location = new Point(748, 48);
             lblNovaTurmaAluno.Name = "lblNovaTurmaAluno";
             lblNovaTurmaAluno.Size = new Size(226, 20);
             lblNovaTurmaAluno.TabIndex = 6;
@@ -115,7 +116,7 @@
             // 
             // txtBuscarAluno
             // 
-            txtBuscarAluno.Location = new Point(656, 114);
+            txtBuscarAluno.Location = new Point(1006, 113);
             txtBuscarAluno.Name = "txtBuscarAluno";
             txtBuscarAluno.Size = new Size(214, 27);
             txtBuscarAluno.TabIndex = 7;
@@ -123,7 +124,7 @@
             // lblBuscarAluno
             // 
             lblBuscarAluno.AutoSize = true;
-            lblBuscarAluno.Location = new Point(398, 114);
+            lblBuscarAluno.Location = new Point(748, 113);
             lblBuscarAluno.Name = "lblBuscarAluno";
             lblBuscarAluno.Size = new Size(242, 20);
             lblBuscarAluno.TabIndex = 8;
@@ -131,7 +132,7 @@
             // 
             // txtTurmaAluno
             // 
-            txtTurmaAluno.Location = new Point(656, 172);
+            txtTurmaAluno.Location = new Point(1006, 171);
             txtTurmaAluno.Name = "txtTurmaAluno";
             txtTurmaAluno.Size = new Size(214, 27);
             txtTurmaAluno.TabIndex = 9;
@@ -139,7 +140,7 @@
             // lblTurmaAluno
             // 
             lblTurmaAluno.AutoSize = true;
-            lblTurmaAluno.Location = new Point(546, 179);
+            lblTurmaAluno.Location = new Point(896, 178);
             lblTurmaAluno.Name = "lblTurmaAluno";
             lblTurmaAluno.Size = new Size(94, 20);
             lblTurmaAluno.TabIndex = 10;
@@ -147,7 +148,7 @@
             // 
             // txtEmailAluno
             // 
-            txtEmailAluno.Location = new Point(641, 227);
+            txtEmailAluno.Location = new Point(991, 226);
             txtEmailAluno.Name = "txtEmailAluno";
             txtEmailAluno.Size = new Size(125, 27);
             txtEmailAluno.TabIndex = 11;
@@ -155,7 +156,7 @@
             // lblEmailAluno
             // 
             lblEmailAluno.AutoSize = true;
-            lblEmailAluno.Location = new Point(575, 234);
+            lblEmailAluno.Location = new Point(925, 233);
             lblEmailAluno.Name = "lblEmailAluno";
             lblEmailAluno.Size = new Size(49, 20);
             lblEmailAluno.TabIndex = 12;
@@ -164,7 +165,7 @@
             // lblMoradaAluno
             // 
             lblMoradaAluno.AutoSize = true;
-            lblMoradaAluno.Location = new Point(527, 301);
+            lblMoradaAluno.Location = new Point(877, 300);
             lblMoradaAluno.Name = "lblMoradaAluno";
             lblMoradaAluno.Size = new Size(64, 20);
             lblMoradaAluno.TabIndex = 13;
@@ -172,14 +173,14 @@
             // 
             // txtMoradaAluno
             // 
-            txtMoradaAluno.Location = new Point(615, 298);
+            txtMoradaAluno.Location = new Point(965, 297);
             txtMoradaAluno.Name = "txtMoradaAluno";
             txtMoradaAluno.Size = new Size(192, 27);
             txtMoradaAluno.TabIndex = 14;
             // 
             // txtContatoAluno
             // 
-            txtContatoAluno.Location = new Point(614, 359);
+            txtContatoAluno.Location = new Point(964, 358);
             txtContatoAluno.Name = "txtContatoAluno";
             txtContatoAluno.Size = new Size(125, 27);
             txtContatoAluno.TabIndex = 15;
@@ -187,7 +188,7 @@
             // lblContatoAluno
             // 
             lblContatoAluno.AutoSize = true;
-            lblContatoAluno.Location = new Point(526, 362);
+            lblContatoAluno.Location = new Point(876, 361);
             lblContatoAluno.Name = "lblContatoAluno";
             lblContatoAluno.Size = new Size(65, 20);
             lblContatoAluno.TabIndex = 16;
@@ -196,7 +197,7 @@
             // 
             // dtpNascimentoAluno
             // 
-            dtpNascimentoAluno.Location = new Point(631, 413);
+            dtpNascimentoAluno.Location = new Point(981, 412);
             dtpNascimentoAluno.Name = "dtpNascimentoAluno";
             dtpNascimentoAluno.Size = new Size(250, 27);
             dtpNascimentoAluno.TabIndex = 17;
@@ -204,7 +205,7 @@
             // lblDataNascimento
             // 
             lblDataNascimento.AutoSize = true;
-            lblDataNascimento.Location = new Point(460, 420);
+            lblDataNascimento.Location = new Point(810, 419);
             lblDataNascimento.Name = "lblDataNascimento";
             lblDataNascimento.Size = new Size(148, 20);
             lblDataNascimento.TabIndex = 18;
@@ -212,7 +213,7 @@
             // 
             // txtNomeAluno
             // 
-            txtNomeAluno.Location = new Point(694, 470);
+            txtNomeAluno.Location = new Point(1044, 469);
             txtNomeAluno.Name = "txtNomeAluno";
             txtNomeAluno.Size = new Size(125, 27);
             txtNomeAluno.TabIndex = 19;
@@ -220,7 +221,7 @@
             // lblNomeAluno
             // 
             lblNomeAluno.AutoSize = true;
-            lblNomeAluno.Location = new Point(561, 473);
+            lblNomeAluno.Location = new Point(872, 470);
             lblNomeAluno.Name = "lblNomeAluno";
             lblNomeAluno.Size = new Size(118, 20);
             lblNomeAluno.TabIndex = 20;
@@ -228,7 +229,7 @@
             // 
             // txtIdAluno
             // 
-            txtIdAluno.Location = new Point(725, 530);
+            txtIdAluno.Location = new Point(1020, 530);
             txtIdAluno.Name = "txtIdAluno";
             txtIdAluno.Size = new Size(125, 27);
             txtIdAluno.TabIndex = 21;
@@ -236,7 +237,7 @@
             // lblIdAluno
             // 
             lblIdAluno.AutoSize = true;
-            lblIdAluno.Location = new Point(614, 533);
+            lblIdAluno.Location = new Point(925, 530);
             lblIdAluno.Name = "lblIdAluno";
             lblIdAluno.Size = new Size(92, 20);
             lblIdAluno.TabIndex = 22;
@@ -246,36 +247,49 @@
             // 
             cmbNovaTurmaAluno.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbNovaTurmaAluno.FormattingEnabled = true;
-            cmbNovaTurmaAluno.Location = new Point(656, 49);
+            cmbNovaTurmaAluno.Location = new Point(1006, 48);
             cmbNovaTurmaAluno.Name = "cmbNovaTurmaAluno";
-            cmbNovaTurmaAluno.Size = new Size(214, 28);
+            cmbNovaTurmaAluno.Size = new Size(324, 28);
             cmbNovaTurmaAluno.TabIndex = 23;
-            // 
-            // lstEdicaoAluno
-            // 
-            lstEdicaoAluno.FormattingEnabled = true;
-            lstEdicaoAluno.Location = new Point(935, 33);
-            lstEdicaoAluno.Name = "lstEdicaoAluno";
-            lstEdicaoAluno.Size = new Size(419, 444);
-            lstEdicaoAluno.TabIndex = 24;
             // 
             // btnSalvarAlteracoesAluno
             // 
-            btnSalvarAlteracoesAluno.Location = new Point(968, 517);
+            btnSalvarAlteracoesAluno.Location = new Point(256, 456);
             btnSalvarAlteracoesAluno.Name = "btnSalvarAlteracoesAluno";
-            btnSalvarAlteracoesAluno.Size = new Size(188, 53);
+            btnSalvarAlteracoesAluno.Size = new Size(188, 60);
             btnSalvarAlteracoesAluno.TabIndex = 25;
-            btnSalvarAlteracoesAluno.Text = "Editar aluno selecionado";
+            btnSalvarAlteracoesAluno.Text = "Salvar alterações do aluno selecionado";
             btnSalvarAlteracoesAluno.UseVisualStyleBackColor = true;
             btnSalvarAlteracoesAluno.Click += btnSalvarAlteracoesAluno_Click;
+            // 
+            // btnEditarAluno
+            // 
+            btnEditarAluno.Location = new Point(488, 456);
+            btnEditarAluno.Name = "btnEditarAluno";
+            btnEditarAluno.Size = new Size(188, 60);
+            btnEditarAluno.TabIndex = 26;
+            btnEditarAluno.Text = "Editar aluno selecionado";
+            btnEditarAluno.UseVisualStyleBackColor = true;
+            btnEditarAluno.Click += btnEditarAluno_Click;
+            // 
+            // btnConsultarAluno
+            // 
+            btnConsultarAluno.Location = new Point(161, 652);
+            btnConsultarAluno.Name = "btnConsultarAluno";
+            btnConsultarAluno.Size = new Size(145, 51);
+            btnConsultarAluno.TabIndex = 27;
+            btnConsultarAluno.Text = "Consultar aluno";
+            btnConsultarAluno.UseVisualStyleBackColor = true;
+            btnConsultarAluno.Click += btnConsultarAluno_Click;
             // 
             // FormAluno
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1382, 783);
+            Controls.Add(btnConsultarAluno);
+            Controls.Add(btnEditarAluno);
             Controls.Add(btnSalvarAlteracoesAluno);
-            Controls.Add(lstEdicaoAluno);
             Controls.Add(cmbNovaTurmaAluno);
             Controls.Add(lblIdAluno);
             Controls.Add(txtIdAluno);
@@ -331,7 +345,8 @@
         private TextBox txtIdAluno;
         private Label lblIdAluno;
         private ComboBox cmbNovaTurmaAluno;
-        private ListBox lstEdicaoAluno;
         private Button btnSalvarAlteracoesAluno;
+        private Button btnEditarAluno;
+        private Button btnConsultarAluno;
     }
 }

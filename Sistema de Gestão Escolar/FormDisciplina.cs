@@ -32,6 +32,16 @@ namespace Sistema_de_Gestão_Escolar
                 }
                 string nomeDisciplina = cmbNomeDisciplina.SelectedItem.ToString();
 
+                // Verificar se a disciplina já existe no sistema
+                for (int i = 0; i < gestor.Disciplinas.Count; i++)
+                {
+                    if (gestor.Disciplinas[i].Nome.Equals(nomeDisciplina, StringComparison.OrdinalIgnoreCase))
+                    {
+                        MessageBox.Show("Erro: Já existe uma disciplina com esse nome!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
                 // Capturar a carga horária selecionada no ComboBox
                 if (cmbCargaHoraria.SelectedItem == null)
                 {
@@ -50,7 +60,7 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Lista para armazenar os professores da disciplina
+                // Lista para armazenar os professores formatados
                 List<string> professoresFormatados = new List<string>();
 
                 // Associar professores à disciplina
@@ -100,7 +110,13 @@ namespace Sistema_de_Gestão_Escolar
                 }
 
                 // Adicionar a disciplina ao sistema
-                gestor.AdicionarDisciplina(novaDisciplina);
+                if (!gestor.AdicionarDisciplina(novaDisciplina))
+                {
+                    MessageBox.Show("Erro ao adicionar a disciplina.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Atualizar a lista de disciplinas
                 AtualizarListaDisciplinas();
 
                 MessageBox.Show("Disciplina adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
