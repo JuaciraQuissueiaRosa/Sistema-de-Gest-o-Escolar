@@ -83,10 +83,44 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Verificar se a nota é válida
-                if (!double.TryParse(txtValorNota.Text, out double valorNota))
+                // Verificar se o aluno existe
+                bool alunoExiste = false;
+                for (int i = 0; i < gestor.Alunos.Count; i++)
                 {
-                    MessageBox.Show("Erro: O valor da nota deve ser um número válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (gestor.Alunos[i].Id == alunoId)
+                    {
+                        alunoExiste = true;
+                        break;
+                    }
+                }
+
+                if (!alunoExiste)
+                {
+                    MessageBox.Show("Erro: O aluno com ID " + alunoId + " não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Verificar se a disciplina existe
+                bool disciplinaExiste = false;
+                for (int i = 0; i < gestor.Disciplinas.Count; i++)
+                {
+                    if (gestor.Disciplinas[i].Id == disciplinaId)
+                    {
+                        disciplinaExiste = true;
+                        break;
+                    }
+                }
+
+                if (!disciplinaExiste)
+                {
+                    MessageBox.Show("Erro: A disciplina com ID " + disciplinaId + " não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Verificar se a nota é válida
+                if (!double.TryParse(txtValorNota.Text, out double valorNota) || valorNota < 0 || valorNota > 20)
+                {
+                    MessageBox.Show("Erro: O valor da nota deve ser um número entre 0 e 20!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -110,8 +144,7 @@ namespace Sistema_de_Gestão_Escolar
                 string estadoAno = VerificarEstadoAnoLetivo(periodoLetivo);
                 if (estadoAno == "Encerrado")
                 {
-                    MessageBox.Show("Erro: O ano letivo já foi encerrado. Não é possível adicionar ou alterar notas.",
-                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: O ano letivo já foi encerrado. Não é possível adicionar ou alterar notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -288,11 +321,46 @@ namespace Sistema_de_Gestão_Escolar
                 // Obter nota selecionada
                 Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
 
-                // Preencher os campos com os dados da nota
+                // Verificar se o aluno e a disciplina ainda existem
+                bool alunoExiste = false, disciplinaExiste = false;
+
+                for (int i = 0; i < gestor.Alunos.Count; i++)
+                {
+                    if (gestor.Alunos[i].Id == notaSelecionada.AlunoId)
+                    {
+                        alunoExiste = true;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < gestor.Disciplinas.Count; i++)
+                {
+                    if (gestor.Disciplinas[i].Id == notaSelecionada.DisciplinaId)
+                    {
+                        disciplinaExiste = true;
+                        break;
+                    }
+                }
+
+                if (!alunoExiste)
+                {
+                    MessageBox.Show("Erro: O aluno associado a essa nota foi removido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!disciplinaExiste)
+                {
+                    MessageBox.Show("Erro: A disciplina associada a essa nota foi removida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Preencher os campos com os dados da nota selecionada
                 txtAlunoIdNota.Text = notaSelecionada.AlunoId.ToString();
                 txtDisciplinaIdNota.Text = notaSelecionada.DisciplinaId.ToString();
                 txtValorNota.Text = notaSelecionada.ValorNota.ToString();
                 txtPeriodoNota.Text = notaSelecionada.PeriodoLetivo;
+                cmbTipoAvaliacao.SelectedItem = notaSelecionada.TipoAvaliacao; // Define o tipo de avaliação
+
             }
             catch (Exception ex)
             {
@@ -373,13 +441,14 @@ namespace Sistema_de_Gestão_Escolar
                 // Obter nota selecionada
                 Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
 
+                // Validar novo valor da nota
                 if (!double.TryParse(txtValorNota.Text, out double novoValorNota) || novoValorNota < 0 || novoValorNota > 20)
                 {
                     MessageBox.Show("Erro: A nota deve ser um número entre 0 e 20!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Capturar o tipo de avaliação selecionado
+                // Capturar o novo tipo de avaliação
                 string novoTipoAvaliacao = cmbTipoAvaliacao.SelectedItem?.ToString();
                 if (string.IsNullOrEmpty(novoTipoAvaliacao))
                 {
@@ -387,18 +456,18 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                if (!gestor.EditarNota(notaSelecionada.AlunoId, notaSelecionada.DisciplinaId, notaSelecionada.PeriodoLetivo, novoValorNota, novoTipoAvaliacao))
-                {
-                    MessageBox.Show("Erro ao editar a nota!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                // Aplicar alterações à nota selecionada
+                notaSelecionada.ValorNota = novoValorNota;
+                notaSelecionada.TipoAvaliacao = novoTipoAvaliacao;
 
+                // Atualizar a lista de notas
                 AtualizarListaNotas();
+
                 MessageBox.Show("Nota editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao editar nota: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao salvar edição da nota: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

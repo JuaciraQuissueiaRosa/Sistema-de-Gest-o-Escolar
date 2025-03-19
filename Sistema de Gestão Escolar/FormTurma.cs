@@ -94,25 +94,30 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // ------------------ VERIFICANDO DISCIPLINA ------------------ //
-                if (cmbDisciplinasTurma.SelectedItem == null)
+                // ------------------ VERIFICANDO SELEÇÃO DE DISCIPLINAS ------------------ //
+                if (lstDisciplinasTurma.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show("Erro: Selecione uma disciplina para associar à turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                string disciplinaSelecionada = cmbDisciplinasTurma.SelectedItem.ToString();
-                string[] disciplinaSplit = disciplinaSelecionada.Split(' ');
-
-                if (disciplinaSplit.Length < 2 || !int.TryParse(disciplinaSplit[0], out int disciplinaId))
-                {
-                    MessageBox.Show("Erro: O ID da disciplina não é válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Selecione pelo menos uma disciplina para associar à turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // Criar a nova turma
                 Turma novaTurma = new Turma(id, curso, anoLetivo, turno);
-                novaTurma.DisciplinasIds.Add(disciplinaId);
+
+                // Adicionar todas as disciplinas selecionadas
+                for (int i = 0; i < lstDisciplinasTurma.SelectedItems.Count; i++)
+                {
+                    string disciplinaSelecionada = lstDisciplinasTurma.SelectedItems[i].ToString();
+                    string[] disciplinaSplit = disciplinaSelecionada.Split(' ');
+
+                    if (!int.TryParse(disciplinaSplit[0], out int disciplinaId))
+                    {
+                        MessageBox.Show($"Erro: O ID da disciplina '{disciplinaSelecionada}' não é válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    novaTurma.DisciplinasIds.Add(disciplinaId);
+                }
 
                 // ------------------ VERIFICANDO PROFESSOR ------------------ //
                 if (cmbProfessorTurma.SelectedItem == null)
@@ -124,50 +129,19 @@ namespace Sistema_de_Gestão_Escolar
                 string professorSelecionado = cmbProfessorTurma.SelectedItem.ToString();
                 string[] professorSplit = professorSelecionado.Split(' ');
 
-                if (professorSplit.Length < 2 || !int.TryParse(professorSplit[0], out int professorId))
+                if (!int.TryParse(professorSplit[0], out int professorId))
                 {
                     MessageBox.Show("Erro: O ID do professor não é válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // ------------------ BUSCAR DISCIPLINA E PROFESSOR ------------------ //
-                Disciplina disciplinaEncontrada = null;
-                for (int i = 0; i < gestor.Disciplinas.Count; i++)
-                {
-                    if (gestor.Disciplinas[i].Id == disciplinaId)
-                    {
-                        disciplinaEncontrada = gestor.Disciplinas[i];
-                        break;
-                    }
-                }
-
-                if (disciplinaEncontrada == null)
-                {
-                    MessageBox.Show("Erro: A disciplina selecionada não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // ------------------ VERIFICAR DUPLICIDADE DO PROFESSOR ------------------ //
-                bool professorJaAssociado = false;
-                for (int i = 0; i < disciplinaEncontrada.ProfessoresIds.Count; i++)
-                {
-                    if (disciplinaEncontrada.ProfessoresIds[i] == professorId)
-                    {
-                        professorJaAssociado = true;
-                        break;
-                    }
-                }
-
-                if (!professorJaAssociado)
-                {
-                    disciplinaEncontrada.ProfessoresIds.Add(professorId);
-                }
-
                 // ------------------ ADICIONANDO A TURMA ------------------ //
                 gestor.AdicionarTurma(novaTurma);
+
+                // Atualizar a lista de turmas
                 AtualizarListaTurmas();
 
-                MessageBox.Show("Turma e professor adicionados com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Turma criada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -194,34 +168,27 @@ namespace Sistema_de_Gestão_Escolar
                 {
                     Turma turma = gestor.Turmas[i];
 
-                    // Criar string para armazenar os nomes das disciplinas associadas
+                    // Criar strings para armazenar os nomes das disciplinas associadas
                     string disciplinasTexto = "";
                     string professoresTexto = "";
 
                     // Percorrer todas as disciplinas associadas à turma
                     for (int j = 0; j < turma.DisciplinasIds.Count; j++)
                     {
+                        int disciplinaId = turma.DisciplinasIds[j];
+
                         for (int k = 0; k < gestor.Disciplinas.Count; k++)
                         {
-                            if (gestor.Disciplinas[k].Id == turma.DisciplinasIds[j])
+                            if (gestor.Disciplinas[k].Id == disciplinaId)
                             {
+                                // Adiciona a disciplina à string, separando por vírgula
                                 if (disciplinasTexto != "")
                                 {
                                     disciplinasTexto += ", ";
                                 }
                                 disciplinasTexto += gestor.Disciplinas[k].Nome;
-                                break;
-                            }
-                        }
-                    }
 
-                    // Percorrer todas as disciplinas da turma para obter os professores associados
-                    for (int j = 0; j < turma.DisciplinasIds.Count; j++)
-                    {
-                        for (int k = 0; k < gestor.Disciplinas.Count; k++)
-                        {
-                            if (gestor.Disciplinas[k].Id == turma.DisciplinasIds[j])
-                            {
+                                // Percorrer os professores associados a essa disciplina
                                 for (int p = 0; p < gestor.Disciplinas[k].ProfessoresIds.Count; p++)
                                 {
                                     int professorId = gestor.Disciplinas[k].ProfessoresIds[p];
@@ -231,6 +198,7 @@ namespace Sistema_de_Gestão_Escolar
                                     {
                                         if (gestor.Professores[q].Id == professorId)
                                         {
+                                            // Adiciona o professor à string, separando por vírgula
                                             if (professoresTexto != "")
                                             {
                                                 professoresTexto += ", ";
@@ -240,6 +208,7 @@ namespace Sistema_de_Gestão_Escolar
                                         }
                                     }
                                 }
+                                break;
                             }
                         }
                     }
@@ -342,27 +311,22 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                cmbDisciplinasTurma.Items.Clear(); // Limpa a ComboBox antes de atualizar
+                lstDisciplinasTurma.Items.Clear(); // Limpa a ListBox antes de atualizar
 
-                // Se não houver disciplinas cadastradas, exibir mensagem na ComboBox
+                // Se não houver disciplinas cadastradas, exibir mensagem
                 if (gestor.Disciplinas.Count == 0)
                 {
-                    cmbDisciplinasTurma.Items.Add("Nenhuma disciplina disponível");
-                    return; // Não define SelectedIndex para evitar erro de seleção inválida
+                    lstDisciplinasTurma.Items.Add("Nenhuma disciplina disponível");
+                    return;
                 }
 
-                // Adicionar disciplinas à ComboBox
+                // Percorrer todas as disciplinas cadastradas
                 for (int i = 0; i < gestor.Disciplinas.Count; i++)
                 {
                     Disciplina disciplina = gestor.Disciplinas[i];
-                    string item = disciplina.Id + " - " + disciplina.Nome;
-                    cmbDisciplinasTurma.Items.Add(item);
-                }
 
-                // Selecionar o primeiro item apenas se houver disciplinas disponíveis
-                if (cmbDisciplinasTurma.Items.Count > 0)
-                {
-                    cmbDisciplinasTurma.SelectedIndex = 0;
+                    // Adicionar cada disciplina no formato "ID - Nome"
+                    lstDisciplinasTurma.Items.Add(disciplina.Id + " - " + disciplina.Nome);
                 }
             }
             catch (Exception ex)
@@ -390,18 +354,18 @@ namespace Sistema_de_Gestão_Escolar
                 cmbTurnoTurma.SelectedItem = turmaSelecionada.Turno;
                 cmbCursoTurma.SelectedItem = turmaSelecionada.Curso;
 
-                // Limpar e preencher ComboBox de Disciplinas
-                cmbDisciplinasTurma.Items.Clear();
+                // Limpar e preencher ListBox de Disciplinas
+                lstDisciplinasTurma.Items.Clear();
                 for (int i = 0; i < gestor.Disciplinas.Count; i++)
                 {
                     Disciplina disciplina = gestor.Disciplinas[i];
                     string item = disciplina.Id + " - " + disciplina.Nome;
-                    cmbDisciplinasTurma.Items.Add(item);
+                    lstDisciplinasTurma.Items.Add(item);
 
-                    // Selecionar a disciplina atual
+                    // Marcar as disciplinas que já estão associadas à turma
                     if (turmaSelecionada.DisciplinasIds.Contains(disciplina.Id))
                     {
-                        cmbDisciplinasTurma.SelectedItem = item;
+                        lstDisciplinasTurma.SetSelected(lstDisciplinasTurma.Items.Count - 1, true);
                     }
                 }
 
@@ -414,15 +378,14 @@ namespace Sistema_de_Gestão_Escolar
                     cmbProfessorTurma.Items.Add(item);
 
                     // Selecionar os professores que já estão associados à turma
-                    if (turmaSelecionada.DisciplinasIds.Count > 0)
+                    for (int j = 0; j < turmaSelecionada.DisciplinasIds.Count; j++)
                     {
-                        for (int j = 0; j < gestor.Disciplinas.Count; j++)
+                        int disciplinaId = turmaSelecionada.DisciplinasIds[j];
+                        Disciplina disciplinaEncontrada = gestor.Disciplinas.Find(d => d.Id == disciplinaId);
+
+                        if (disciplinaEncontrada != null && disciplinaEncontrada.ProfessoresIds.Contains(professor.Id))
                         {
-                            if (turmaSelecionada.DisciplinasIds.Contains(gestor.Disciplinas[j].Id) &&
-                                gestor.Disciplinas[j].ProfessoresIds.Contains(professor.Id))
-                            {
-                                cmbProfessorTurma.SelectedItem = item;
-                            }
+                            cmbProfessorTurma.SelectedItem = item;
                         }
                     }
                 }
@@ -542,16 +505,16 @@ namespace Sistema_de_Gestão_Escolar
                 turmaSelecionada.AnoLetivo = novoAnoLetivo;
                 turmaSelecionada.Turno = novoTurno;
 
-                // Atualizar disciplinas associadas à turma
+                // Atualizar disciplinas associadas à turma usando a ListBox
                 turmaSelecionada.DisciplinasIds.Clear();
-                if (cmbDisciplinasTurma.SelectedItem != null)
+                for (int i = 0; i < lstDisciplinasTurma.SelectedItems.Count; i++)
                 {
-                    string disciplinaSelecionada = cmbDisciplinasTurma.SelectedItem.ToString();
+                    string disciplinaSelecionada = lstDisciplinasTurma.SelectedItems[i].ToString();
                     int disciplinaId = int.Parse(disciplinaSelecionada.Split(' ')[0]);
                     turmaSelecionada.DisciplinasIds.Add(disciplinaId);
                 }
 
-                // Atualizar professores associados à turma
+                // Atualizar professores associados às disciplinas da turma
                 for (int i = 0; i < gestor.Disciplinas.Count; i++)
                 {
                     Disciplina disciplina = gestor.Disciplinas[i];
@@ -559,6 +522,7 @@ namespace Sistema_de_Gestão_Escolar
                     if (turmaSelecionada.DisciplinasIds.Contains(disciplina.Id))
                     {
                         disciplina.ProfessoresIds.Clear();
+
                         if (cmbProfessorTurma.SelectedItem != null)
                         {
                             string professorSelecionado = cmbProfessorTurma.SelectedItem.ToString();

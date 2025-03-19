@@ -263,7 +263,6 @@ namespace Sistema_de_Gestão_Escolar
 
                     // Procurar o nome da turma correspondente
                     string nomeTurma = "Turma não encontrada";
-
                     for (int j = 0; j < gestor.Turmas.Count; j++)
                     {
                         if (gestor.Turmas[j].Id == aluno.TurmaId)
@@ -273,38 +272,50 @@ namespace Sistema_de_Gestão_Escolar
                         }
                     }
 
-                    // Construir o histórico de notas do aluno
+                    // Construir o histórico de notas do aluno manualmente
                     string historicoNotas = "Sem notas registradas";
                     List<string> notasLista = new List<string>();
 
-                    for (int j = 0; j < aluno.Notas.Count; j++)
+                    for (int j = 0; j < gestor.Notas.Count; j++)
                     {
-                        Nota nota = aluno.Notas[j];
+                        Nota nota = gestor.Notas[j];
 
-                        // Buscar o nome da disciplina associada à nota
-                        string nomeDisciplina = "Disciplina não encontrada";
-                        for (int k = 0; k < gestor.Disciplinas.Count; k++)
+                        if (nota.AlunoId == aluno.Id)
                         {
-                            if (gestor.Disciplinas[k].Id == nota.DisciplinaId)
+                            // Buscar o nome da disciplina associada à nota
+                            string nomeDisciplina = "Disciplina não encontrada";
+                            for (int k = 0; k < gestor.Disciplinas.Count; k++)
                             {
-                                nomeDisciplina = gestor.Disciplinas[k].Nome;
-                                break;
+                                if (gestor.Disciplinas[k].Id == nota.DisciplinaId)
+                                {
+                                    nomeDisciplina = gestor.Disciplinas[k].Nome;
+                                    break;
+                                }
                             }
-                        }
 
-                        // Adicionar a nota ao histórico do aluno
-                        notasLista.Add($"{nomeDisciplina}: {nota.ValorNota}");
+                            // Adicionar a nota ao histórico do aluno
+                            notasLista.Add("ID: " + nota.DisciplinaId + " | " + nomeDisciplina + ": " + nota.ValorNota + " (" + nota.PeriodoLetivo + ")");
+                        }
                     }
 
                     if (notasLista.Count > 0)
                     {
-                        historicoNotas = string.Join(" | ", notasLista);
+                        historicoNotas = ""; // Resetar a string para começar a concatenação manualmente
+                        for (int n = 0; n < notasLista.Count; n++)
+                        {
+                            if (n > 0) // Adicionar separador apenas a partir do segundo item
+                            {
+                                historicoNotas += " | ";
+                            }
+                            historicoNotas += notasLista[n];
+                        }
                     }
 
                     // Criar a string formatada para exibição
-                    string infoAluno = $"ID: {aluno.Id} | Nome: {aluno.Nome} | Turma: {nomeTurma} | " +
-                                       $"Contato: {aluno.Contato} | Morada: {aluno.Morada} | " +
-                                       $"Nascimento: {aluno.DataNascimento.ToShortDateString()} | Notas: {historicoNotas}";
+                    string infoAluno = "ID: " + aluno.Id + " | Nome: " + aluno.Nome + " | " +
+                                       "Nascimento: " + aluno.DataNascimento.ToShortDateString() + " | " +
+                                       "Contato: " + aluno.Contato + " | Morada: " + aluno.Morada + " | " +
+                                       "Turma: " + nomeTurma + " | Histórico: " + historicoNotas;
 
                     // Adicionar o aluno na ListBox
                     lstAlunos.Items.Add(infoAluno);
@@ -577,19 +588,71 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Obter aluno selecionado
+                // Obter o aluno selecionado
                 Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
 
-                // Exibir os dados do aluno em um MessageBox
+                // Buscar o nome da turma correspondente
+                string nomeTurma = "Turma não encontrada";
+                for (int j = 0; j < gestor.Turmas.Count; j++)
+                {
+                    if (gestor.Turmas[j].Id == alunoSelecionado.TurmaId)
+                    {
+                        nomeTurma = gestor.Turmas[j].Id + " - " + gestor.Turmas[j].Curso;
+                        break;
+                    }
+                }
+
+                // Construir o histórico de notas do aluno manualmente
+                string historicoNotas = "Sem notas registradas";
+                List<string> notasLista = new List<string>();
+
+                for (int j = 0; j < gestor.Notas.Count; j++)
+                {
+                    Nota nota = gestor.Notas[j];
+
+                    if (nota.AlunoId == alunoSelecionado.Id)
+                    {
+                        // Buscar o nome da disciplina associada à nota
+                        string nomeDisciplina = "Disciplina não encontrada";
+                        for (int k = 0; k < gestor.Disciplinas.Count; k++)
+                        {
+                            if (gestor.Disciplinas[k].Id == nota.DisciplinaId)
+                            {
+                                nomeDisciplina = gestor.Disciplinas[k].Nome;
+                                break;
+                            }
+                        }
+
+                        // Adicionar a nota ao histórico do aluno
+                        notasLista.Add("ID: " + nota.DisciplinaId + " | " + nomeDisciplina + ": " + nota.ValorNota + " (" + nota.PeriodoLetivo + ")");
+                    }
+                }
+
+                if (notasLista.Count > 0)
+                {
+                    historicoNotas = ""; // Resetar a string para começar a concatenação manualmente
+                    for (int n = 0; n < notasLista.Count; n++)
+                    {
+                        if (n > 0) // Adicionar separador apenas a partir do segundo item
+                        {
+                            historicoNotas += "\n";
+                        }
+                        historicoNotas += notasLista[n];
+                    }
+                }
+
+                // Criar a string formatada para exibição
                 string infoAluno = $"ID: {alunoSelecionado.Id}\n" +
                                    $"Nome: {alunoSelecionado.Nome}\n" +
                                    $"Data de Nascimento: {alunoSelecionado.DataNascimento.ToShortDateString()}\n" +
                                    $"Contato: {alunoSelecionado.Contato}\n" +
                                    $"Morada: {alunoSelecionado.Morada}\n" +
                                    $"E-mail: {alunoSelecionado.Email}\n" +
-                                   $"Turma: {alunoSelecionado.TurmaId}";
+                                   $"Turma: {nomeTurma}\n" +
+                                   $"\n📚 Histórico Escolar:\n{historicoNotas}";
 
-                MessageBox.Show(infoAluno, "Detalhes do Aluno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Exibir as informações detalhadas do aluno
+                MessageBox.Show(infoAluno, "Consulta de Aluno", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

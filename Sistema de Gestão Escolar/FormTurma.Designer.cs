@@ -48,12 +48,13 @@
             cmbProfessorTurma = new ComboBox();
             label1 = new Label();
             btnSalvarEdicaoTurma = new Button();
+            lstDisciplinasTurma = new ListBox();
             SuspendLayout();
             // 
             // lblIdTurma
             // 
             lblIdTurma.AutoSize = true;
-            lblIdTurma.Location = new Point(43, 61);
+            lblIdTurma.Location = new Point(54, 54);
             lblIdTurma.Name = "lblIdTurma";
             lblIdTurma.Size = new Size(94, 20);
             lblIdTurma.TabIndex = 0;
@@ -62,7 +63,7 @@
             // lblCursoTurma
             // 
             lblCursoTurma.AutoSize = true;
-            lblCursoTurma.Location = new Point(43, 116);
+            lblCursoTurma.Location = new Point(54, 109);
             lblCursoTurma.Name = "lblCursoTurma";
             lblCursoTurma.Size = new Size(49, 20);
             lblCursoTurma.TabIndex = 1;
@@ -71,7 +72,7 @@
             // lblAnoLetivoTurma
             // 
             lblAnoLetivoTurma.AutoSize = true;
-            lblAnoLetivoTurma.Location = new Point(43, 170);
+            lblAnoLetivoTurma.Location = new Point(54, 163);
             lblAnoLetivoTurma.Name = "lblAnoLetivoTurma";
             lblAnoLetivoTurma.Size = new Size(83, 20);
             lblAnoLetivoTurma.TabIndex = 2;
@@ -80,7 +81,7 @@
             // lblAlunosTurma
             // 
             lblAlunosTurma.AutoSize = true;
-            lblAlunosTurma.Location = new Point(43, 236);
+            lblAlunosTurma.Location = new Point(54, 208);
             lblAlunosTurma.Name = "lblAlunosTurma";
             lblAlunosTurma.Size = new Size(268, 20);
             lblAlunosTurma.TabIndex = 3;
@@ -89,7 +90,7 @@
             // lblTurnoTurma
             // 
             lblTurnoTurma.AutoSize = true;
-            lblTurnoTurma.Location = new Point(53, 336);
+            lblTurnoTurma.Location = new Point(64, 308);
             lblTurnoTurma.Name = "lblTurnoTurma";
             lblTurnoTurma.Size = new Size(50, 20);
             lblTurnoTurma.TabIndex = 4;
@@ -98,7 +99,7 @@
             // lblDisciplinasTurma
             // 
             lblDisciplinasTurma.AutoSize = true;
-            lblDisciplinasTurma.Location = new Point(43, 397);
+            lblDisciplinasTurma.Location = new Point(54, 369);
             lblDisciplinasTurma.Name = "lblDisciplinasTurma";
             lblDisciplinasTurma.Size = new Size(161, 20);
             lblDisciplinasTurma.TabIndex = 5;
@@ -106,21 +107,21 @@
             // 
             // txtAnoLetivoTurma
             // 
-            txtAnoLetivoTurma.Location = new Point(145, 163);
+            txtAnoLetivoTurma.Location = new Point(156, 156);
             txtAnoLetivoTurma.Name = "txtAnoLetivoTurma";
             txtAnoLetivoTurma.Size = new Size(253, 27);
             txtAnoLetivoTurma.TabIndex = 7;
             // 
             // txtAlunosTurma
             // 
-            txtAlunosTurma.Location = new Point(53, 269);
+            txtAlunosTurma.Location = new Point(64, 241);
             txtAlunosTurma.Name = "txtAlunosTurma";
             txtAlunosTurma.Size = new Size(253, 27);
             txtAlunosTurma.TabIndex = 8;
             // 
             // txtIdTurma
             // 
-            txtIdTurma.Location = new Point(170, 54);
+            txtIdTurma.Location = new Point(181, 47);
             txtIdTurma.Name = "txtIdTurma";
             txtIdTurma.Size = new Size(259, 27);
             txtIdTurma.TabIndex = 11;
@@ -129,7 +130,7 @@
             // 
             cmbTurnoTurma.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbTurnoTurma.FormattingEnabled = true;
-            cmbTurnoTurma.Location = new Point(121, 333);
+            cmbTurnoTurma.Location = new Point(132, 305);
             cmbTurnoTurma.Name = "cmbTurnoTurma";
             cmbTurnoTurma.Size = new Size(268, 28);
             cmbTurnoTurma.TabIndex = 12;
@@ -137,7 +138,7 @@
             // 
             // btnRemoverTurma
             // 
-            btnRemoverTurma.Location = new Point(53, 657);
+            btnRemoverTurma.Location = new Point(816, 573);
             btnRemoverTurma.Name = "btnRemoverTurma";
             btnRemoverTurma.Size = new Size(139, 70);
             btnRemoverTurma.TabIndex = 13;
@@ -147,7 +148,7 @@
             // 
             // btnAdicionarTurma
             // 
-            btnAdicionarTurma.Location = new Point(233, 657);
+            btnAdicionarTurma.Location = new Point(996, 573);
             btnAdicionarTurma.Name = "btnAdicionarTurma";
             btnAdicionarTurma.Size = new Size(156, 70);
             btnAdicionarTurma.TabIndex = 14;
@@ -158,9 +159,9 @@
             // lstTurmas
             // 
             lstTurmas.FormattingEnabled = true;
-            lstTurmas.Location = new Point(644, 54);
+            lstTurmas.Location = new Point(662, 12);
             lstTurmas.Name = "lstTurmas";
-            lstTurmas.Size = new Size(735, 444);
+            lstTurmas.Size = new Size(735, 404);
             lstTurmas.TabIndex = 15;
             lstTurmas.SelectedIndexChanged += lstTurmas_SelectedIndexChanged;
             // 
@@ -168,7 +169,7 @@
             // 
             cmbCursoTurma.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbCursoTurma.FormattingEnabled = true;
-            cmbCursoTurma.Location = new Point(147, 110);
+            cmbCursoTurma.Location = new Point(158, 103);
             cmbCursoTurma.Name = "cmbCursoTurma";
             cmbCursoTurma.Size = new Size(373, 28);
             cmbCursoTurma.TabIndex = 16;
@@ -177,14 +178,14 @@
             // 
             cmbDisciplinasTurma.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbDisciplinasTurma.FormattingEnabled = true;
-            cmbDisciplinasTurma.Location = new Point(232, 389);
+            cmbDisciplinasTurma.Location = new Point(243, 361);
             cmbDisciplinasTurma.Name = "cmbDisciplinasTurma";
             cmbDisciplinasTurma.Size = new Size(288, 28);
             cmbDisciplinasTurma.TabIndex = 17;
             // 
             // btnEditarTurma
             // 
-            btnEditarTurma.Location = new Point(457, 657);
+            btnEditarTurma.Location = new Point(1220, 573);
             btnEditarTurma.Name = "btnEditarTurma";
             btnEditarTurma.Size = new Size(149, 70);
             btnEditarTurma.TabIndex = 18;
@@ -194,7 +195,7 @@
             // 
             // btnConsultarTurma
             // 
-            btnConsultarTurma.Location = new Point(991, 561);
+            btnConsultarTurma.Location = new Point(986, 474);
             btnConsultarTurma.Name = "btnConsultarTurma";
             btnConsultarTurma.Size = new Size(144, 59);
             btnConsultarTurma.TabIndex = 19;
@@ -206,7 +207,7 @@
             // 
             cmbProfessorTurma.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProfessorTurma.FormattingEnabled = true;
-            cmbProfessorTurma.Location = new Point(233, 458);
+            cmbProfessorTurma.Location = new Point(244, 428);
             cmbProfessorTurma.Name = "cmbProfessorTurma";
             cmbProfessorTurma.Size = new Size(287, 28);
             cmbProfessorTurma.TabIndex = 20;
@@ -214,7 +215,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(39, 461);
+            label1.Location = new Point(50, 431);
             label1.Name = "label1";
             label1.Size = new Size(165, 20);
             label1.TabIndex = 21;
@@ -222,7 +223,7 @@
             // 
             // btnSalvarEdicaoTurma
             // 
-            btnSalvarEdicaoTurma.Location = new Point(1177, 561);
+            btnSalvarEdicaoTurma.Location = new Point(1172, 474);
             btnSalvarEdicaoTurma.Name = "btnSalvarEdicaoTurma";
             btnSalvarEdicaoTurma.Size = new Size(135, 59);
             btnSalvarEdicaoTurma.TabIndex = 22;
@@ -230,11 +231,21 @@
             btnSalvarEdicaoTurma.UseVisualStyleBackColor = true;
             btnSalvarEdicaoTurma.Click += btnSalvarEdicaoTurma_Click;
             // 
+            // lstDisciplinasTurma
+            // 
+            lstDisciplinasTurma.FormattingEnabled = true;
+            lstDisciplinasTurma.Location = new Point(54, 506);
+            lstDisciplinasTurma.Name = "lstDisciplinasTurma";
+            lstDisciplinasTurma.SelectionMode = SelectionMode.MultiExtended;
+            lstDisciplinasTurma.Size = new Size(576, 344);
+            lstDisciplinasTurma.TabIndex = 23;
+            // 
             // FormTurma
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1409, 788);
+            ClientSize = new Size(1409, 879);
+            Controls.Add(lstDisciplinasTurma);
             Controls.Add(btnSalvarEdicaoTurma);
             Controls.Add(label1);
             Controls.Add(cmbProfessorTurma);
@@ -284,5 +295,6 @@
         private ComboBox cmbProfessorTurma;
         private Label label1;
         private Button btnSalvarEdicaoTurma;
+        private ListBox lstDisciplinasTurma;
     }
 }
