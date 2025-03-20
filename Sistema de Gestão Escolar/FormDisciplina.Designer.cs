@@ -40,7 +40,6 @@
             cmbNomeDisciplina = new ComboBox();
             cmbCargaHoraria = new ComboBox();
             btnConsultarDisciplina = new Button();
-            button2 = new Button();
             btnEditarDisciplina = new Button();
             btnSalvarEdicaoDisciplina = new Button();
             SuspendLayout();
@@ -97,7 +96,7 @@
             // 
             // btnAdicionarDisciplina
             // 
-            btnAdicionarDisciplina.Location = new Point(51, 348);
+            btnAdicionarDisciplina.Location = new Point(20, 348);
             btnAdicionarDisciplina.Name = "btnAdicionarDisciplina";
             btnAdicionarDisciplina.Size = new Size(119, 68);
             btnAdicionarDisciplina.TabIndex = 8;
@@ -107,7 +106,7 @@
             // 
             // btnRemoverDisciplina
             // 
-            btnRemoverDisciplina.Location = new Point(304, 348);
+            btnRemoverDisciplina.Location = new Point(188, 348);
             btnRemoverDisciplina.Name = "btnRemoverDisciplina";
             btnRemoverDisciplina.Size = new Size(164, 68);
             btnRemoverDisciplina.TabIndex = 9;
@@ -143,7 +142,7 @@
             // 
             // btnConsultarDisciplina
             // 
-            btnConsultarDisciplina.Location = new Point(131, 498);
+            btnConsultarDisciplina.Location = new Point(40, 489);
             btnConsultarDisciplina.Name = "btnConsultarDisciplina";
             btnConsultarDisciplina.Size = new Size(128, 51);
             btnConsultarDisciplina.TabIndex = 13;
@@ -151,18 +150,9 @@
             btnConsultarDisciplina.UseVisualStyleBackColor = true;
             btnConsultarDisciplina.Click += btnConsultarDisciplina_Click;
             // 
-            // button2
-            // 
-            button2.Location = new Point(0, 0);
-            button2.Name = "button2";
-            button2.Size = new Size(94, 29);
-            button2.TabIndex = 14;
-            button2.Text = "button2";
-            button2.UseVisualStyleBackColor = true;
-            // 
             // btnEditarDisciplina
             // 
-            btnEditarDisciplina.Location = new Point(416, 458);
+            btnEditarDisciplina.Location = new Point(221, 473);
             btnEditarDisciplina.Name = "btnEditarDisciplina";
             btnEditarDisciplina.Size = new Size(126, 67);
             btnEditarDisciplina.TabIndex = 15;
@@ -172,7 +162,7 @@
             // 
             // btnSalvarEdicaoDisciplina
             // 
-            btnSalvarEdicaoDisciplina.Location = new Point(815, 509);
+            btnSalvarEdicaoDisciplina.Location = new Point(393, 404);
             btnSalvarEdicaoDisciplina.Name = "btnSalvarEdicaoDisciplina";
             btnSalvarEdicaoDisciplina.Size = new Size(132, 76);
             btnSalvarEdicaoDisciplina.TabIndex = 16;
@@ -187,7 +177,6 @@
             ClientSize = new Size(1412, 639);
             Controls.Add(btnSalvarEdicaoDisciplina);
             Controls.Add(btnEditarDisciplina);
-            Controls.Add(button2);
             Controls.Add(btnConsultarDisciplina);
             Controls.Add(cmbCargaHoraria);
             Controls.Add(cmbNomeDisciplina);
@@ -221,7 +210,6 @@
         private ComboBox cmbNomeDisciplina;
         private ComboBox cmbCargaHoraria;
         private Button btnConsultarDisciplina;
-        private Button button2;
         private Button btnEditarDisciplina;
         private Button btnSalvarEdicaoDisciplina;
     }
