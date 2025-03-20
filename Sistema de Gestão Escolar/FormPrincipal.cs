@@ -22,7 +22,7 @@
 
         private void btnProfessores_Click(object sender, EventArgs e)
         {
-            FormProfessor formProfessores = new FormProfessor (gestor);
+            FormProfessor formProfessores = new FormProfessor(gestor);
             formProfessores.Show();
         }
 
@@ -47,6 +47,13 @@
         private void btnSair_Click(object sender, EventArgs e)
         {
             Application.Exit(); // Fecha o programa
+        }
+
+        private void btnCreditos_Click(object sender, EventArgs e)
+        {
+            FormCredito formCredito = new FormCredito();
+
+            formCredito.Show();
         }
     }
 }

@@ -34,11 +34,12 @@
             btnAlunos = new Button();
             btnTurmas = new Button();
             btnSair = new Button();
+            btnCreditos = new Button();
             SuspendLayout();
             // 
             // btnDisciplinas
             // 
-            btnDisciplinas.Location = new Point(311, 87);
+            btnDisciplinas.Location = new Point(292, 60);
             btnDisciplinas.Name = "btnDisciplinas";
             btnDisciplinas.Size = new Size(116, 50);
             btnDisciplinas.TabIndex = 0;
@@ -48,7 +49,7 @@
             // 
             // btnNotas
             // 
-            btnNotas.Location = new Point(229, 171);
+            btnNotas.Location = new Point(300, 168);
             btnNotas.Name = "btnNotas";
             btnNotas.Size = new Size(116, 52);
             btnNotas.TabIndex = 1;
@@ -78,7 +79,7 @@
             // 
             // btnTurmas
             // 
-            btnTurmas.Location = new Point(154, 87);
+            btnTurmas.Location = new Point(135, 60);
             btnTurmas.Name = "btnTurmas";
             btnTurmas.Size = new Size(104, 50);
             btnTurmas.TabIndex = 4;
@@ -96,11 +97,22 @@
             btnSair.UseVisualStyleBackColor = true;
             btnSair.Click += btnSair_Click;
             // 
+            // btnCreditos
+            // 
+            btnCreditos.Location = new Point(135, 176);
+            btnCreditos.Name = "btnCreditos";
+            btnCreditos.Size = new Size(94, 44);
+            btnCreditos.TabIndex = 6;
+            btnCreditos.Text = "Creditos";
+            btnCreditos.UseVisualStyleBackColor = true;
+            btnCreditos.Click += btnCreditos_Click;
+            // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(620, 450);
+            Controls.Add(btnCreditos);
             Controls.Add(btnSair);
             Controls.Add(btnTurmas);
             Controls.Add(btnAlunos);
@@ -121,5 +133,6 @@
         private Button btnAlunos;
         private Button btnTurmas;
         private Button btnSair;
+        private Button btnCreditos;
     }
 }

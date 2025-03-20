@@ -153,16 +153,6 @@ namespace Sistema_de_Gestão_Escolar
                 Nota novaNota = new Nota(alunoId, disciplinaId, valorNota, periodoLetivo, tipoAvaliacao);
                 gestor.AdicionarNota(novaNota);
 
-                // ----------- GARANTIR QUE O TIPO DE AVALIAÇÃO SEJA SALVO ----------- //
-                if (!tiposAvaliacao.ContainsKey(gestor.Notas.Count - 1))
-                {
-                    tiposAvaliacao.Add(gestor.Notas.Count - 1, tipoAvaliacao);
-                }
-                else
-                {
-                    tiposAvaliacao[gestor.Notas.Count - 1] = tipoAvaliacao;
-                }
-
                 // ----------- ATUALIZAR A LISTA DE NOTAS ----------- //
                 AtualizarListaNotas();
 
@@ -183,7 +173,7 @@ namespace Sistema_de_Gestão_Escolar
                 {
                     Nota nota = gestor.Notas[i];
 
-                    // ----------- BUSCAR O NOME DA DISCIPLINA ----------- //
+                    // Buscar a disciplina correspondente
                     string nomeDisciplina = "Disciplina não encontrada";
                     for (int j = 0; j < gestor.Disciplinas.Count; j++)
                     {
@@ -194,7 +184,7 @@ namespace Sistema_de_Gestão_Escolar
                         }
                     }
 
-                    // ----------- BUSCAR O NOME DO ALUNO E A TURMA ----------- //
+                    // Buscar o aluno correspondente e sua turma
                     string nomeAluno = "Aluno não encontrado";
                     string turmaInfo = "Turma não encontrada";
 
@@ -204,7 +194,7 @@ namespace Sistema_de_Gestão_Escolar
                         {
                             nomeAluno = gestor.Alunos[j].Nome;
 
-                            // Buscar o curso e o ID da turma do aluno
+                            // Buscar turma e curso do aluno
                             for (int k = 0; k < gestor.Turmas.Count; k++)
                             {
                                 if (gestor.Turmas[k].Id == gestor.Alunos[j].TurmaId)
@@ -213,25 +203,17 @@ namespace Sistema_de_Gestão_Escolar
                                     break;
                                 }
                             }
-
                             break;
                         }
                     }
 
-                    // ----------- VERIFICAR O TIPO DE AVALIAÇÃO ----------- //
-                    string tipoAvaliacao = "Não Informado";
-                    if (tiposAvaliacao.ContainsKey(i))
-                    {
-                        tipoAvaliacao = tiposAvaliacao[i];
-                    }
-
-                    // ----------- CRIAR A STRING FORMATADA PARA A LISTBOX ----------- //
+                    // Criar a string formatada para exibição na ListBox
                     string infoNota = "Ano Letivo: " + nota.PeriodoLetivo +
-                                      " | Tipo: " + tipoAvaliacao +
+                                      " | Tipo: " + nota.TipoAvaliacao + // Corrigido para garantir que sempre exibe
                                       " | Nota: " + nota.ValorNota +
                                       " | Disciplina: " + nota.DisciplinaId + " - " + nomeDisciplina +
                                       " | Aluno: " + nota.AlunoId + " - " + nomeAluno +
-                                      " | Turma: " + turmaInfo; // Agora mostra ID e curso da turma
+                                      " | Turma: " + turmaInfo; // Agora exibe ID e curso da turma
 
                     lstNotas.Items.Add(infoNota);
                 }
@@ -400,7 +382,7 @@ namespace Sistema_de_Gestão_Escolar
                 // Obter a nota selecionada
                 Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
 
-                // Procurar a disciplina correspondente
+                // ----------- BUSCAR O NOME DA DISCIPLINA ----------- //
                 string nomeDisciplina = "Disciplina não encontrada";
                 for (int i = 0; i < gestor.Disciplinas.Count; i++)
                 {
@@ -411,33 +393,45 @@ namespace Sistema_de_Gestão_Escolar
                     }
                 }
 
-                // Procurar o aluno correspondente
+                // ----------- BUSCAR O NOME DO ALUNO ----------- //
                 string nomeAluno = "Aluno não encontrado";
-                int turmaAluno = -1;
+                int turmaId = -1;
+                string nomeTurma = "Turma não encontrada";
+
                 for (int i = 0; i < gestor.Alunos.Count; i++)
                 {
                     if (gestor.Alunos[i].Id == notaSelecionada.AlunoId)
                     {
                         nomeAluno = gestor.Alunos[i].Nome;
-                        turmaAluno = gestor.Alunos[i].TurmaId;
+                        turmaId = gestor.Alunos[i].TurmaId;
+
+                        // Buscar o nome da turma correspondente
+                        for (int j = 0; j < gestor.Turmas.Count; j++)
+                        {
+                            if (gestor.Turmas[j].Id == turmaId)
+                            {
+                                nomeTurma = gestor.Turmas[j].Curso; // Agora captura o nome do curso
+                                break;
+                            }
+                        }
                         break;
                     }
                 }
 
-                // Procurar o tipo de avaliação no dicionário (ou usar "Não Informado" se não existir)
+                // ----------- BUSCAR O TIPO DE AVALIAÇÃO ----------- //
                 string tipoAvaliacao = "Não Informado";
                 if (tiposAvaliacao.ContainsKey(lstNotas.SelectedIndex))
                 {
                     tipoAvaliacao = tiposAvaliacao[lstNotas.SelectedIndex];
                 }
 
-                // Exibir os detalhes da nota
+                // ----------- EXIBIR OS DETALHES DA NOTA ----------- //
                 MessageBox.Show("Ano Letivo: " + notaSelecionada.PeriodoLetivo +
                                 "\nTipo de Avaliação: " + tipoAvaliacao +
                                 "\nValor da Nota: " + notaSelecionada.ValorNota +
                                 "\nDisciplina: " + notaSelecionada.DisciplinaId + " - " + nomeDisciplina +
                                 "\nAluno: " + notaSelecionada.AlunoId + " - " + nomeAluno +
-                                "\nTurma: " + turmaAluno,
+                                "\nTurma: " + turmaId + " - " + nomeTurma,  // Agora exibe ID + Nome da turma
                                 "Detalhes da Nota", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

@@ -318,7 +318,7 @@ namespace Sistema_de_Gestão_Escolar
                     {
                         professores += ", ";
                     }
-                    professores += disciplinaSelecionada.ProfessoresIds[i];
+                    professores += disciplinaSelecionada.ProfessoresIds[i].ToString();
                 }
                 txtProfessoresDisciplina.Text = professores;
             }
@@ -360,11 +360,16 @@ namespace Sistema_de_Gestão_Escolar
                 }
 
                 string novoNome = cmbNomeDisciplina.SelectedItem?.ToString();
-                int novaCargaHoraria;
-
-                if (string.IsNullOrEmpty(novoNome) || !int.TryParse(cmbCargaHoraria.SelectedItem?.ToString(), out novaCargaHoraria))
+                if (string.IsNullOrEmpty(novoNome))
                 {
-                    MessageBox.Show("Erro: Preencha todos os campos corretamente!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Selecione um nome válido para a disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Validar carga horária
+                if (!int.TryParse(cmbCargaHoraria.SelectedItem?.ToString(), out int novaCargaHoraria))
+                {
+                    MessageBox.Show("Erro: Selecione uma carga horária válida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -387,19 +392,41 @@ namespace Sistema_de_Gestão_Escolar
 
                     for (int i = 0; i < professoresTexto.Length; i++)
                     {
-                        if (int.TryParse(professoresTexto[i].Trim(), out int professorId))
+                        string idStr = professoresTexto[i].Trim();
+                        if (int.TryParse(idStr, out int professorId))
                         {
+                            // Verificar se o professor existe
+                            bool professorExiste = false;
+                            for (int j = 0; j < gestor.Professores.Count; j++)
+                            {
+                                if (gestor.Professores[j].Id == professorId)
+                                {
+                                    professorExiste = true;
+                                    break;
+                                }
+                            }
+
+                            if (!professorExiste)
+                            {
+                                MessageBox.Show($"Erro: O professor com ID {professorId} não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
                             novosProfessoresIds.Add(professorId);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Erro: O ID do professor '{idStr}' é inválido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                         }
                     }
                 }
 
                 // Atualizar a disciplina no sistema
-                if (!gestor.EditarDisciplina(disciplinaSelecionada.Id, novoNome, novaCargaHoraria, novosProfessoresIds))
-                {
-                    MessageBox.Show("Erro ao editar a disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                disciplinaSelecionada.Id = novoId;
+                disciplinaSelecionada.Nome = novoNome;
+                disciplinaSelecionada.CargaHoraria = novaCargaHoraria;
+                disciplinaSelecionada.ProfessoresIds = novosProfessoresIds;
 
                 AtualizarListaDisciplinas();
                 MessageBox.Show("Disciplina editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
