@@ -1,9 +1,5 @@
 ﻿using Bibilioteca_Sistema_de_Gestão_Escolar;
 
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
 public class GestorEscola
 {
     // Listas para armazenar os dados das entidades
@@ -503,6 +499,7 @@ public class GestorEscola
         return false; // Retorna falso se a turma não for encontrada
     }
 
+  
 
 
 

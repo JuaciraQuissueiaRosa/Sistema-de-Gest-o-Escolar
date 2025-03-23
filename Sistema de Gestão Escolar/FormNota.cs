@@ -18,21 +18,12 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Verificar se o ID do aluno é um número válido
-                if (!int.TryParse(txtAlunoIdNota.Text, out int alunoId))
+                if (!int.TryParse(txtAlunoIdNota.Text, out int alunoId) || !int.TryParse(txtDisciplinaIdNota.Text, out int disciplinaId))
                 {
-                    MessageBox.Show("Erro: O ID do aluno deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Os IDs do aluno e da disciplina devem ser números inteiros!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Verificar se o ID da disciplina é um número válido
-                if (!int.TryParse(txtDisciplinaIdNota.Text, out int disciplinaId))
-                {
-                    MessageBox.Show("Erro: O ID da disciplina deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Verificar se o período letivo foi preenchido corretamente
                 string periodo = txtPeriodoNota.Text.Trim();
                 if (string.IsNullOrEmpty(periodo))
                 {
@@ -40,16 +31,13 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Verificar se o período letivo já foi encerrado
                 if (gestor.VerificarSePeriodoEncerrado(periodo))
                 {
                     MessageBox.Show("Erro: O período letivo já foi encerrado. Não é possível remover notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Tentar remover a nota
-                bool removida = gestor.RemoverNota(alunoId, disciplinaId, periodo);
-                if (removida)
+                if (gestor.RemoverNota(alunoId, disciplinaId, periodo))
                 {
                     MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     AtualizarListaNotas();
@@ -69,46 +57,19 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // ----------- VALIDAR ID DO ALUNO ----------- //
-                if (!int.TryParse(txtAlunoIdNota.Text, out int alunoId))
+                if (!int.TryParse(txtAlunoIdNota.Text, out int alunoId) || !int.TryParse(txtDisciplinaIdNota.Text, out int disciplinaId))
                 {
-                    MessageBox.Show("Erro: O ID do aluno deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Os IDs do aluno e da disciplina devem ser números inteiros!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // ----------- VALIDAR ID DA DISCIPLINA ----------- //
-                if (!int.TryParse(txtDisciplinaIdNota.Text, out int disciplinaId))
-                {
-                    MessageBox.Show("Erro: O ID da disciplina deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // ----------- VERIFICAR SE O ALUNO EXISTE ----------- //
-                Aluno alunoEncontrado = null;
-                for (int i = 0; i < gestor.Alunos.Count; i++)
-                {
-                    if (gestor.Alunos[i].Id == alunoId)
-                    {
-                        alunoEncontrado = gestor.Alunos[i];
-                        break;
-                    }
-                }
+                Aluno alunoEncontrado = gestor.Alunos.FirstOrDefault(a => a.Id == alunoId);
+                Disciplina disciplinaEncontrada = gestor.Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
 
                 if (alunoEncontrado == null)
                 {
                     MessageBox.Show($"Erro: O aluno com ID {alunoId} não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
-                }
-
-                // ----------- VERIFICAR SE A DISCIPLINA EXISTE ----------- //
-                Disciplina disciplinaEncontrada = null;
-                for (int i = 0; i < gestor.Disciplinas.Count; i++)
-                {
-                    if (gestor.Disciplinas[i].Id == disciplinaId)
-                    {
-                        disciplinaEncontrada = gestor.Disciplinas[i];
-                        break;
-                    }
                 }
 
                 if (disciplinaEncontrada == null)
@@ -117,14 +78,12 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // ----------- VALIDAR VALOR DA NOTA ----------- //
                 if (!double.TryParse(txtValorNota.Text, out double valorNota) || valorNota < 0 || valorNota > 20)
                 {
                     MessageBox.Show("Erro: O valor da nota deve ser um número entre 0 e 20!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // ----------- VALIDAR TIPO DE AVALIAÇÃO ----------- //
                 string tipoAvaliacao = cmbTipoAvaliacao.SelectedItem?.ToString();
                 if (string.IsNullOrEmpty(tipoAvaliacao))
                 {
@@ -132,28 +91,26 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // ----------- VALIDAR PERÍODO LETIVO ----------- //
+                if (gestor.Notas.Any(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.TipoAvaliacao == tipoAvaliacao))
+                {
+                    MessageBox.Show($"Erro: Já existe uma nota para '{tipoAvaliacao}' nesta disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (gestor.Notas.Count(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId) >= 3)
+                {
+                    MessageBox.Show("Erro: Apenas 3 notas (Teste, Trabalho e Exame) podem ser registradas por disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 string periodoLetivo = txtPeriodoNota.Text.Trim();
-                if (string.IsNullOrEmpty(periodoLetivo))
+                if (string.IsNullOrEmpty(periodoLetivo) || VerificarEstadoAnoLetivo(periodoLetivo) == "Encerrado")
                 {
-                    MessageBox.Show("Erro: O período letivo não pode estar vazio!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: O ano letivo já foi encerrado. Não é possível adicionar ou alterar notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // ----------- VERIFICAR O ESTADO DO ANO LETIVO ----------- //
-                string estadoAno = VerificarEstadoAnoLetivo(periodoLetivo);
-                if (estadoAno == "Encerrado")
-                {
-                    MessageBox.Show("Erro: O ano letivo já foi encerrado. Não é possível adicionar ou alterar notas.",
-                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // ----------- CRIAR E ADICIONAR A NOTA ----------- //
-                Nota novaNota = new Nota(alunoId, disciplinaId, valorNota, periodoLetivo, tipoAvaliacao);
-                gestor.AdicionarNota(novaNota);
-
-                // ----------- ATUALIZAR A LISTA DE NOTAS ----------- //
+                gestor.AdicionarNota(new Nota(alunoId, disciplinaId, valorNota, periodoLetivo, tipoAvaliacao));
                 AtualizarListaNotas();
 
                 MessageBox.Show("Nota adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -167,55 +124,29 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                lstNotas.Items.Clear(); // Limpa a lista antes de atualizar
+                lstNotas.Items.Clear();
 
-                for (int i = 0; i < gestor.Notas.Count; i++)
+                var notasAgrupadas = gestor.Notas
+                    .GroupBy(n => new { n.AlunoId, n.DisciplinaId })
+                    .ToDictionary(g => g.Key, g => g.Select(n => n.ValorNota).ToList());
+
+                foreach (var nota in gestor.Notas)
                 {
-                    Nota nota = gestor.Notas[i];
+                    string nomeDisciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == nota.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
+                    string nomeAluno = gestor.Alunos.FirstOrDefault(a => a.Id == nota.AlunoId)?.Nome ?? "Aluno não encontrado";
+                    string turmaInfo = gestor.Turmas.FirstOrDefault(t => t.Id == gestor.Alunos.FirstOrDefault(a => a.Id == nota.AlunoId)?.TurmaId)?.Curso ?? "Turma não encontrada";
+                    string tipoAvaliacao = string.IsNullOrEmpty(nota.TipoAvaliacao) ? "Não Informado" : nota.TipoAvaliacao;
 
-                    // Buscar a disciplina correspondente
-                    string nomeDisciplina = "Disciplina não encontrada";
-                    for (int j = 0; j < gestor.Disciplinas.Count; j++)
-                    {
-                        if (gestor.Disciplinas[j].Id == nota.DisciplinaId)
-                        {
-                            nomeDisciplina = gestor.Disciplinas[j].Nome;
-                            break;
-                        }
-                    }
-
-                    // Buscar o aluno correspondente e sua turma
-                    string nomeAluno = "Aluno não encontrado";
-                    string turmaInfo = "Turma não encontrada";
-
-                    for (int j = 0; j < gestor.Alunos.Count; j++)
-                    {
-                        if (gestor.Alunos[j].Id == nota.AlunoId)
-                        {
-                            nomeAluno = gestor.Alunos[j].Nome;
-
-                            // Buscar turma e curso do aluno
-                            for (int k = 0; k < gestor.Turmas.Count; k++)
-                            {
-                                if (gestor.Turmas[k].Id == gestor.Alunos[j].TurmaId)
-                                {
-                                    turmaInfo = gestor.Turmas[k].Id + " - " + gestor.Turmas[k].Curso;
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
-
-                    // Criar a string formatada para exibição na ListBox
-                    string infoNota = "Ano Letivo: " + nota.PeriodoLetivo +
-                                      " | Tipo: " + nota.TipoAvaliacao + // Corrigido para garantir que sempre exibe
-                                      " | Nota: " + nota.ValorNota +
-                                      " | Disciplina: " + nota.DisciplinaId + " - " + nomeDisciplina +
-                                      " | Aluno: " + nota.AlunoId + " - " + nomeAluno +
-                                      " | Turma: " + turmaInfo; // Agora exibe ID e curso da turma
+                    string infoNota = $"Ano Letivo: {nota.PeriodoLetivo} | Tipo: {tipoAvaliacao} | Nota: {nota.ValorNota} " +
+                                      $"| Disciplina: {nota.DisciplinaId} - {nomeDisciplina} | Aluno: {nota.AlunoId} - {nomeAluno} | Turma: {turmaInfo}";
 
                     lstNotas.Items.Add(infoNota);
+                }
+
+                foreach (var chave in notasAgrupadas.Keys)
+                {
+                    double media = notasAgrupadas[chave].Average();
+                    lstNotas.Items.Add($"Aluno ID {chave.AlunoId} | Disciplina ID {chave.DisciplinaId} | Média Final: {media:F2}");
                 }
             }
             catch (Exception ex)
@@ -228,78 +159,50 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Limpar os ComboBoxes antes de preencher (evita duplicação)
                 cmbProfessorNota.Items.Clear();
                 cmbTipoAvaliacao.Items.Clear();
 
-                // ----------------- Professores -----------------
-                if (gestor.Professores.Count == 0)
+                // ✅ Carregar professores disponíveis
+                if (gestor.Professores.Any())
                 {
-                    cmbProfessorNota.Items.Add("Nenhum professor disponível");
+                    cmbProfessorNota.Items.AddRange(gestor.Professores
+                        .Select(p => $"{p.Id} - {p.Nome}")
+                        .ToArray());
                     cmbProfessorNota.SelectedIndex = 0;
-                    return;
-
-                   
                 }
                 else
                 {
-                    for (int i = 0; i < gestor.Professores.Count; i++)
-                    {
-                        Professor professor = gestor.Professores[i];
-                        cmbProfessorNota.Items.Add(professor.Id + " - " + professor.Nome);
-                    }
-
-                    // Selecionar o primeiro professor disponível por padrão
+                    cmbProfessorNota.Items.Add("Nenhum professor disponível");
                     cmbProfessorNota.SelectedIndex = 0;
                 }
-
-                // ----------------- Tipos de Avaliação -----------------
-                cmbTipoAvaliacao.Items.Add("Teste");
-                cmbTipoAvaliacao.Items.Add("Trabalho");
-                cmbTipoAvaliacao.Items.Add("Exame");
-
-                // Define "Teste" como opção inicial
+                // ✅ Carregar tipos de avaliação
+                string[] tiposAvaliacao = { "Teste", "Trabalho", "Exame" };
+                cmbTipoAvaliacao.Items.AddRange(tiposAvaliacao);
                 cmbTipoAvaliacao.SelectedIndex = 0;
 
-                // ----------------- Atualizar Notas -----------------
+                // ✅ Atualizar lista de notas
                 AtualizarListaNotas();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar formulário de notas: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao carregar formulário de notas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
         }
 
         private string VerificarEstadoAnoLetivo(string anoLetivo)
         {
             try
             {
-                // Verificar se o formato está correto: "AAAA/AAAA"
-                string[] anos = anoLetivo.Split('/');
+                var anos = anoLetivo.Split('/');
                 if (anos.Length != 2 || !int.TryParse(anos[0], out int anoInicio) || !int.TryParse(anos[1], out int anoFim))
-                {
                     return "Ano letivo inválido";
-                }
 
-                // Criar datas de início e fim para o ano letivo
-                DateTime dataInicio = new DateTime(anoInicio, 9, 1); // Começa em setembro do primeiro ano
-                DateTime dataFim = new DateTime(anoFim, 7, 31); // Termina em julho do segundo ano
+                var dataInicio = new DateTime(anoInicio, 9, 1);
+                var dataFim = new DateTime(anoFim, 7, 31);
+                var hoje = DateTime.Today;
 
-                DateTime hoje = DateTime.Today;
-
-                // Determinar o estado do ano letivo
-                if (hoje < dataInicio)
-                {
-                    return "Não iniciado";
-                }
-                else if (hoje >= dataInicio && hoje <= dataFim)
-                {
-                    return "Em andamento";
-                }
-                else
-                {
-                    return "Encerrado";
-                }
+                return hoje < dataInicio ? "Não iniciado" : (hoje <= dataFim ? "Em andamento" : "Encerrado");
             }
             catch
             {
@@ -317,29 +220,10 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Obter nota selecionada
                 Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
 
-                // Verificar se o aluno e a disciplina ainda existem
-                bool alunoExiste = false, disciplinaExiste = false;
-
-                for (int i = 0; i < gestor.Alunos.Count; i++)
-                {
-                    if (gestor.Alunos[i].Id == notaSelecionada.AlunoId)
-                    {
-                        alunoExiste = true;
-                        break;
-                    }
-                }
-
-                for (int i = 0; i < gestor.Disciplinas.Count; i++)
-                {
-                    if (gestor.Disciplinas[i].Id == notaSelecionada.DisciplinaId)
-                    {
-                        disciplinaExiste = true;
-                        break;
-                    }
-                }
+                bool alunoExiste = gestor.Alunos.Any(a => a.Id == notaSelecionada.AlunoId);
+                bool disciplinaExiste = gestor.Disciplinas.Any(d => d.Id == notaSelecionada.DisciplinaId);
 
                 if (!alunoExiste)
                 {
@@ -353,19 +237,19 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Preencher os campos com os dados da nota selecionada
                 txtAlunoIdNota.Text = notaSelecionada.AlunoId.ToString();
                 txtDisciplinaIdNota.Text = notaSelecionada.DisciplinaId.ToString();
                 txtValorNota.Text = notaSelecionada.ValorNota.ToString();
                 txtPeriodoNota.Text = notaSelecionada.PeriodoLetivo;
-                cmbTipoAvaliacao.SelectedItem = notaSelecionada.TipoAvaliacao; // Define o tipo de avaliação
+                cmbTipoAvaliacao.SelectedItem = notaSelecionada.TipoAvaliacao;
 
                 MessageBox.Show("Nota carregada para edição.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar nota para edição: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao carregar nota para edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
 
         }
 
@@ -379,64 +263,28 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Obter a nota selecionada
-                Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
-
-                // ----------- BUSCAR O NOME DA DISCIPLINA ----------- //
-                string nomeDisciplina = "Disciplina não encontrada";
-                for (int i = 0; i < gestor.Disciplinas.Count; i++)
+                Nota notaSelecionada = gestor.Notas.ElementAtOrDefault(lstNotas.SelectedIndex);
+                if (notaSelecionada == null)
                 {
-                    if (gestor.Disciplinas[i].Id == notaSelecionada.DisciplinaId)
-                    {
-                        nomeDisciplina = gestor.Disciplinas[i].Nome;
-                        break;
-                    }
+                    MessageBox.Show("Erro: Selecione uma nota válida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
 
-                // ----------- BUSCAR O NOME DO ALUNO ----------- //
-                string nomeAluno = "Aluno não encontrado";
-                int turmaId = -1;
-                string nomeTurma = "Turma não encontrada";
+                string nomeDisciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == notaSelecionada.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
+                string nomeAluno = gestor.Alunos.FirstOrDefault(a => a.Id == notaSelecionada.AlunoId)?.Nome ?? "Aluno não encontrado";
+                string turmaInfo = gestor.Turmas.FirstOrDefault(t => t.Id == gestor.Alunos.FirstOrDefault(a => a.Id == notaSelecionada.AlunoId)?.TurmaId)?.Curso ?? "Turma não encontrada";
 
-                for (int i = 0; i < gestor.Alunos.Count; i++)
-                {
-                    if (gestor.Alunos[i].Id == notaSelecionada.AlunoId)
-                    {
-                        nomeAluno = gestor.Alunos[i].Nome;
-                        turmaId = gestor.Alunos[i].TurmaId;
-
-                        // Buscar o nome da turma correspondente
-                        for (int j = 0; j < gestor.Turmas.Count; j++)
-                        {
-                            if (gestor.Turmas[j].Id == turmaId)
-                            {
-                                nomeTurma = gestor.Turmas[j].Curso; // Agora captura o nome do curso
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                // ----------- BUSCAR O TIPO DE AVALIAÇÃO ----------- //
-                string tipoAvaliacao = "Não Informado";
-                if (tiposAvaliacao.ContainsKey(lstNotas.SelectedIndex))
-                {
-                    tipoAvaliacao = tiposAvaliacao[lstNotas.SelectedIndex];
-                }
-
-                // ----------- EXIBIR OS DETALHES DA NOTA ----------- //
-                MessageBox.Show("Ano Letivo: " + notaSelecionada.PeriodoLetivo +
-                                "\nTipo de Avaliação: " + tipoAvaliacao +
-                                "\nValor da Nota: " + notaSelecionada.ValorNota +
-                                "\nDisciplina: " + notaSelecionada.DisciplinaId + " - " + nomeDisciplina +
-                                "\nAluno: " + notaSelecionada.AlunoId + " - " + nomeAluno +
-                                "\nTurma: " + turmaId + " - " + nomeTurma,  // Agora exibe ID + Nome da turma
+                MessageBox.Show($"Ano Letivo: {notaSelecionada.PeriodoLetivo}\n" +
+                                $"Tipo de Avaliação: {notaSelecionada.TipoAvaliacao ?? "Não Informado"}\n" +
+                                $"Valor da Nota: {notaSelecionada.ValorNota}\n" +
+                                $"Disciplina: {notaSelecionada.DisciplinaId} - {nomeDisciplina}\n" +
+                                $"Aluno: {notaSelecionada.AlunoId} - {nomeAluno}\n" +
+                                $"Turma: {turmaInfo}",
                                 "Detalhes da Nota", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao consultar nota: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao consultar nota: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -450,31 +298,16 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Obter nota selecionada
                 Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
 
-                // Validar novo ID do aluno
-                if (!int.TryParse(txtAlunoIdNota.Text, out int novoAlunoId))
+                if (!int.TryParse(txtAlunoIdNota.Text, out int novoAlunoId) ||
+                    !int.TryParse(txtDisciplinaIdNota.Text, out int novaDisciplinaId) ||
+                    !double.TryParse(txtValorNota.Text, out double novoValorNota) || novoValorNota < 0 || novoValorNota > 20)
                 {
-                    MessageBox.Show("Erro: O ID do aluno deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Dados inválidos! Verifique os campos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Validar novo ID da disciplina
-                if (!int.TryParse(txtDisciplinaIdNota.Text, out int novaDisciplinaId))
-                {
-                    MessageBox.Show("Erro: O ID da disciplina deve ser um número inteiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Validar novo valor da nota
-                if (!double.TryParse(txtValorNota.Text, out double novoValorNota) || novoValorNota < 0 || novoValorNota > 20)
-                {
-                    MessageBox.Show("Erro: A nota deve ser um número entre 0 e 20!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Capturar o novo tipo de avaliação
                 string novoTipoAvaliacao = cmbTipoAvaliacao.SelectedItem?.ToString();
                 if (string.IsNullOrEmpty(novoTipoAvaliacao))
                 {
@@ -482,22 +315,21 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Aplicar alterações na nota
                 notaSelecionada.AlunoId = novoAlunoId;
                 notaSelecionada.DisciplinaId = novaDisciplinaId;
                 notaSelecionada.ValorNota = novoValorNota;
                 notaSelecionada.TipoAvaliacao = novoTipoAvaliacao;
 
-                // Atualizar a lista de notas
                 AtualizarListaNotas();
-
                 MessageBox.Show("Nota editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao salvar edição da nota: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao salvar edição da nota: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+      
     }
 
 }

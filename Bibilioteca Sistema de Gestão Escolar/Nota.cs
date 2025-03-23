@@ -5,9 +5,9 @@
         public int AlunoId { get; set; }
         public int DisciplinaId { get; set; }
         public double ValorNota { get; set; }
-        public string PeriodoLetivo { get; set; } // Ex: "1º Trimestre"
+        public string PeriodoLetivo { get; set; } // Ex: 2023/2024"
 
-        public string TipoAvaliacao { get; set; } // Novo campo
+        public string TipoAvaliacao { get; set; } // Teste, Trabalho, Exame
 
         public Nota(int alunoId, int disciplinaId, double valorNota, string periodoLetivo, string tipoAvaliacao)
         {
