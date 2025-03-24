@@ -69,6 +69,8 @@ namespace Sistema_de_Gestão_Escolar
                 Aluno novoAluno = new Aluno(id, nome, dataNascimento, contato, txtMoradaAluno.Text.Trim(), email, turmaId);
                 gestor.AdicionarAluno(novoAluno);
 
+                gestor.SalvarDados();
+
                 // ✅ Atualizar lista e bloquear edição do ID
                 txtIdAluno.Enabled = false;
                 AtualizarListaAlunos();
@@ -79,6 +81,8 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show($"Erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+          
+
         }
 
         private void btnRemoverAluno_Click(object sender, EventArgs e)
@@ -91,12 +95,20 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // ✅ Remover aluno se não houver notas registradas
-                string mensagem = gestor.RemoverAluno(id)
+                bool alunoRemovido = gestor.RemoverAluno(id);
+
+                string mensagem = alunoRemovido
                     ? "Aluno removido com sucesso!"
-                    : "Erro: O aluno não pode ser removido. Verifique se ele possui notas registradas!";
+                    : "Erro: O aluno não pode ser removido porque possui notas registradas!";
 
                 MessageBox.Show(mensagem, "Remover Aluno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                if (alunoRemovido)
+                {
+                    // ✅ Salvar os dados após remover aluno
+                    gestor.SalvarDados();
+                }
+
                 AtualizarListaAlunos();
             }
             catch (Exception ex)
@@ -176,6 +188,9 @@ namespace Sistema_de_Gestão_Escolar
 
                 // ✅ Atualizar a turma do aluno SEM APAGAR O HISTÓRICO
                 alunoSelecionado.TurmaId = novoTurmaId;
+
+                // ✅ Salvar as mudanças
+                gestor.SalvarDados();
 
                 MessageBox.Show("Aluno transferido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 AtualizarListaAlunos();
@@ -339,7 +354,6 @@ namespace Sistema_de_Gestão_Escolar
 
                 // Garantir que o ID original seja mantido
                 int idOriginal = alunoSelecionado.Id;
-
                 // Validar nome
                 string novoNome = txtNomeAluno.Text.Trim();
                 if (string.IsNullOrEmpty(novoNome))
@@ -373,6 +387,9 @@ namespace Sistema_de_Gestão_Escolar
                 alunoSelecionado.Contato = novoContato;
                 alunoSelecionado.Email = novoEmail;
 
+                // ✅ Salvar as mudanças
+                gestor.SalvarDados();
+
                 // Atualizar lista
                 AtualizarListaAlunos();
                 MessageBox.Show("Aluno atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -384,6 +401,8 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show("Erro ao salvar alterações do aluno: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+
         }
 
         private void btnConsultarAluno_Click(object sender, EventArgs e)

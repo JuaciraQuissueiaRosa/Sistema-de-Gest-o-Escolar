@@ -2,12 +2,35 @@
 
 public class GestorEscola
 {
+
+    private GestorPersistencia persistencia = new GestorPersistencia();
     // Listas para armazenar os dados das entidades
     public List<Aluno> Alunos { get; set; } = new List<Aluno>();
     public List<Professor> Professores { get; set; } = new List<Professor>();
     public List<Disciplina> Disciplinas { get; set; } = new List<Disciplina>();
     public List<Turma> Turmas { get; set; } = new List<Turma>();
     public List<Nota> Notas { get; set; } = new List<Nota>();
+
+
+    // Carregar dados ao iniciar o programa
+    public GestorEscola()
+    {
+        (Alunos, Professores, Disciplinas, Turmas, Notas) = persistencia.CarregarDados();
+    }
+
+    public void SalvarDados()
+    {
+       
+            persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas);
+      
+    }
+
+
+
+
+
+
+
 
     // ----------------- CRUD PARA ALUNOS ----------------- 
 
@@ -499,7 +522,10 @@ public class GestorEscola
         return false; // Retorna falso se a turma não for encontrada
     }
 
-  
+    // Garantir a persistencia dos dados
+
+
+
 
 
 

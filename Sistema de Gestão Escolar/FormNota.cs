@@ -40,6 +40,10 @@ namespace Sistema_de_Gestão_Escolar
                 if (gestor.RemoverNota(alunoId, disciplinaId, periodo))
                 {
                     MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
+                    // ✅ Salvar os dados após remover nota 
+                    gestor.SalvarDados();
                     AtualizarListaNotas();
                 }
                 else
@@ -111,6 +115,9 @@ namespace Sistema_de_Gestão_Escolar
                 }
 
                 gestor.AdicionarNota(new Nota(alunoId, disciplinaId, valorNota, periodoLetivo, tipoAvaliacao));
+
+                // ✅ Salvar os dados após adicionar nota 
+                gestor.SalvarDados();
                 AtualizarListaNotas();
 
                 MessageBox.Show("Nota adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -319,6 +326,9 @@ namespace Sistema_de_Gestão_Escolar
                 notaSelecionada.DisciplinaId = novaDisciplinaId;
                 notaSelecionada.ValorNota = novoValorNota;
                 notaSelecionada.TipoAvaliacao = novoTipoAvaliacao;
+
+                // ✅ Salvar os dados após editar nota 
+                gestor.SalvarDados();
 
                 AtualizarListaNotas();
                 MessageBox.Show("Nota editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);

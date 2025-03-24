@@ -33,6 +33,8 @@ namespace Sistema_de_Gestão_Escolar
 
                 MessageBox.Show(mensagem, "Remover Turma", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                // ✅ Salvar os dados após remover turma
+                gestor.SalvarDados();
                 AtualizarListaTurmas();
                 AtualizarFormAluno();
             }
@@ -88,6 +90,10 @@ namespace Sistema_de_Gestão_Escolar
                 });
 
                 txtIdTurma.Enabled = false;
+
+
+                // ✅ Salvar os dados após adicionar turma
+                gestor.SalvarDados();
                 AtualizarListaTurmas();
                 MessageBox.Show("Turma adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -382,6 +388,10 @@ namespace Sistema_de_Gestão_Escolar
                 MessageBox.Show("Turma editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 btnSalvarEdicaoTurma.Enabled = false;
+
+
+                // ✅ Salvar os dados após editar turma
+                gestor.SalvarDados();
             }
             catch (Exception ex)
             {

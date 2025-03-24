@@ -83,6 +83,8 @@ namespace Sistema_de_Gestão_Escolar
                 // ✅ Bloquear edição do ID
                 txtIdDisciplina.Enabled = false;
 
+                // ✅ Salvar os dados após adicionar disciplina
+                gestor.SalvarDados();
                 // ✅ Atualizar a lista de disciplinas
                 AtualizarListaDisciplinas();
                 MessageBox.Show("Disciplina adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -129,6 +131,8 @@ namespace Sistema_de_Gestão_Escolar
                 if (removida)
                 {
                     MessageBox.Show("Disciplina removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // ✅ Salvar os dados após remover dissciplina
+                    gestor.SalvarDados();
                     AtualizarListaDisciplinas();
                 }
                 else
@@ -344,6 +348,10 @@ namespace Sistema_de_Gestão_Escolar
                 disciplinaSelecionada.Nome = novoNome;
                 disciplinaSelecionada.CargaHoraria = novaCargaHoraria;
                 disciplinaSelecionada.ProfessoresIds = novosProfessoresIds;
+
+
+                // ✅ Salvar os dados após editar disciplina 
+                gestor.SalvarDados();
 
                 // ✅ Atualizar lista
                 AtualizarListaDisciplinas();

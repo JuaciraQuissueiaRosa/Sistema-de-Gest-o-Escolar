@@ -42,6 +42,9 @@ namespace Sistema_de_Gestão_Escolar
                         "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+                // ✅ Salvar os dados após remover professor
+                gestor.SalvarDados();
+
                 AtualizarListaProfessores();
             }
             catch (Exception ex)
@@ -98,6 +101,8 @@ namespace Sistema_de_Gestão_Escolar
                 var novoProfessor = new Professor(id, nome, contato, email, areaEnsino);
 
                 gestor.AdicionarProfessor(novoProfessor);
+                // ✅ Salvar os dados após adicionar professor 
+                gestor.SalvarDados();
                 AtualizarListaProfessores();
 
                 MessageBox.Show("Professor adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -280,7 +285,8 @@ namespace Sistema_de_Gestão_Escolar
                     MessageBox.Show("Erro ao editar o professor!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
+                // ✅ Salvar os dados após editar professor
+                gestor.SalvarDados();
                 // Atualizar lista de professores
                 AtualizarListaProfessores();
 

@@ -117,7 +117,7 @@
             // lstDisciplinas
             // 
             lstDisciplinas.FormattingEnabled = true;
-            lstDisciplinas.Location = new Point(614, 42);
+            lstDisciplinas.Location = new Point(576, 42);
             lstDisciplinas.Name = "lstDisciplinas";
             lstDisciplinas.Size = new Size(773, 404);
             lstDisciplinas.TabIndex = 10;
