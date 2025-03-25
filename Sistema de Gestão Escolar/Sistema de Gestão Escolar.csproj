@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="SendGrid" Version="9.29.3" />
+    <PackageReference Include="Syncfusion.Tools.Windows" Version="29.1.33" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿namespace Sistema_de_Gestão_Escolar
+﻿using Syncfusion.Windows.Forms;
+
+namespace Sistema_de_Gestão_Escolar
 {
     partial class FormDisciplina
     {
@@ -28,20 +30,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             lblNomeDisciplina = new Label();
             lblProfessoresDisc = new Label();
             lblCargaHoraria = new Label();
             lblIdDisciplina = new Label();
-            txtIdDisciplina = new TextBox();
-            txtProfessoresDisciplina = new TextBox();
             btnAdicionarDisciplina = new Button();
             btnRemoverDisciplina = new Button();
             lstDisciplinas = new ListBox();
-            cmbNomeDisciplina = new ComboBox();
-            cmbCargaHoraria = new ComboBox();
             btnConsultarDisciplina = new Button();
             btnEditarDisciplina = new Button();
             btnSalvarEdicaoDisciplina = new Button();
+            colorPickerButton1 = new ColorPickerButton();
+            txtProfessoresDisciplina = new TextBox();
+            cmbNomeDisciplina = new ComboBox();
+            cmbCargaHoraria = new ComboBox();
+            txtIdDisciplina = new TextBox();
             SuspendLayout();
             // 
             // lblNomeDisciplina
@@ -80,20 +84,6 @@
             lblIdDisciplina.TabIndex = 3;
             lblIdDisciplina.Text = "ID da Disciplina:";
             // 
-            // txtIdDisciplina
-            // 
-            txtIdDisciplina.Location = new Point(188, 39);
-            txtIdDisciplina.Name = "txtIdDisciplina";
-            txtIdDisciplina.Size = new Size(286, 27);
-            txtIdDisciplina.TabIndex = 4;
-            // 
-            // txtProfessoresDisciplina
-            // 
-            txtProfessoresDisciplina.Location = new Point(40, 251);
-            txtProfessoresDisciplina.Name = "txtProfessoresDisciplina";
-            txtProfessoresDisciplina.Size = new Size(253, 27);
-            txtProfessoresDisciplina.TabIndex = 7;
-            // 
             // btnAdicionarDisciplina
             // 
             btnAdicionarDisciplina.Location = new Point(20, 348);
@@ -121,24 +111,6 @@
             lstDisciplinas.Name = "lstDisciplinas";
             lstDisciplinas.Size = new Size(773, 404);
             lstDisciplinas.TabIndex = 10;
-            // 
-            // cmbNomeDisciplina
-            // 
-            cmbNomeDisciplina.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbNomeDisciplina.FormattingEnabled = true;
-            cmbNomeDisciplina.Location = new Point(221, 102);
-            cmbNomeDisciplina.Name = "cmbNomeDisciplina";
-            cmbNomeDisciplina.Size = new Size(253, 28);
-            cmbNomeDisciplina.TabIndex = 11;
-            // 
-            // cmbCargaHoraria
-            // 
-            cmbCargaHoraria.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbCargaHoraria.FormattingEnabled = true;
-            cmbCargaHoraria.Location = new Point(282, 155);
-            cmbCargaHoraria.Name = "cmbCargaHoraria";
-            cmbCargaHoraria.Size = new Size(151, 28);
-            cmbCargaHoraria.TabIndex = 12;
             // 
             // btnConsultarDisciplina
             // 
@@ -170,21 +142,63 @@
             btnSalvarEdicaoDisciplina.UseVisualStyleBackColor = true;
             btnSalvarEdicaoDisciplina.Click += btnSalvarEdicaoDisciplina_Click;
             // 
+            // colorPickerButton1
+            // 
+            colorPickerButton1.AccessibilityEnabled = true;
+            colorPickerButton1.BeforeTouchSize = new Size(94, 29);
+            colorPickerButton1.Location = new Point(656, 489);
+            colorPickerButton1.MetroColor = Color.FromArgb(192, 192, 255);
+            colorPickerButton1.Name = "colorPickerButton1";
+            colorPickerButton1.Size = new Size(94, 29);
+            colorPickerButton1.TabIndex = 17;
+            colorPickerButton1.Text = "colorPickerButton1";
+            // 
+            // txtProfessoresDisciplina
+            // 
+            txtProfessoresDisciplina.Location = new Point(40, 251);
+            txtProfessoresDisciplina.Name = "txtProfessoresDisciplina";
+            txtProfessoresDisciplina.Size = new Size(253, 27);
+            txtProfessoresDisciplina.TabIndex = 7;
+            // 
+            // cmbNomeDisciplina
+            // 
+            cmbNomeDisciplina.FormattingEnabled = true;
+            cmbNomeDisciplina.Location = new Point(221, 94);
+            cmbNomeDisciplina.Name = "cmbNomeDisciplina";
+            cmbNomeDisciplina.Size = new Size(151, 28);
+            cmbNomeDisciplina.TabIndex = 21;
+            // 
+            // cmbCargaHoraria
+            // 
+            cmbCargaHoraria.FormattingEnabled = true;
+            cmbCargaHoraria.Location = new Point(282, 147);
+            cmbCargaHoraria.Name = "cmbCargaHoraria";
+            cmbCargaHoraria.Size = new Size(151, 28);
+            cmbCargaHoraria.TabIndex = 22;
+            // 
+            // txtIdDisciplina
+            // 
+            txtIdDisciplina.Location = new Point(208, 39);
+            txtIdDisciplina.Name = "txtIdDisciplina";
+            txtIdDisciplina.Size = new Size(125, 27);
+            txtIdDisciplina.TabIndex = 23;
+            // 
             // FormDisciplina
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1412, 639);
+            Controls.Add(txtIdDisciplina);
+            Controls.Add(cmbCargaHoraria);
+            Controls.Add(cmbNomeDisciplina);
+            Controls.Add(colorPickerButton1);
             Controls.Add(btnSalvarEdicaoDisciplina);
             Controls.Add(btnEditarDisciplina);
             Controls.Add(btnConsultarDisciplina);
-            Controls.Add(cmbCargaHoraria);
-            Controls.Add(cmbNomeDisciplina);
             Controls.Add(lstDisciplinas);
             Controls.Add(btnRemoverDisciplina);
             Controls.Add(btnAdicionarDisciplina);
             Controls.Add(txtProfessoresDisciplina);
-            Controls.Add(txtIdDisciplina);
             Controls.Add(lblIdDisciplina);
             Controls.Add(lblCargaHoraria);
             Controls.Add(lblProfessoresDisc);
@@ -202,15 +216,20 @@
         private Label lblProfessoresDisc;
         private Label lblCargaHoraria;
         private Label lblIdDisciplina;
-        private TextBox txtIdDisciplina;
-        private TextBox txtProfessoresDisciplina;
+
         private Button btnAdicionarDisciplina;
         private Button btnRemoverDisciplina;
         private ListBox lstDisciplinas;
-        private ComboBox cmbNomeDisciplina;
-        private ComboBox cmbCargaHoraria;
+
+
         private Button btnConsultarDisciplina;
         private Button btnEditarDisciplina;
         private Button btnSalvarEdicaoDisciplina;
+        private Syncfusion.Windows.Forms.ColorPickerButton colorPickerButton1;
+        private TextBox txtProfessoresDisciplina;
+        private ComboBox cmbNomeDisciplina;
+        private ComboBox cmbCargaHoraria;
+        private TextBox txtIdDisciplina;
     }
 }
+       

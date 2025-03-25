@@ -57,9 +57,9 @@ namespace Sistema_de_Gestão_Escolar
                 Disciplina novaDisciplina = new Disciplina(id, nomeDisciplina, cargaHoraria);
 
                 // ✅ Associar professores (se houver)
-                if (!string.IsNullOrWhiteSpace(txtProfessoresDisciplina.Text))
+                if (!string.IsNullOrWhiteSpace(cmbCargaHoraria.Text))
                 {
-                    List<int> professoresIds = txtProfessoresDisciplina.Text
+                    List<int> professoresIds = cmbCargaHoraria.Text
                         .Split(',')
                         .Select(p => p.Trim())  // Remover espaços extras
                         .Where(p => int.TryParse(p, out _)) // Verificar se é número válido
@@ -280,7 +280,7 @@ namespace Sistema_de_Gestão_Escolar
                 cmbCargaHoraria.SelectedItem = disciplinaSelecionada.CargaHoraria.ToString();
 
                 // ✅ Preencher os professores da disciplina
-                txtProfessoresDisciplina.Text = string.Join(", ", disciplinaSelecionada.ProfessoresIds);
+                cmbCargaHoraria.Text = string.Join(", ", disciplinaSelecionada.ProfessoresIds);
 
                 // ✅ Habilitar botão "Salvar Alterações"
                 btnSalvarEdicaoDisciplina.Enabled = true;
@@ -330,7 +330,7 @@ namespace Sistema_de_Gestão_Escolar
                 }
 
                 // ✅ Capturar IDs dos professores
-                List<int> novosProfessoresIds = txtProfessoresDisciplina.Text
+                List<int> novosProfessoresIds = cmbCargaHoraria.Text
                     .Split(',')
                     .Select(p => p.Trim()) // Remover espaços extras
                     .Where(p => int.TryParse(p, out _)) // Verificar se é número válido
@@ -338,7 +338,7 @@ namespace Sistema_de_Gestão_Escolar
                     .Where(pid => gestor.Professores.Any(p => p.Id == pid)) // Verificar se o professor existe
                     .ToList();
 
-                if (!string.IsNullOrWhiteSpace(txtProfessoresDisciplina.Text) && novosProfessoresIds.Count == 0)
+                if (!string.IsNullOrWhiteSpace(cmbCargaHoraria.Text) && novosProfessoresIds.Count == 0)
                 {
                     MessageBox.Show("Erro: Um ou mais IDs de professores são inválidos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -364,6 +364,11 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show($"Erro ao salvar alterações da disciplina: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void cmbNomeDisciplina_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
