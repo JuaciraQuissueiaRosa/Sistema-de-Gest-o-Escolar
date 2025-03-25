@@ -6,35 +6,14 @@ public class GestorPersistencia
 
     private string CaminhoArquivo(string nomeArquivo) => Path.Combine(PastaDados, nomeArquivo);
 
-    public GestorPersistencia()
-    {
-        // Criar diretório "Dados" caso não exista
-        if (!Directory.Exists(PastaDados))
-            Directory.CreateDirectory(PastaDados);
-    }
-
-    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>) CarregarDados()
+    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>, List<Presenca>) CarregarDados()
     {
         List<Aluno> alunos = new List<Aluno>();
         List<Professor> professores = new List<Professor>();
         List<Disciplina> disciplinas = new List<Disciplina>();
         List<Turma> turmas = new List<Turma>();
         List<Nota> notas = new List<Nota>();
-
-        // Carregar notas primeiro para vincular corretamente aos alunos depois
-        if (File.Exists(CaminhoArquivo("notas.txt")))
-        {
-            foreach (var linha in File.ReadAllLines(CaminhoArquivo("notas.txt")))
-            {
-                var partes = linha.Split(';');
-                if (partes.Length == 5)
-                {
-                    notas.Add(new Nota(
-                        int.Parse(partes[0]), int.Parse(partes[1]), double.Parse(partes[2]), partes[3], partes[4]
-                    ));
-                }
-            }
-        }
+        List<Presenca> presencas = new List<Presenca>();
 
         // Carregar alunos
         if (File.Exists(CaminhoArquivo("alunos.txt")))
@@ -44,14 +23,10 @@ public class GestorPersistencia
                 var partes = linha.Split(';');
                 if (partes.Length >= 7)
                 {
-                    var aluno = new Aluno(
+                    alunos.Add(new Aluno(
                         int.Parse(partes[0]), partes[1], DateTime.Parse(partes[2]),
                         partes[3], partes[4], partes[5], int.Parse(partes[6])
-                    );
-
-                    // Associar notas ao aluno
-                    aluno.Notas = notas.Where(n => n.AlunoId == aluno.Id).ToList();
-                    alunos.Add(aluno);
+                    ));
                 }
             }
         }
@@ -103,6 +78,118 @@ public class GestorPersistencia
             }
         }
 
-        return (alunos, professores, disciplinas, turmas, notas);
+        // Carregar notas
+        if (File.Exists(CaminhoArquivo("notas.txt")))
+        {
+            foreach (var linha in File.ReadAllLines(CaminhoArquivo("notas.txt")))
+            {
+                var partes = linha.Split(';');
+                if (partes.Length == 5)
+                {
+                    notas.Add(new Nota(
+                        int.Parse(partes[0]), int.Parse(partes[1]), double.Parse(partes[2]), partes[3], partes[4]
+                    ));
+                }
+            }
+        }
+
+        // Carregar presenças
+        if (File.Exists(CaminhoArquivo("presencas.txt")))
+        {
+            foreach (var linha in File.ReadAllLines(CaminhoArquivo("presencas.txt")))
+            {
+                var partes = linha.Split(';');
+                if (partes.Length == 4)
+                {
+                    presencas.Add(new Presenca(
+                        int.Parse(partes[0]),
+                        int.Parse(partes[1]),
+                        DateTime.Parse(partes[2]),
+                        bool.Parse(partes[3])
+                    ));
+                }
+            }
+        }
+
+        return (alunos, professores, disciplinas, turmas, notas, presencas);
     }
+
+    public void SalvarDados(List<Aluno> alunos, List<Professor> professores, List<Disciplina> disciplinas, List<Turma> turmas, List<Nota> notas, List<Presenca> presencas)
+    {
+        if (!Directory.Exists(PastaDados))
+            Directory.CreateDirectory(PastaDados);
+
+        // Salvar alunos
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("alunos.txt")))
+        {
+            foreach (var aluno in alunos)
+            {
+                sw.WriteLine($"{aluno.Id};{aluno.Nome};{aluno.DataNascimento:yyyy-MM-dd};{aluno.Contato};{aluno.Morada};{aluno.Email};{aluno.TurmaId}");
+            }
+        }
+
+        // Salvar professores
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("professores.txt")))
+        {
+            foreach (var professor in professores)
+            {
+                sw.WriteLine($"{professor.Id};{professor.Nome};{professor.Contato};{professor.Email};{professor.AreaEnsino}");
+            }
+        }
+
+        // Salvar disciplinas
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("disciplinas.txt")))
+        {
+            foreach (var disciplina in disciplinas)
+            {
+                sw.WriteLine($"{disciplina.Id};{disciplina.Nome};{disciplina.CargaHoraria};{string.Join(",", disciplina.ProfessoresIds)};{string.Join(",", disciplina.TurmasIds)}");
+            }
+        }
+
+        // Salvar turmas
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("turmas.txt")))
+        {
+            foreach (var turma in turmas)
+            {
+                sw.WriteLine($"{turma.Id};{turma.Curso};{turma.AnoLetivo};{turma.Turno};{string.Join(",", turma.AlunosIds)};{string.Join(",", turma.DisciplinasIds)}");
+            }
+        }
+
+        // Salvar notas
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("notas.txt")))
+        {
+            foreach (var nota in notas)
+            {
+                sw.WriteLine($"{nota.AlunoId};{nota.DisciplinaId};{nota.ValorNota};{nota.PeriodoLetivo};{nota.TipoAvaliacao}");
+            }
+        }
+
+        // ✅ Carregar presenças
+        if (File.Exists(CaminhoArquivo("presencas.txt")))
+        {
+            foreach (var linha in File.ReadAllLines(CaminhoArquivo("presencas.txt")))
+            {
+                var partes = linha.Split(';');
+                if (partes.Length == 4)
+                {
+                    presencas.Add(new Presenca(
+                        int.Parse(partes[0]),
+                        int.Parse(partes[1]),
+                        DateTime.Parse(partes[2]),
+                        bool.Parse(partes[3])
+                    ));
+                }
+            }
+        }
+
+
+    }
+
+    
 }
+
+
+
+
+
+

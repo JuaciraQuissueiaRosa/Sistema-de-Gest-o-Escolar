@@ -35,6 +35,7 @@
             btnTurmas = new Button();
             btnSair = new Button();
             btnCreditos = new Button();
+            btnPresencas = new Button();
             SuspendLayout();
             // 
             // btnDisciplinas
@@ -107,11 +108,22 @@
             btnCreditos.UseVisualStyleBackColor = true;
             btnCreditos.Click += btnCreditos_Click;
             // 
+            // btnPresencas
+            // 
+            btnPresencas.Location = new Point(419, 334);
+            btnPresencas.Name = "btnPresencas";
+            btnPresencas.Size = new Size(94, 44);
+            btnPresencas.TabIndex = 7;
+            btnPresencas.Text = "Presenças";
+            btnPresencas.UseVisualStyleBackColor = true;
+            btnPresencas.Click += btnPresencas_Click;
+            // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(620, 450);
+            Controls.Add(btnPresencas);
             Controls.Add(btnCreditos);
             Controls.Add(btnSair);
             Controls.Add(btnTurmas);
@@ -134,5 +146,6 @@
         private Button btnTurmas;
         private Button btnSair;
         private Button btnCreditos;
+        private Button btnPresencas;
     }
 }

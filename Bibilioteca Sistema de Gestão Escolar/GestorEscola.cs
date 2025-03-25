@@ -11,21 +11,24 @@ public class GestorEscola
     public List<Turma> Turmas { get; set; } = new List<Turma>();
     public List<Nota> Notas { get; set; } = new List<Nota>();
 
+    public List<Presenca> Presencas { get; set; } = new List<Presenca>();
 
     // Carregar dados ao iniciar o programa
     public GestorEscola()
     {
-        (Alunos, Professores, Disciplinas, Turmas, Notas) = persistencia.CarregarDados();
+        var dados = persistencia.CarregarDados();
+        Alunos = dados.Item1;
+        Professores = dados.Item2;
+        Disciplinas = dados.Item3;
+        Turmas = dados.Item4;
+        Notas = dados.Item5;
+        Presencas = dados.Item6;
     }
 
     public void SalvarDados()
     {
-       
-            persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas);
-      
+        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Presencas);
     }
-
-
 
 
 
@@ -522,8 +525,46 @@ public class GestorEscola
         return false; // Retorna falso se a turma não for encontrada
     }
 
-    // Garantir a persistencia dos dados
+    // ✅ Método para registrar presença ou falta
+    public void RegistrarPresenca(int alunoId, int disciplinaId, DateTime data, bool presente)
+    {
+        Presenca novaPresenca = new Presenca(alunoId, disciplinaId, data, presente);
+        Presencas.Add(novaPresenca);
+        SalvarDados();
+    }
 
+    // ✅ Método para contar faltas e gerar alertas automáticos
+    public List<string> VerificarFaltasExcessivas()
+    {
+        List<string> alertas = new List<string>();
+
+        // Define o limite de faltas para gerar alerta
+        int limiteFaltas = 5;
+
+        // Conta as faltas por aluno e disciplina
+        var faltasPorAluno = Presencas
+            .Where(p => !p.Presente) // Filtra apenas as faltas
+            .GroupBy(p => new { p.AlunoId, p.DisciplinaId })
+            .Select(g => new
+            {
+                AlunoId = g.Key.AlunoId,
+                DisciplinaId = g.Key.DisciplinaId,
+                TotalFaltas = g.Count()
+            })
+            .Where(x => x.TotalFaltas >= limiteFaltas) // Pega apenas os que ultrapassaram o limite
+            .ToList();
+
+        foreach (var falta in faltasPorAluno)
+        {
+            string alunoNome = Alunos.FirstOrDefault(a => a.Id == falta.AlunoId)?.Nome ?? "Aluno não encontrado";
+            string disciplinaNome = Disciplinas.FirstOrDefault(d => d.Id == falta.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
+
+            string mensagem = $"⚠ ALERTA: O aluno {alunoNome} já recebeu um alerta sobre ter atingido o limite de faltas {falta.TotalFaltas} na {disciplinaNome}!";
+            alertas.Add(mensagem);
+        }
+
+        return alertas;
+    }
 
 
 
