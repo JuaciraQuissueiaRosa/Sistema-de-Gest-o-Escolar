@@ -1,7 +1,11 @@
 ﻿using Bibilioteca_Sistema_de_Gestão_Escolar;
+using System.Net.Mail;
+using System.Net;
 
 public class GestorEscola
 {
+
+    private const int LimiteFaltas = 5; // Número máximo de faltas antes do alerta
 
     private GestorPersistencia persistencia = new GestorPersistencia();
     // Listas para armazenar os dados das entidades
@@ -538,34 +542,66 @@ public class GestorEscola
     {
         List<string> alertas = new List<string>();
 
-        // Define o limite de faltas para gerar alerta
-        int limiteFaltas = 5;
-
-        // Conta as faltas por aluno e disciplina
+        // Agrupar faltas por aluno e disciplina
         var faltasPorAluno = Presencas
-            .Where(p => !p.Presente) // Filtra apenas as faltas
+            .Where(p => !p.Presente) // Apenas faltas
             .GroupBy(p => new { p.AlunoId, p.DisciplinaId })
             .Select(g => new
             {
                 AlunoId = g.Key.AlunoId,
                 DisciplinaId = g.Key.DisciplinaId,
-                TotalFaltas = g.Count()
+                QuantidadeFaltas = g.Count()
             })
-            .Where(x => x.TotalFaltas >= limiteFaltas) // Pega apenas os que ultrapassaram o limite
+            .Where(f => f.QuantidadeFaltas >= LimiteFaltas) // Apenas alunos com muitas faltas
             .ToList();
 
         foreach (var falta in faltasPorAluno)
         {
-            string alunoNome = Alunos.FirstOrDefault(a => a.Id == falta.AlunoId)?.Nome ?? "Aluno não encontrado";
-            string disciplinaNome = Disciplinas.FirstOrDefault(d => d.Id == falta.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
+            var aluno = Alunos.FirstOrDefault(a => a.Id == falta.AlunoId);
+            var disciplina = Disciplinas.FirstOrDefault(d => d.Id == falta.DisciplinaId);
 
-            string mensagem = $"⚠ ALERTA: O aluno {alunoNome} já recebeu um alerta sobre ter atingido o limite de faltas {falta.TotalFaltas} na {disciplinaNome}!";
-            alertas.Add(mensagem);
+            if (aluno != null && disciplina != null)
+            {
+                string alerta = $"Aluno: {aluno.Nome} ({aluno.Email}) tem {falta.QuantidadeFaltas} faltas na disciplina {disciplina.Nome}.";
+                alertas.Add(alerta);
+
+                // Enviar e-mail de alerta para o aluno
+                EnviarEmailAlerta(aluno.Email, aluno.Nome, disciplina.Nome, falta.QuantidadeFaltas);
+            }
         }
 
         return alertas;
     }
 
+    private void EnviarEmailAlerta(string emailAluno, string nomeAluno, string nomeDisciplina, int totalFaltas)
+    {
+        try
+        {
+            string remetente = "seuemail@gmail.com"; // Altere para seu e-mail
+            string senha = "suaSenha"; // Cuidado! Melhor armazenar em um local seguro
+            string assunto = "⚠ Alerta de Faltas Excessivas ⚠";
+            string corpo = $"Prezado(a) {nomeAluno},\n\n" +
+                           $"Você atingiu {totalFaltas} faltas na disciplina {nomeDisciplina}. " +
+                           "Por favor, entre em contato com a coordenação para evitar consequências acadêmicas.\n\n" +
+                           "Atenciosamente,\nCoordenação Escolar";
+
+            using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+            {
+                smtp.Credentials = new NetworkCredential(remetente, senha);
+                smtp.EnableSsl = true;
+
+                using (MailMessage mensagem = new MailMessage(remetente, emailAluno, assunto, corpo))
+                {
+                    smtp.Send(mensagem);
+                }
+            }
+
+            Console.WriteLine($"✅ Alerta enviado para {emailAluno}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erro ao enviar e-mail para {emailAluno}: {ex.Message}");
+        }
 
 
 
@@ -573,4 +609,6 @@ public class GestorEscola
 
 
 
+
+    }
 }
