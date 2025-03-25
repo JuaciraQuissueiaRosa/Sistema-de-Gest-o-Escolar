@@ -6,14 +6,18 @@ public class GestorPersistencia
 
     private string CaminhoArquivo(string nomeArquivo) => Path.Combine(PastaDados, nomeArquivo);
 
-    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>) CarregarDados()
+    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>, List<Evento>) CarregarDados()
     {
         List<Aluno> alunos = new List<Aluno>();
         List<Professor> professores = new List<Professor>();
         List<Disciplina> disciplinas = new List<Disciplina>();
         List<Turma> turmas = new List<Turma>();
         List<Nota> notas = new List<Nota>();
-       
+        List<Evento> eventos = new List<Evento>();
+
+        // Criar diretório caso não exista
+        if (!Directory.Exists(PastaDados))
+            Directory.CreateDirectory(PastaDados);
 
         // Carregar alunos
         if (File.Exists(CaminhoArquivo("alunos.txt")))
@@ -93,12 +97,37 @@ public class GestorPersistencia
             }
         }
 
-    
+        // Carregar eventos
+        if (File.Exists(CaminhoArquivo("eventos.txt")))
+        {
+            foreach (var linha in File.ReadAllLines(CaminhoArquivo("eventos.txt")))
+            {
+                var partes = linha.Split(';');
+                if (partes.Length >= 4)
+                {
+                    var evento = new Evento(
+                        int.Parse(partes[0]), partes[1], partes[2], DateTime.Parse(partes[3])
+                    );
 
-        return (alunos, professores, disciplinas, turmas, notas);
+                    if (partes.Length > 4)
+                    {
+                        evento.AlunosIds = partes[4].Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+                    }
+
+                    if (partes.Length > 5)
+                    {
+                        evento.ProfessoresIds = partes[5].Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+                    }
+
+                    eventos.Add(evento);
+                }
+            }
+        }
+
+        return (alunos, professores, disciplinas, turmas, notas, eventos);
     }
 
-    public void SalvarDados(List<Aluno> alunos, List<Professor> professores, List<Disciplina> disciplinas, List<Turma> turmas, List<Nota> notas)
+    public void SalvarDados(List<Aluno> alunos, List<Professor> professores, List<Disciplina> disciplinas, List<Turma> turmas, List<Nota> notas, List<Evento> eventos)
     {
         if (!Directory.Exists(PastaDados))
             Directory.CreateDirectory(PastaDados);
@@ -148,16 +177,16 @@ public class GestorPersistencia
             }
         }
 
-       
-
-
+        // Salvar eventos
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("eventos.txt")))
+        {
+            foreach (var evento in eventos)
+            {
+                string alunosIds = string.Join(",", evento.AlunosIds);
+                string professoresIds = string.Join(",", evento.ProfessoresIds);
+                sw.WriteLine($"{evento.Id};{evento.Nome};{evento.Descricao};{evento.Data:yyyy-MM-dd};{alunosIds};{professoresIds}");
+            }
+        }
     }
-
-    
 }
-
-
-
-
-
 

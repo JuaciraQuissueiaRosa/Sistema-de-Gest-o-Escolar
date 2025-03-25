@@ -56,9 +56,10 @@
             formCredito.Show();
         }
 
-        private void btnPresencas_Click(object sender, EventArgs e)
+        private void btnEvento_Click(object sender, EventArgs e)
         {
-          
+            FormEvento formEvento = new FormEvento(gestor);
+            formEvento.Show();
         }
     }
 }

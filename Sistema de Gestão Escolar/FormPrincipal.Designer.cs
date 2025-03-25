@@ -35,6 +35,7 @@
             btnTurmas = new Button();
             btnSair = new Button();
             btnCreditos = new Button();
+            btnEvento = new Button();
             SuspendLayout();
             // 
             // btnDisciplinas
@@ -107,11 +108,22 @@
             btnCreditos.UseVisualStyleBackColor = true;
             btnCreditos.Click += btnCreditos_Click;
             // 
+            // btnEvento
+            // 
+            btnEvento.Location = new Point(418, 358);
+            btnEvento.Name = "btnEvento";
+            btnEvento.Size = new Size(94, 52);
+            btnEvento.TabIndex = 7;
+            btnEvento.Text = "Evento";
+            btnEvento.UseVisualStyleBackColor = true;
+            btnEvento.Click += btnEvento_Click;
+            // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(620, 450);
+            Controls.Add(btnEvento);
             Controls.Add(btnCreditos);
             Controls.Add(btnSair);
             Controls.Add(btnTurmas);
@@ -134,5 +146,6 @@
         private Button btnTurmas;
         private Button btnSair;
         private Button btnCreditos;
+        private Button btnEvento;
     }
 }

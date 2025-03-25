@@ -1,22 +1,21 @@
 ﻿using Bibilioteca_Sistema_de_Gestão_Escolar;
 using System.Net.Mail;
 using System.Net;
+using System.Numerics;
 
 public class GestorEscola
 {
-
-   
     private GestorPersistencia persistencia = new GestorPersistencia();
+
     // Listas para armazenar os dados das entidades
     public List<Aluno> Alunos { get; set; } = new List<Aluno>();
     public List<Professor> Professores { get; set; } = new List<Professor>();
     public List<Disciplina> Disciplinas { get; set; } = new List<Disciplina>();
     public List<Turma> Turmas { get; set; } = new List<Turma>();
     public List<Nota> Notas { get; set; } = new List<Nota>();
+    public List<Evento> Eventos { get; set; } = new List<Evento>();
 
-   
-
-    // Carregar dados ao iniciar o programa
+    // 🔹 Carregar dados ao iniciar o programa
     public GestorEscola()
     {
         var dados = persistencia.CarregarDados();
@@ -25,328 +24,67 @@ public class GestorEscola
         Disciplinas = dados.Item3;
         Turmas = dados.Item4;
         Notas = dados.Item5;
-       
+        Eventos = dados.Item6;
     }
 
     public void SalvarDados()
     {
-        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas);
+        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Eventos);
     }
+    // ----------------- CRUD PARA ALUNOS -----------------
 
-
-
-
-
-
-    // ----------------- CRUD PARA ALUNOS ----------------- 
-
-    /// <summary>
-    /// Adiciona um aluno à lista de alunos.
-    /// </summary>
     public void AdicionarAluno(Aluno aluno)
     {
         Alunos.Add(aluno);
+        SalvarDados();
     }
 
-    /// <summary>
-    /// Retorna a lista de alunos cadastrados.
-    /// </summary>
+    public bool RemoverAluno(int id)
+    {
+        Aluno aluno = Alunos.FirstOrDefault(a => a.Id == id);
+        if (aluno != null && !Notas.Any(n => n.AlunoId == id))
+        {
+            Alunos.Remove(aluno);
+            SalvarDados();
+            return true;
+        }
+        return false;
+    }
+
     public List<Aluno> ListarAlunos()
     {
         return Alunos;
     }
 
-    /// <summary>
-    /// Atualiza os dados de um aluno pelo ID.
-    /// </summary>
     public void AtualizarAluno(int id, string novoNome, string novoContato)
     {
-        foreach (var aluno in Alunos)
+        Aluno aluno = Alunos.FirstOrDefault(a => a.Id == id);
+        if (aluno != null)
         {
-            if (aluno.Id == id)
-            {
-                aluno.Nome = novoNome;
-                aluno.Contato = novoContato;
-                return;
-            }
+            aluno.Nome = novoNome;
+            aluno.Contato = novoContato;
+            SalvarDados();
         }
-        throw new Exception("Aluno não encontrado.");
+        else
+        {
+            throw new Exception("Aluno não encontrado.");
+        }
     }
 
-    /// <summary>
-    /// Permite mudar um aluno de turma sem perder seu histórico de notas.
-    /// </summary>
     public void MudarAlunoDeTurma(int alunoId, int novaTurmaId)
     {
-        foreach (var aluno in Alunos)
+        Aluno aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
+        if (aluno != null)
         {
-            if (aluno.Id == alunoId)
-            {
-                aluno.TurmaId = novaTurmaId;
-                return;
-            }
+            aluno.TurmaId = novaTurmaId;
+            SalvarDados();
         }
-        throw new Exception("Aluno não encontrado.");
+        else
+        {
+            throw new Exception("Aluno não encontrado.");
+        }
     }
 
-    /// <summary>
-    /// Remove um aluno apenas se ele não tiver notas registradas.
-    /// </summary>
-    public bool RemoverAluno(int id)
-    {
-        for (int i = 0; i < Alunos.Count; i++)
-        {
-            if (Alunos[i].Id == id)
-            {
-                // Verificar se o aluno tem notas registradas
-                for (int j = 0; j < Notas.Count; j++)
-                {
-                    if (Notas[j].AlunoId == id)
-                    {
-                        return false; // Não pode remover se houver notas registradas
-                    }
-                }
-
-                Alunos.RemoveAt(i);
-                return true; // Aluno removido com sucesso
-            }
-        }
-
-        return false; // Aluno não encontrado
-    }
-
-    /// <summary>
-    /// Permite buscar alunos por nome, número de estudante ou turma.
-    /// </summary>
-    public List<Aluno> BuscarAlunos(string termoBusca)
-    {
-        List<Aluno> resultado = new List<Aluno>();
-        foreach (var aluno in Alunos)
-        {
-            if (aluno.Nome.Contains(termoBusca) || aluno.Id.ToString() == termoBusca || aluno.TurmaId.ToString() == termoBusca)
-            {
-                resultado.Add(aluno);
-            }
-        }
-        return resultado;
-    }
-
-    // ----------------- CRUD PARA PROFESSORES ----------------- 
-
-    /// <summary>
-    /// Adiciona um professor à lista de professores.
-    /// </summary>
-    public void AdicionarProfessor(Professor professor)
-    {
-        Professores.Add(professor);
-    }
-
-    /// <summary>
-    /// Remove um professor apenas se ele não estiver associado a disciplinas.
-    /// </summary>
-    public bool RemoverProfessor(int id)
-    {
-        // Verificar se o professor existe
-        for (int i = 0; i < Professores.Count; i++)
-        {
-            if (Professores[i].Id == id)
-            {
-                // Verificar se o professor está associado a alguma disciplina
-                for (int j = 0; j < Disciplinas.Count; j++)
-                {
-                    for (int k = 0; k < Disciplinas[j].ProfessoresIds.Count; k++)
-                    {
-                        if (Disciplinas[j].ProfessoresIds[k] == id)
-                        {
-                            return false; // O professor não pode ser removido
-                        }
-                    }
-                }
-
-                // Remover o professor da lista
-                Professores.RemoveAt(i);
-                return true; // Professor removido com sucesso
-            }
-        }
-
-        return false; // Professor não encontrado
-    }
-
-    // ----------------- CRUD PARA DISCIPLINAS ----------------- 
-
-    /// <summary>
-    /// Adiciona uma disciplina à lista de disciplinas.
-    /// </summary>
-    public bool AdicionarDisciplina(Disciplina disciplina)
-    {
-        // Verificar se já existe uma disciplina com o mesmo nome
-        for (int i = 0; i < Disciplinas.Count; i++)
-        {
-            if (Disciplinas[i].Nome.Equals(disciplina.Nome, StringComparison.OrdinalIgnoreCase))
-            {
-                return false; // Retorna falso caso a disciplina já exista
-            }
-        }
-
-        // Se não existir, adiciona normalmente
-        Disciplinas.Add(disciplina);
-        return true;
-    }
-
-    /// <summary>
-    /// Associa um professor a uma disciplina.
-    /// </summary>
-    public void AssociarProfessorADisciplina(int disciplinaId, int professorId)
-    {
-        foreach (var disciplina in Disciplinas)
-        {
-            if (disciplina.Id == disciplinaId)
-            {
-                if (!disciplina.ProfessoresIds.Contains(professorId))
-                {
-                    disciplina.ProfessoresIds.Add(professorId);
-                }
-                return;
-            }
-        }
-        throw new Exception("Disciplina não encontrada.");
-    }
-
-    // ----------------- CRUD PARA NOTAS ----------------- 
-
-    /// <summary>
-    /// Adiciona uma nota ao sistema, verificando se o período letivo ainda está ativo e se o professor pode lançar a nota.
-    /// </summary>
-    public void AdicionarNota(Nota nota)
-    {
-        if (VerificarSePeriodoEncerrado(nota.PeriodoLetivo))
-        {
-            throw new Exception("Notas não podem ser adicionadas após o término do período letivo.");
-        }
-
-        if (!VerificarSeProfessorPodeLancarNota(nota.DisciplinaId, nota.AlunoId))
-        {
-            throw new Exception("Apenas professores da disciplina podem lançar notas.");
-        }
-
-        Notas.Add(nota);
-    }
-
-    /// <summary>
-    /// Remove uma nota, verificando se o período letivo está encerrado.
-    /// </summary>
-    public bool RemoverNota(int alunoId, int disciplinaId, string periodoLetivo)
-    {
-        for (int i = 0; i < Notas.Count; i++)
-        {
-            if (Notas[i].AlunoId == alunoId &&
-                Notas[i].DisciplinaId == disciplinaId &&
-                Notas[i].PeriodoLetivo.Equals(periodoLetivo, StringComparison.OrdinalIgnoreCase))
-            {
-                Notas.RemoveAt(i);
-                return true; // Nota removida com sucesso
-            }
-        }
-
-        return false; // Nota não encontrada
-    }
-
-    // ----------------- MÉTODOS AUXILIARES ----------------- 
-
-    /// <summary>
-    /// Verifica se o período letivo já foi encerrado.
-    /// </summary>
-    public bool VerificarSePeriodoEncerrado(string periodoLetivo)
-    {
-        // Extrair o ano do período letivo (se for no formato "2023/2024", pega "2024")
-        string[] partes = periodoLetivo.Split('/');
-        int anoFinal;
-
-        if (partes.Length > 1 && int.TryParse(partes[1], out anoFinal))
-        {
-            int anoAtual = DateTime.Now.Year;
-            return anoFinal < anoAtual; // Se o período terminou antes do ano atual, está encerrado
-        }
-
-        return false; // Se não conseguiu identificar um ano, assume que está ativo
-    }
-
-    /// <summary>
-    /// Verifica se o professor pode lançar notas para a disciplina.
-    /// </summary>
-    public bool VerificarSeProfessorPodeLancarNota(int disciplinaId, int alunoId)
-    {
-        foreach (var disciplina in Disciplinas)
-        {
-            if (disciplina.Id == disciplinaId)
-            {
-                foreach (var professor in Professores)
-                {
-                    if (disciplina.ProfessoresIds.Contains(professor.Id))
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Verifica se a área de ensino do professor é compatível com a disciplina.
-    /// </summary>
-    public bool ValidarAreaDeEnsino(string areaEnsino, string disciplina)
-    {
-        // Mapeamento das áreas de ensino e disciplinas correspondentes
-        Dictionary<string, List<string>> areaParaDisciplinas = new Dictionary<string, List<string>>()
-    {
-        { "Línguas e Humanidades", new List<string> { "Português", "Inglês", "Francês", "Espanhol", "Filosofia", "História" } },
-        { "Ciências e Tecnologias", new List<string> { "Matemática", "Física e Química", "Biologia e Geologia", "Geometria Descritiva" } },
-        { "Ciências Socioeconómicas", new List<string> { "Economia", "Geografia", "Sociologia", "Direito" } },
-        { "Artes Visuais", new List<string> { "Educação Visual", "Desenho", "História da Cultura e das Artes" } },
-        { "Educação Física e Desporto", new List<string> { "Educação Física", "Ciências do Desporto" } },
-        { "Informática e Tecnologias", new List<string> { "Tecnologias de Informação e Comunicação (TIC)", "Programação", "Robótica" } }
-    };
-
-        // Verifica se a área de ensino existe e se a disciplina pertence a ela
-        if (areaParaDisciplinas.ContainsKey(areaEnsino))
-        {
-            return areaParaDisciplinas[areaEnsino].Contains(disciplina);
-        }
-
-        return false; // Se a área de ensino não for encontrada, assume que não é válida
-    }
-
-
-
-    /// <summary>
-    /// Adiciona uma nova turma ao sistema.
-    /// </summary>
-    public void AdicionarTurma(Turma turma)
-    {
-        // Verificar se já existe uma turma com o mesmo ID
-        foreach (var t in Turmas)
-        {
-            if (t.Id == turma.Id)
-            {
-                throw new Exception("Já existe uma turma com esse ID.");
-            }
-        }
-
-        // Inicializar listas se estiverem nulas
-        if (turma.AlunosIds == null)
-            turma.AlunosIds = new List<int>();
-
-        if (turma.DisciplinasIds == null)
-            turma.DisciplinasIds = new List<int>();
-
-        // Adicionar a turma à lista de turmas
-        Turmas.Add(turma);
-    }
-
-    /// <summary>
-    /// Remove uma turma do sistema, verificando se há alunos matriculados.
-    /// </summary>
     public bool RemoverTurma(int id)
     {
         for (int i = 0; i < Turmas.Count; i++)
@@ -361,6 +99,7 @@ public class GestorEscola
 
                 // Remover a turma da lista
                 Turmas.RemoveAt(i);
+                SalvarDados();
                 return true; // Retorna verdadeiro se a remoção for bem-sucedida
             }
         }
@@ -368,44 +107,204 @@ public class GestorEscola
         return false; // Retorna falso se a turma não for encontrada
     }
 
-    /// <summary>
-    /// Tenta remover uma disciplina do sistema, verificando se ela está associada a turmas ou notas.
-    /// Retorna true se a remoção for bem-sucedida e false se não puder ser removida.
-    /// </summary>
+    // ----------------- CRUD PARA PROFESSORES -----------------
+
+    public void AdicionarProfessor(Professor professor)
+    {
+        Professores.Add(professor);
+        SalvarDados();
+    }
+
+    public bool RemoverProfessor(int id)
+    {
+        if (!Disciplinas.Any(d => d.ProfessoresIds.Contains(id)))
+        {
+            Professores.RemoveAll(p => p.Id == id);
+            SalvarDados();
+            return true;
+        }
+        return false;
+    }
+
+    public bool EditarProfessor(int id, string novoNome, string novaAreaEnsino, string novoContato, string novoEmail)
+    {
+        for (int i = 0; i < Professores.Count; i++)
+        {
+            if (Professores[i].Id == id)
+            {
+                if (string.IsNullOrEmpty(novoNome) || string.IsNullOrEmpty(novaAreaEnsino) ||
+                    string.IsNullOrEmpty(novoContato) || string.IsNullOrEmpty(novoEmail))
+                {
+                    return false;
+                }
+
+                // Atualizar informações do professor
+                Professores[i].Nome = novoNome;
+                Professores[i].AreaEnsino = novaAreaEnsino;
+                Professores[i].Contato = novoContato;
+                Professores[i].Email = novoEmail;
+
+                SalvarDados();
+                return true;
+            }
+        }
+        return false; // Retorna falso se o professor não for encontrado
+    }
+
+    // ----------------- CRUD PARA DISCIPLINAS -----------------
+
+    public bool AdicionarDisciplina(Disciplina disciplina)
+    {
+        if (Disciplinas.Any(d => d.Nome.Equals(disciplina.Nome, StringComparison.OrdinalIgnoreCase)))
+        {
+            return false;
+        }
+
+        Disciplinas.Add(disciplina);
+        SalvarDados();
+        return true;
+    }
+
     public bool RemoverDisciplina(int id)
     {
         for (int i = 0; i < Disciplinas.Count; i++)
         {
             if (Disciplinas[i].Id == id)
             {
-                // Verificar se a disciplina está associada a turmas
-                for (int j = 0; j < Turmas.Count; j++)
+                // Verificar se a disciplina está associada a alguma turma
+                foreach (var turma in Turmas)
                 {
-                    for (int k = 0; k < Turmas[j].DisciplinasIds.Count; k++)
+                    if (turma.DisciplinasIds.Contains(id))
                     {
-                        if (Turmas[j].DisciplinasIds[k] == id)
-                        {
-                            return false; // A disciplina não pode ser removida pois está associada a uma turma
-                        }
+                        return false; // A disciplina não pode ser removida pois está associada a uma turma
                     }
                 }
 
-                // Verificar se existem notas registradas para a disciplina
-                for (int j = 0; j < Notas.Count; j++)
+                // Verificar se há notas registradas para a disciplina
+                foreach (var nota in Notas)
                 {
-                    if (Notas[j].DisciplinaId == id)
+                    if (nota.DisciplinaId == id)
                     {
                         return false; // A disciplina não pode ser removida pois há notas registradas
                     }
                 }
 
-                // Remover a disciplina da lista
+                // Se não houver restrições, remover a disciplina
                 Disciplinas.RemoveAt(i);
-                return true; // Disciplina removida com sucesso
+                SalvarDados();
+                return true; // Retorna verdadeiro indicando que a disciplina foi removida com sucesso
             }
         }
 
-        return false; // Disciplina não encontrada
+        return false; // Retorna falso se a disciplina não for encontrada
+    }
+
+
+    public void AssociarProfessorADisciplina(int disciplinaId, int professorId)
+    {
+        Disciplina disciplina = Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
+        if (disciplina != null && !disciplina.ProfessoresIds.Contains(professorId))
+        {
+            disciplina.ProfessoresIds.Add(professorId);
+            SalvarDados();
+        }
+    }
+
+    // ----------------- CRUD PARA NOTAS -----------------
+
+    public void AdicionarNota(Nota nota)
+    {
+        if (VerificarSePeriodoEncerrado(nota.PeriodoLetivo))
+            throw new Exception("Notas não podem ser adicionadas após o término do período letivo.");
+
+        Notas.Add(nota);
+        SalvarDados();
+    }
+
+    public bool RemoverNota(int alunoId, int disciplinaId, string periodoLetivo)
+    {
+        Nota nota = Notas.FirstOrDefault(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.PeriodoLetivo == periodoLetivo);
+        if (nota != null)
+        {
+            Notas.Remove(nota);
+            SalvarDados();
+            return true;
+        }
+        return false;
+    }
+
+    // ----------------- CRUD PARA EVENTOS -----------------
+    // --- Métodos para Eventos ---
+    // 📌 Adicionar Evento
+    public void AdicionarEvento(int id, string nome, string descricao, DateTime data)
+    {
+        if (Eventos.Any(e => e.Id == id))
+            throw new Exception("Já existe um evento com este ID.");
+
+        Evento novoEvento = new Evento(id, nome, descricao, data);
+        Eventos.Add(novoEvento);
+        SalvarDados();
+    }
+
+    // 📌 Editar Evento
+    public bool EditarEvento(int id, string novoNome, string novaDescricao, DateTime novaData)
+    {
+        Evento evento = Eventos.FirstOrDefault(e => e.Id == id);
+        if (evento == null)
+            return false;
+
+        evento.Nome = novoNome;
+        evento.Descricao = novaDescricao;
+        evento.Data = novaData;
+
+        SalvarDados();
+        return true;
+    }
+
+    // 📌 Remover Evento
+    public bool RemoverEvento(int id)
+    {
+        Evento evento = Eventos.FirstOrDefault(e => e.Id == id);
+        if (evento == null)
+            return false;
+
+        Eventos.Remove(evento);
+        SalvarDados();
+        return true;
+    }
+
+    // 📌 Associar Aluno ao Evento
+    public void AssociarAlunoEvento(int eventoId, int alunoId)
+    {
+        Evento evento = Eventos.FirstOrDefault(e => e.Id == eventoId);
+        if (evento != null && !evento.AlunosIds.Contains(alunoId))
+        {
+            evento.AlunosIds.Add(alunoId);
+            SalvarDados();
+        }
+    }
+
+    // 📌 Associar Professor ao Evento
+    public void AssociarProfessorEvento(int eventoId, int professorId)
+    {
+        Evento evento = Eventos.FirstOrDefault(e => e.Id == eventoId);
+        if (evento != null && !evento.ProfessoresIds.Contains(professorId))
+        {
+            evento.ProfessoresIds.Add(professorId);
+            SalvarDados();
+        }
+    }
+
+    // ----------------- MÉTODOS AUXILIARES -----------------
+
+    public bool VerificarSePeriodoEncerrado(string periodoLetivo)
+    {
+        string[] partes = periodoLetivo.Split('/');
+        if (partes.Length == 2 && int.TryParse(partes[1], out int anoFinal))
+        {
+            return anoFinal < DateTime.Now.Year;
+        }
+        return false;
     }
 
     public bool ValidarAnoLetivo(string anoLetivo)
@@ -427,113 +326,11 @@ public class GestorEscola
             }
 
             // O primeiro ano deve ser menor que o segundo (exemplo: 2023/2024)
-            if (anoInicio >= anoFim)
-            {
-                return false;
-            }
-
-            return true;
+            return anoInicio < anoFim;
         }
-        catch (Exception)
+        catch
         {
             return false; // Em caso de erro, retorna falso sem quebrar o sistema
         }
     }
-    public bool EditarProfessor(int id, string novoNome, string novaAreaEnsino, string novoContato, string novoEmail)
-    {
-        for (int i = 0; i < Professores.Count; i++)
-        {
-            if (Professores[i].Id == id)
-            {
-                if (string.IsNullOrEmpty(novoNome) || string.IsNullOrEmpty(novaAreaEnsino) ||
-                    string.IsNullOrEmpty(novoContato) || string.IsNullOrEmpty(novoEmail))
-                {
-                    return false;
-                }
-
-                // Atualizar informações do professor
-                Professores[i].Nome = novoNome;
-                Professores[i].AreaEnsino = novaAreaEnsino;
-                Professores[i].Contato = novoContato;
-                Professores[i].Email = novoEmail;
-
-                return true;
-            }
-        }
-        return false; // Retorna falso se o professor não for encontrado
-    }
-
-    public bool EditarNota(int alunoId, int disciplinaId, string periodoLetivo, double novoValorNota, string novoTipoAvaliacao)
-    {
-        for (int i = 0; i < Notas.Count; i++)
-        {
-            if (Notas[i].AlunoId == alunoId &&
-                Notas[i].DisciplinaId == disciplinaId &&
-                Notas[i].PeriodoLetivo.Equals(periodoLetivo, StringComparison.OrdinalIgnoreCase))
-            {
-                if (novoValorNota < 0 || novoValorNota > 20) // Notas entre 0 e 20
-                {
-                    return false;
-                }
-
-                // Atualizar a nota e o tipo de avaliação
-                Notas[i].ValorNota = novoValorNota;
-                Notas[i].TipoAvaliacao = novoTipoAvaliacao;
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public bool EditarDisciplina(int id, string novoNome, int novaCargaHoraria, List<int> novosProfessoresIds)
-    {
-        for (int i = 0; i < Disciplinas.Count; i++)
-        {
-            if (Disciplinas[i].Id == id)
-            {
-                if (string.IsNullOrEmpty(novoNome) || novaCargaHoraria <= 0)
-                {
-                    return false; // Validação dos campos
-                }
-
-                Disciplinas[i].Nome = novoNome;
-                Disciplinas[i].CargaHoraria = novaCargaHoraria;
-                Disciplinas[i].ProfessoresIds = novosProfessoresIds; // Adicionando os professores
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public bool EditarTurma(int id, string novoCurso, string novoAnoLetivo, string novoTurno)
-    {
-        for (int i = 0; i < Turmas.Count; i++)
-        {
-            if (Turmas[i].Id == id)
-            {
-                // Validar se os novos dados são válidos
-                if (string.IsNullOrEmpty(novoCurso) || string.IsNullOrEmpty(novoAnoLetivo) || string.IsNullOrEmpty(novoTurno))
-                {
-                    return false; // Retorna falso se algum campo estiver inválido
-                }
-
-                Turmas[i].Curso = novoCurso;
-                Turmas[i].AnoLetivo = novoAnoLetivo;
-                Turmas[i].Turno = novoTurno;
-                return true; // Retorna verdadeiro indicando sucesso
-            }
-        }
-        return false; // Retorna falso se a turma não for encontrada
-    }
-
-  
-
-
-
-
-
-
-    
 }
