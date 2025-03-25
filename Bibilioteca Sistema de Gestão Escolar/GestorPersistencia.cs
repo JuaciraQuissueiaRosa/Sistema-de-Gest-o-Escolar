@@ -6,14 +6,14 @@ public class GestorPersistencia
 
     private string CaminhoArquivo(string nomeArquivo) => Path.Combine(PastaDados, nomeArquivo);
 
-    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>, List<Presenca>) CarregarDados()
+    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>) CarregarDados()
     {
         List<Aluno> alunos = new List<Aluno>();
         List<Professor> professores = new List<Professor>();
         List<Disciplina> disciplinas = new List<Disciplina>();
         List<Turma> turmas = new List<Turma>();
         List<Nota> notas = new List<Nota>();
-        List<Presenca> presencas = new List<Presenca>();
+       
 
         // Carregar alunos
         if (File.Exists(CaminhoArquivo("alunos.txt")))
@@ -93,28 +93,12 @@ public class GestorPersistencia
             }
         }
 
-        // Carregar presenças
-        if (File.Exists(CaminhoArquivo("presencas.txt")))
-        {
-            foreach (var linha in File.ReadAllLines(CaminhoArquivo("presencas.txt")))
-            {
-                var partes = linha.Split(';');
-                if (partes.Length == 4)
-                {
-                    presencas.Add(new Presenca(
-                        int.Parse(partes[0]),
-                        int.Parse(partes[1]),
-                        DateTime.Parse(partes[2]),
-                        bool.Parse(partes[3])
-                    ));
-                }
-            }
-        }
+    
 
-        return (alunos, professores, disciplinas, turmas, notas, presencas);
+        return (alunos, professores, disciplinas, turmas, notas);
     }
 
-    public void SalvarDados(List<Aluno> alunos, List<Professor> professores, List<Disciplina> disciplinas, List<Turma> turmas, List<Nota> notas, List<Presenca> presencas)
+    public void SalvarDados(List<Aluno> alunos, List<Professor> professores, List<Disciplina> disciplinas, List<Turma> turmas, List<Nota> notas)
     {
         if (!Directory.Exists(PastaDados))
             Directory.CreateDirectory(PastaDados);
@@ -164,23 +148,7 @@ public class GestorPersistencia
             }
         }
 
-        // ✅ Carregar presenças
-        if (File.Exists(CaminhoArquivo("presencas.txt")))
-        {
-            foreach (var linha in File.ReadAllLines(CaminhoArquivo("presencas.txt")))
-            {
-                var partes = linha.Split(';');
-                if (partes.Length == 4)
-                {
-                    presencas.Add(new Presenca(
-                        int.Parse(partes[0]),
-                        int.Parse(partes[1]),
-                        DateTime.Parse(partes[2]),
-                        bool.Parse(partes[3])
-                    ));
-                }
-            }
-        }
+       
 
 
     }

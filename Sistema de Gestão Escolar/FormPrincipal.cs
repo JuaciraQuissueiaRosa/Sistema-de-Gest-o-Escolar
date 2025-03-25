@@ -58,8 +58,7 @@
 
         private void btnPresencas_Click(object sender, EventArgs e)
         {
-            FormPresenca formPresenca = new FormPresenca(gestor);
-            formPresenca.Show();
+          
         }
     }
 }

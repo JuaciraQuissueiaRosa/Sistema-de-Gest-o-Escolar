@@ -5,8 +5,7 @@ using System.Net;
 public class GestorEscola
 {
 
-    private const int LimiteFaltas = 5; // Número máximo de faltas antes do alerta
-
+   
     private GestorPersistencia persistencia = new GestorPersistencia();
     // Listas para armazenar os dados das entidades
     public List<Aluno> Alunos { get; set; } = new List<Aluno>();
@@ -15,7 +14,7 @@ public class GestorEscola
     public List<Turma> Turmas { get; set; } = new List<Turma>();
     public List<Nota> Notas { get; set; } = new List<Nota>();
 
-    public List<Presenca> Presencas { get; set; } = new List<Presenca>();
+   
 
     // Carregar dados ao iniciar o programa
     public GestorEscola()
@@ -26,12 +25,12 @@ public class GestorEscola
         Disciplinas = dados.Item3;
         Turmas = dados.Item4;
         Notas = dados.Item5;
-        Presencas = dados.Item6;
+       
     }
 
     public void SalvarDados()
     {
-        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Presencas);
+        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas);
     }
 
 
@@ -529,86 +528,12 @@ public class GestorEscola
         return false; // Retorna falso se a turma não for encontrada
     }
 
-    // ✅ Método para registrar presença ou falta
-    public void RegistrarPresenca(int alunoId, int disciplinaId, DateTime data, bool presente)
-    {
-        Presenca novaPresenca = new Presenca(alunoId, disciplinaId, data, presente);
-        Presencas.Add(novaPresenca);
-        SalvarDados();
-    }
-
-    // ✅ Método para contar faltas e gerar alertas automáticos
-    public List<string> VerificarFaltasExcessivas()
-    {
-        List<string> alertas = new List<string>();
-
-        // Agrupar faltas por aluno e disciplina
-        var faltasPorAluno = Presencas
-            .Where(p => !p.Presente) // Apenas faltas
-            .GroupBy(p => new { p.AlunoId, p.DisciplinaId })
-            .Select(g => new
-            {
-                AlunoId = g.Key.AlunoId,
-                DisciplinaId = g.Key.DisciplinaId,
-                QuantidadeFaltas = g.Count()
-            })
-            .Where(f => f.QuantidadeFaltas >= LimiteFaltas) // Apenas alunos com muitas faltas
-            .ToList();
-
-        foreach (var falta in faltasPorAluno)
-        {
-            var aluno = Alunos.FirstOrDefault(a => a.Id == falta.AlunoId);
-            var disciplina = Disciplinas.FirstOrDefault(d => d.Id == falta.DisciplinaId);
-
-            if (aluno != null && disciplina != null)
-            {
-                string alerta = $"Aluno: {aluno.Nome} ({aluno.Email}) tem {falta.QuantidadeFaltas} faltas na disciplina {disciplina.Nome}.";
-                alertas.Add(alerta);
-
-                // Enviar e-mail de alerta para o aluno
-                EnviarEmailAlerta(aluno.Email, aluno.Nome, disciplina.Nome, falta.QuantidadeFaltas);
-            }
-        }
-
-        return alertas;
-    }
-
-    private void EnviarEmailAlerta(string emailAluno, string nomeAluno, string nomeDisciplina, int totalFaltas)
-    {
-        try
-        {
-            string remetente = "seuemail@gmail.com"; // Altere para seu e-mail
-            string senha = "suaSenha"; // Cuidado! Melhor armazenar em um local seguro
-            string assunto = "⚠ Alerta de Faltas Excessivas ⚠";
-            string corpo = $"Prezado(a) {nomeAluno},\n\n" +
-                           $"Você atingiu {totalFaltas} faltas na disciplina {nomeDisciplina}. " +
-                           "Por favor, entre em contato com a coordenação para evitar consequências acadêmicas.\n\n" +
-                           "Atenciosamente,\nCoordenação Escolar";
-
-            using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
-            {
-                smtp.Credentials = new NetworkCredential(remetente, senha);
-                smtp.EnableSsl = true;
-
-                using (MailMessage mensagem = new MailMessage(remetente, emailAluno, assunto, corpo))
-                {
-                    smtp.Send(mensagem);
-                }
-            }
-
-            Console.WriteLine($"✅ Alerta enviado para {emailAluno}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Erro ao enviar e-mail para {emailAluno}: {ex.Message}");
-        }
+  
 
 
 
 
 
 
-
-
-    }
+    
 }
