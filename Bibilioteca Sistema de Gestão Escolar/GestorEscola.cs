@@ -31,9 +31,63 @@ public class GestorEscola
     {
         persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Eventos);
     }
-    // ----------------- CRUD PARA ALUNOS -----------------
 
-    public void AdicionarAluno(Aluno aluno)
+
+    //-------------------Metodo para Criar métodos para gerar pautas de notas por aluno e turma,  Calcular médias e estatísticas de desempenho
+
+    // 📌 Gera a pauta de notas de um aluno
+    public string GerarPautaAluno(int alunoId)
+    {
+        var aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
+        if (aluno == null) return "Aluno não encontrado.";
+
+        var notasAluno = Notas.Where(n => n.AlunoId == alunoId).ToList();
+        if (!notasAluno.Any()) return "Nenhuma nota registrada para este aluno.";
+
+        string pauta = $"Pauta de Notas - {aluno.Nome}\n";
+        foreach (var nota in notasAluno)
+        {
+            var disciplina = Disciplinas.FirstOrDefault(d => d.Id == nota.DisciplinaId);
+            string nomeDisciplina = disciplina != null ? disciplina.Nome : "Desconhecida";
+            pauta += $"{nomeDisciplina}: {nota.ValorNota} ({nota.TipoAvaliacao})\n";
+        }
+
+        return pauta;
+    }
+
+
+    // 📌 Gera um relatório de desempenho da turma
+    public string GerarRelatorioTurma(int turmaId)
+    {
+        var turma = Turmas.FirstOrDefault(t => t.Id == turmaId);
+        if (turma == null) return "Turma não encontrada.";
+
+        var alunosTurma = Alunos.Where(a => a.TurmaId == turmaId).ToList();
+        if (!alunosTurma.Any()) return "Nenhum aluno nesta turma.";
+
+        string relatorio = $"Relatório de Desempenho - {turma.Curso}\n";
+
+        foreach (var aluno in alunosTurma)
+        {
+            var notasAluno = Notas.Where(n => n.AlunoId == aluno.Id).ToList();
+            if (!notasAluno.Any())
+            {
+                relatorio += $"{aluno.Nome}: Sem notas registradas\n";
+                continue;
+            }
+
+            double media = notasAluno.Average(n => n.ValorNota);
+            relatorio += $"{aluno.Nome}: Média {media:F2}\n";
+        }
+
+        return relatorio;
+    }
+}
+
+
+// ----------------- CRUD PARA ALUNOS -----------------
+
+public void AdicionarAluno(Aluno aluno)
     {
         Alunos.Add(aluno);
         SalvarDados();

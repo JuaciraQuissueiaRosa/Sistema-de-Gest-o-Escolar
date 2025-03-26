@@ -1,4 +1,5 @@
 ﻿using Bibilioteca_Sistema_de_Gestão_Escolar;
+using System.Windows.Forms;
 
 namespace Sistema_de_Gestão_Escolar
 {
@@ -12,8 +13,15 @@ namespace Sistema_de_Gestão_Escolar
             InitializeComponent();
             this.gestor = gestor;
             AtualizarListaNotas();
-        }
+            ConfiguraListBox();
 
+
+        }
+        private void ConfiguraListBox()
+        {
+            lstNotas.Width = 200;  // Ajuste a largura
+            lstNotas.Height = 500; // Ajuste a altura
+        }
         private void btnRemoverNota_Click(object sender, EventArgs e)
         {
             try
@@ -45,6 +53,7 @@ namespace Sistema_de_Gestão_Escolar
                     // ✅ Salvar os dados após remover nota 
                     gestor.SalvarDados();
                     AtualizarListaNotas();
+                  
                 }
                 else
                 {

@@ -105,9 +105,9 @@
             // 
             // btnAdicionarNota
             // 
-            btnAdicionarNota.Location = new Point(136, 381);
+            btnAdicionarNota.Location = new Point(56, 436);
             btnAdicionarNota.Name = "btnAdicionarNota";
-            btnAdicionarNota.Size = new Size(99, 72);
+            btnAdicionarNota.Size = new Size(148, 49);
             btnAdicionarNota.TabIndex = 7;
             btnAdicionarNota.Text = "Adicionar Nota";
             btnAdicionarNota.UseVisualStyleBackColor = true;
@@ -115,9 +115,9 @@
             // 
             // btnRemoverNota
             // 
-            btnRemoverNota.Location = new Point(318, 381);
+            btnRemoverNota.Location = new Point(280, 445);
             btnRemoverNota.Name = "btnRemoverNota";
-            btnRemoverNota.Size = new Size(129, 72);
+            btnRemoverNota.Size = new Size(154, 49);
             btnRemoverNota.TabIndex = 8;
             btnRemoverNota.Text = "Remover Nota";
             btnRemoverNota.UseVisualStyleBackColor = true;
@@ -128,7 +128,7 @@
             lstNotas.FormattingEnabled = true;
             lstNotas.Location = new Point(543, 42);
             lstNotas.Name = "lstNotas";
-            lstNotas.Size = new Size(436, 284);
+            lstNotas.Size = new Size(609, 304);
             lstNotas.TabIndex = 9;
             // 
             // lblPeriodoNota
@@ -143,7 +143,7 @@
             // lblProfessorResponsavel
             // 
             lblProfessorResponsavel.AutoSize = true;
-            lblProfessorResponsavel.Location = new Point(543, 381);
+            lblProfessorResponsavel.Location = new Point(678, 410);
             lblProfessorResponsavel.Name = "lblProfessorResponsavel";
             lblProfessorResponsavel.Size = new Size(159, 20);
             lblProfessorResponsavel.TabIndex = 11;
@@ -153,7 +153,7 @@
             // 
             cmbProfessorNota.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProfessorNota.FormattingEnabled = true;
-            cmbProfessorNota.Location = new Point(725, 378);
+            cmbProfessorNota.Location = new Point(860, 407);
             cmbProfessorNota.Name = "cmbProfessorNota";
             cmbProfessorNota.Size = new Size(172, 28);
             cmbProfessorNota.TabIndex = 12;
@@ -178,9 +178,9 @@
             // 
             // btnConsultarNota
             // 
-            btnConsultarNota.Location = new Point(353, 508);
+            btnConsultarNota.Location = new Point(275, 534);
             btnConsultarNota.Name = "btnConsultarNota";
-            btnConsultarNota.Size = new Size(127, 48);
+            btnConsultarNota.Size = new Size(146, 48);
             btnConsultarNota.TabIndex = 15;
             btnConsultarNota.Text = "Consultar nota";
             btnConsultarNota.UseVisualStyleBackColor = true;
@@ -188,7 +188,7 @@
             // 
             // btnEditarNota
             // 
-            btnEditarNota.Location = new Point(108, 508);
+            btnEditarNota.Location = new Point(59, 527);
             btnEditarNota.Name = "btnEditarNota";
             btnEditarNota.Size = new Size(136, 48);
             btnEditarNota.TabIndex = 16;
@@ -198,9 +198,9 @@
             // 
             // btnSalvarEdicaoNota
             // 
-            btnSalvarEdicaoNota.Location = new Point(658, 480);
+            btnSalvarEdicaoNota.Location = new Point(515, 527);
             btnSalvarEdicaoNota.Name = "btnSalvarEdicaoNota";
-            btnSalvarEdicaoNota.Size = new Size(147, 76);
+            btnSalvarEdicaoNota.Size = new Size(184, 62);
             btnSalvarEdicaoNota.TabIndex = 17;
             btnSalvarEdicaoNota.Text = "Salvar edição da nota";
             btnSalvarEdicaoNota.UseVisualStyleBackColor = true;
@@ -210,7 +210,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1045, 620);
+            ClientSize = new Size(1231, 620);
             Controls.Add(btnSalvarEdicaoNota);
             Controls.Add(btnEditarNota);
             Controls.Add(btnConsultarNota);

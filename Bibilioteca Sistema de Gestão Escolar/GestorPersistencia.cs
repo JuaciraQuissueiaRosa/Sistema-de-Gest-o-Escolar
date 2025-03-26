@@ -187,6 +187,23 @@ public class GestorPersistencia
                 sw.WriteLine($"{evento.Id};{evento.Nome};{evento.Descricao};{evento.Data:yyyy-MM-dd};{alunosIds};{professoresIds}");
             }
         }
+
+        // Salvar dados em arquivos .txt
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("pautas.txt")))
+        {
+            foreach (var aluno in alunos)
+            {
+                sw.WriteLine($"{aluno.Id};{aluno.Nome};{aluno.TurmaId}");
+            }
+        }
+
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("notas.txt")))
+        {
+            foreach (var nota in notas)
+            {
+                sw.WriteLine($"{nota.AlunoId};{nota.DisciplinaId};{nota.ValorNota};{nota.PeriodoLetivo};{nota.TipoAvaliacao}");
+            }
+        }
     }
 }
 

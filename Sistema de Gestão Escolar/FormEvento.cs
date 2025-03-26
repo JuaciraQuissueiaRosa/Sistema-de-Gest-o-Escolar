@@ -147,15 +147,8 @@ namespace Sistema_de_Gestão_Escolar
         }
         // 🔄 Carregar Alunos e Professores disponíveis
         private void CarregarDados()
-        { // Preencher a ComboBox com alunos
-            cmbAluno.DataSource = gestor.Alunos;
-            cmbAluno.DisplayMember = "Nome";
-            cmbAluno.ValueMember = "Id";
-
-            // Preencher a ComboBox com professores
-            cmbProfessor.DataSource = gestor.Professores;
-            cmbProfessor.DisplayMember = "Nome";
-            cmbProfessor.ValueMember = "Id";
+        {
+           
 
             // Adicionar alunos na ListBox (disponíveis)
             lstAlunos.Items.Clear();
@@ -239,6 +232,11 @@ namespace Sistema_de_Gestão_Escolar
             gestor.SalvarDados();
             AtualizarListaParticipantes();
             AtualizarListaEventos();
+        }
+
+        private void lblListaEventos_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

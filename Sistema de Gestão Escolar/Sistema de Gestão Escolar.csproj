@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ScottPlot.WinForms" Version="5.0.55" />
     <PackageReference Include="SendGrid" Version="9.29.3" />
     <PackageReference Include="Syncfusion.Tools.Windows" Version="29.1.33" />
   </ItemGroup>
