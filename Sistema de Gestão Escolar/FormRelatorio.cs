@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿
 
 namespace Sistema_de_Gestão_Escolar
 {
+
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data;
+    using System.Drawing;
+    using System.Drawing.Drawing2D;
+    using System.Linq;
+    using System.Numerics;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using ScottPlot;
+
     public partial class FormRelatorio : Form
     {
         private GestorEscola gestor;
@@ -21,6 +26,8 @@ namespace Sistema_de_Gestão_Escolar
             this.gestor = gestor;
             CarregarDados();
         }
+
+
 
         private void CarregarDados()
         {
@@ -41,7 +48,7 @@ namespace Sistema_de_Gestão_Escolar
 
         }
 
-   
+
         private void btnGerarRelatorio_Click(object sender, EventArgs e)
         {
             if (cmbTurma.SelectedValue != null)
@@ -54,31 +61,37 @@ namespace Sistema_de_Gestão_Escolar
         }
 
         private void AtualizarGrafico(int turmaId)
-        {
+        {// Limpar gráficos anteriores
             graficoDesempenho.Plot.Clear();
 
+            // Obter alunos da turma
             var alunos = gestor.Alunos.Where(a => a.TurmaId == turmaId).ToList();
             var notas = gestor.Notas.Where(n => alunos.Any(a => a.Id == n.AlunoId));
 
-            if (!notas.Any())
+            // Verificar se há dados para exibir
+            if (!alunos.Any())
             {
-                MessageBox.Show("Nenhuma nota disponível para gerar o gráfico.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Nenhum aluno encontrado para essa turma.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            double[] medias = alunos.Select(aluno =>
+            // Criar array de nomes dos alunos
+            string[] nomesAlunos = alunos.Select(a => a.Nome).ToArray();
+            double[] medias = alunos.Select(a =>
             {
-                var notasAluno = notas.Where(n => n.AlunoId == aluno.Id).ToList();
+                var notasAluno = notas.Where(n => n.AlunoId == a.Id).ToList();
                 return notasAluno.Any() ? notasAluno.Average(n => n.ValorNota) : 0;
             }).ToArray();
 
-            string[] nomesAlunos = alunos.Select(a => a.Nome).ToArray();
-
+            // Criar gráfico de barras
             var bar = graficoDesempenho.Plot.AddBar(medias);
-            bar.Labels = nomesAlunos;
-            graficoDesempenho.Plot.XTicks(nomesAlunos);
+            graficoDesempenho.Plot.XTicks(nomesAlunos); // Definir rótulos no eixo X
+
+            // Configurar rótulos e título
+            graficoDesempenho.Plot.Title("Desempenho dos Alunos");
             graficoDesempenho.Plot.YLabel("Média das Notas");
 
+            // Atualizar o gráfico
             graficoDesempenho.Refresh();
         }
 
@@ -91,5 +104,32 @@ namespace Sistema_de_Gestão_Escolar
                 txtRelatorio.Text = pauta;
             }
         }
+
+        private void FormRelatorio_Load(object sender, EventArgs e)
+        {
+            // Definir botões redondos
+            SetRoundButton(btnGerarRelatorio);
+            SetRoundButton(btnGerarPauta);
+          
+
+        }
+
+        private void SetRoundButton(Button button)
+        {
+            // Cria um caminho gráfico para o botão
+            GraphicsPath path = new GraphicsPath();
+
+            // Define um retângulo arredondado para o botão
+            path.AddEllipse(0, 0, button.Width, button.Height);
+
+            // Atribui a região do botão para o caminho arredondado
+            button.Region = new Region(path);
+
+            // Opcional: Define a cor de fundo e borda
+            button.BackColor = Color.LightBlue;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+        }
     }
+    
 }

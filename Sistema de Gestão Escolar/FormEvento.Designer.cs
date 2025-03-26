@@ -189,6 +189,7 @@
             Controls.Add(lstEventos);
             Name = "FormEvento";
             Text = "FormEvento";
+            Load += FormEvento_Load;
             ResumeLayout(false);
             PerformLayout();
         }

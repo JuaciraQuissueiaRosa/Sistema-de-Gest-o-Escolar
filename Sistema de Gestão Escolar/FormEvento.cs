@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -148,7 +149,7 @@ namespace Sistema_de_Gestão_Escolar
         // 🔄 Carregar Alunos e Professores disponíveis
         private void CarregarDados()
         {
-           
+
 
             // Adicionar alunos na ListBox (disponíveis)
             lstAlunos.Items.Clear();
@@ -238,5 +239,38 @@ namespace Sistema_de_Gestão_Escolar
         {
 
         }
+
+        private void FormEvento_Load(object sender, EventArgs e)
+        {
+            // Definir botões redondos
+
+            SetRoundButton(btnSelecionarEvento);
+            SetRoundButton(btnAdicionarEvento);
+            SetRoundButton(btnRemoverEvento);
+            SetRoundButton(btnRemoverEvento);
+            SetRoundButton(btnEditarEvento);
+
+
+
+        }
+
+        private void SetRoundButton(Button button)
+        {
+            // Cria um caminho gráfico para o botão
+            GraphicsPath path = new GraphicsPath();
+
+            // Define um retângulo arredondado para o botão
+            path.AddEllipse(0, 0, button.Width, button.Height);
+
+            // Atribui a região do botão para o caminho arredondado
+            button.Region = new Region(path);
+
+            // Opcional: Define a cor de fundo e borda
+            button.BackColor = Color.LightBlue;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+        }
+
     }
 }
+

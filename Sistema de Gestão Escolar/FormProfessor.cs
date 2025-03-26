@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -164,7 +165,38 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show($"Erro ao carregar formulário de professores: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+
+
+            // Definir botões redondos
+
+            SetRoundButton(btnSalvarEdicaoProfessor);
+            SetRoundButton(btnConsultarProfessor);
+            SetRoundButton(btnRemoverProfessor);
+            SetRoundButton(btnAdicionarProfessor);
+            SetRoundButton(btnEditarProfessor);
+
+
+
         }
+
+        private void SetRoundButton(Button button)
+        {
+            // Cria um caminho gráfico para o botão
+            GraphicsPath path = new GraphicsPath();
+
+            // Define um retângulo arredondado para o botão
+            path.AddEllipse(0, 0, button.Width, button.Height);
+
+            // Atribui a região do botão para o caminho arredondado
+            button.Region = new Region(path);
+
+            // Opcional: Define a cor de fundo e borda
+            button.BackColor = Color.LightBlue;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+        }
+    
 
         private bool ValidarEmail(string email) =>
       Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");

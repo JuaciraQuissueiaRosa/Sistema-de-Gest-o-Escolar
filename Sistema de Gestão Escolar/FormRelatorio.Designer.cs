@@ -33,7 +33,7 @@
             cmbTurma = new ComboBox();
             btnGerarRelatorio = new Button();
             txtRelatorio = new RichTextBox();
-            graficoDesempenho = new ScottPlot.WinForms.FormsPlot();
+            graficoDesempenho = new ScottPlot.FormsPlot();
             SuspendLayout();
             // 
             // btnGerarPauta
@@ -83,10 +83,10 @@
             // 
             // graficoDesempenho
             // 
-            graficoDesempenho.DisplayScale = 1.25F;
-            graficoDesempenho.Location = new Point(428, 256);
+            graficoDesempenho.Location = new Point(329, 277);
+            graficoDesempenho.Margin = new Padding(5, 4, 5, 4);
             graficoDesempenho.Name = "graficoDesempenho";
-            graficoDesempenho.Size = new Size(478, 377);
+            graficoDesempenho.Size = new Size(649, 345);
             graficoDesempenho.TabIndex = 5;
             // 
             // FormRelatorio
@@ -102,6 +102,7 @@
             Controls.Add(btnGerarPauta);
             Name = "FormRelatorio";
             Text = "FormRelatorio";
+            Load += FormRelatorio_Load;
             ResumeLayout(false);
         }
 
@@ -112,6 +113,6 @@
         private ComboBox cmbTurma;
         private Button btnGerarRelatorio;
         private RichTextBox txtRelatorio;
-        private ScottPlot.WinForms.FormsPlot graficoDesempenho;
+        private ScottPlot.FormsPlot graficoDesempenho;
     }
 }

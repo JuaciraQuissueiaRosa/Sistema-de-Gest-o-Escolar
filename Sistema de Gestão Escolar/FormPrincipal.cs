@@ -1,4 +1,6 @@
-﻿namespace Sistema_de_Gestão_Escolar
+﻿using System.Drawing.Drawing2D;
+
+namespace Sistema_de_Gestão_Escolar
 {
     public partial class FormPrincipal : Form
     {
@@ -11,7 +13,34 @@
         }
         private void FormPrincipal_Load(object sender, EventArgs e)
         {
+            // Definir botões redondos
+            SetRoundButton(btnTurmas);
+            SetRoundButton(btnProfessores);
+            SetRoundButton(btnNotas);
+            SetRoundButton(btnDisciplinas);
+            SetRoundButton(btnAlunos);
+            SetRoundButton(btnSair);
+            SetRoundButton(btnCreditos);
+            SetRoundButton(btnEvento);
+            SetRoundButton(btnFormRelatorio);
+            SetRoundButton(btnFormHorario);
+        }
 
+        private void SetRoundButton(Button button)
+        {
+            // Cria um caminho gráfico para o botão
+            GraphicsPath path = new GraphicsPath();
+
+            // Define um retângulo arredondado para o botão
+            path.AddEllipse(0, 0, button.Width, button.Height);
+
+            // Atribui a região do botão para o caminho arredondado
+            button.Region = new Region(path);
+
+            // Opcional: Define a cor de fundo e borda
+            button.BackColor = Color.LightBlue;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
         }
 
         private void btnTurmas_Click(object sender, EventArgs e)
@@ -60,6 +89,19 @@
         {
             FormEvento formEvento = new FormEvento(gestor);
             formEvento.Show();
+        }
+
+        private void btnFormRelatorio_Click(object sender, EventArgs e)
+        {
+
+            FormRelatorio formRelatorio = new FormRelatorio(gestor);
+            formRelatorio.Show();
+        }
+
+        private void btnFormHorario_Click(object sender, EventArgs e)
+        {
+            FormHorario formHorario = new FormHorario(gestor);
+            formHorario.Show();
         }
     }
 }

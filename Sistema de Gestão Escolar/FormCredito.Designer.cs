@@ -37,7 +37,7 @@
             // lblAutor
             // 
             lblAutor.AutoSize = true;
-            lblAutor.Location = new Point(68, 100);
+            lblAutor.Location = new Point(193, 107);
             lblAutor.Name = "lblAutor";
             lblAutor.Size = new Size(49, 20);
             lblAutor.TabIndex = 0;
@@ -46,7 +46,7 @@
             // lblVersao
             // 
             lblVersao.AutoSize = true;
-            lblVersao.Location = new Point(68, 250);
+            lblVersao.Location = new Point(193, 249);
             lblVersao.Name = "lblVersao";
             lblVersao.Size = new Size(56, 20);
             lblVersao.TabIndex = 1;
@@ -55,7 +55,7 @@
             // lblData
             // 
             lblData.AutoSize = true;
-            lblData.Location = new Point(68, 178);
+            lblData.Location = new Point(193, 177);
             lblData.Name = "lblData";
             lblData.Size = new Size(44, 20);
             lblData.TabIndex = 2;

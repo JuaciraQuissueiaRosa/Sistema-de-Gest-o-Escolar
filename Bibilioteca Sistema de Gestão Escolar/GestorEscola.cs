@@ -8,12 +8,14 @@ public class GestorEscola
     private GestorPersistencia persistencia = new GestorPersistencia();
 
     // Listas para armazenar os dados das entidades
+    public List<Horario> Horarios { get; set; } = new List<Horario>();
     public List<Aluno> Alunos { get; set; } = new List<Aluno>();
     public List<Professor> Professores { get; set; } = new List<Professor>();
     public List<Disciplina> Disciplinas { get; set; } = new List<Disciplina>();
     public List<Turma> Turmas { get; set; } = new List<Turma>();
     public List<Nota> Notas { get; set; } = new List<Nota>();
     public List<Evento> Eventos { get; set; } = new List<Evento>();
+
 
     // 🔹 Carregar dados ao iniciar o programa
     public GestorEscola()
@@ -25,14 +27,60 @@ public class GestorEscola
         Turmas = dados.Item4;
         Notas = dados.Item5;
         Eventos = dados.Item6;
+        Horarios = dados.Item7; 
     }
 
     public void SalvarDados()
     {
-        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Eventos);
+        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Eventos, Horarios);
+    }
+    //--------------------------metodo para gerir horarios
+
+
+    public void AdicionarHorario(Horario horario)
+    {
+        if (VerificarConflitoHorario(horario))
+            throw new Exception("Conflito de horário detectado!");
+
+        Horarios.Add(horario);
     }
 
+    public void RemoverHorario(int id)
+    {
+        Horarios.RemoveAll(h => h.Id == id);
+    }
 
+    public bool VerificarConflitoHorario(Horario novoHorario)
+    {
+        return Horarios.Any(h =>
+       h.DiaSemana == novoHorario.DiaSemana &&
+       (h.TurmaId == novoHorario.TurmaId || h.ProfessorId == novoHorario.ProfessorId) &&
+       h.HoraInicio < novoHorario.HoraFim &&
+       novoHorario.HoraInicio < h.HoraFim);
+    }
+
+    public List<Horario> ListarHorariosPorTurma(int turmaId)
+    {
+        return Horarios.Where(h => h.TurmaId == turmaId).ToList();
+    }
+
+    public List<Horario> ListarHorariosPorProfessor(int professorId)
+    {
+        return Horarios.Where(h => h.ProfessorId == professorId).ToList();
+    }
+
+    public void EditarHorario(Horario horarioAtualizado)
+    {
+        for (int i = 0; i < Horarios.Count; i++)
+        {
+            if (Horarios[i].Id == horarioAtualizado.Id)
+            {
+                Horarios[i] = horarioAtualizado; // Substitui pelo novo horário
+                return;
+            }
+        }
+        throw new Exception("Horário não encontrado.");
+    }
     //-------------------Metodo para Criar métodos para gerar pautas de notas por aluno e turma,  Calcular médias e estatísticas de desempenho
 
     // 📌 Gera a pauta de notas de um aluno
@@ -82,16 +130,16 @@ public class GestorEscola
 
         return relatorio;
     }
-}
+
 
 
 // ----------------- CRUD PARA ALUNOS -----------------
 
-public void AdicionarAluno(Aluno aluno)
-    {
+     public void AdicionarAluno(Aluno aluno)
+     {
         Alunos.Add(aluno);
         SalvarDados();
-    }
+     }
 
     public bool RemoverAluno(int id)
     {

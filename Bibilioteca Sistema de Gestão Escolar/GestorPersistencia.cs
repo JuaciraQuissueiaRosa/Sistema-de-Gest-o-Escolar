@@ -6,7 +6,7 @@ public class GestorPersistencia
 
     private string CaminhoArquivo(string nomeArquivo) => Path.Combine(PastaDados, nomeArquivo);
 
-    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>, List<Evento>) CarregarDados()
+    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>, List<Evento>, List<Horario>) CarregarDados()
     {
         List<Aluno> alunos = new List<Aluno>();
         List<Professor> professores = new List<Professor>();
@@ -14,6 +14,7 @@ public class GestorPersistencia
         List<Turma> turmas = new List<Turma>();
         List<Nota> notas = new List<Nota>();
         List<Evento> eventos = new List<Evento>();
+        List<Horario> horarios = new List<Horario>();
 
         // Criar diretório caso não exista
         if (!Directory.Exists(PastaDados))
@@ -124,10 +125,26 @@ public class GestorPersistencia
             }
         }
 
-        return (alunos, professores, disciplinas, turmas, notas, eventos);
+        if (File.Exists("Dados/horarios.txt"))
+        {
+            foreach (var linha in File.ReadAllLines("Dados/horarios.txt"))
+            {
+                var partes = linha.Split(';');
+                if (partes.Length == 7)
+                {
+                    horarios.Add(new Horario(
+                        int.Parse(partes[0]), int.Parse(partes[1]), int.Parse(partes[2]), int.Parse(partes[3]),
+                        (DayOfWeek)int.Parse(partes[4]), TimeSpan.Parse(partes[5]), TimeSpan.Parse(partes[6])
+                    ));
+                }
+            }
+        }
+
+        return (alunos, professores, disciplinas, turmas, notas, eventos, horarios);
     }
 
-    public void SalvarDados(List<Aluno> alunos, List<Professor> professores, List<Disciplina> disciplinas, List<Turma> turmas, List<Nota> notas, List<Evento> eventos)
+    public void SalvarDados(List<Aluno> alunos, List<Professor> professores, List<Disciplina> disciplinas, List<Turma> turmas, List<Nota> notas, List<Evento> eventos,
+         List<Horario> horarios )
     {
         if (!Directory.Exists(PastaDados))
             Directory.CreateDirectory(PastaDados);
@@ -202,6 +219,14 @@ public class GestorPersistencia
             foreach (var nota in notas)
             {
                 sw.WriteLine($"{nota.AlunoId};{nota.DisciplinaId};{nota.ValorNota};{nota.PeriodoLetivo};{nota.TipoAvaliacao}");
+            }
+        }
+
+        using (StreamWriter sw = new StreamWriter("Dados/horarios.txt"))
+        {
+            foreach (var horario in horarios)
+            {
+                sw.WriteLine($"{horario.Id};{horario.DisciplinaId};{horario.ProfessorId};{horario.TurmaId};{(int)horario.DiaSemana};{horario.HoraInicio};{horario.HoraFim}");
             }
         }
     }

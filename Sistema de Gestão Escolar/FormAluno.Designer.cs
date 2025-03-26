@@ -77,7 +77,7 @@
             // 
             // btnRemoverAluno
             // 
-            btnRemoverAluno.Location = new Point(211, 544);
+            btnRemoverAluno.Location = new Point(256, 545);
             btnRemoverAluno.Name = "btnRemoverAluno";
             btnRemoverAluno.Size = new Size(201, 53);
             btnRemoverAluno.TabIndex = 2;
@@ -97,9 +97,9 @@
             // 
             // btnBuscarAluno
             // 
-            btnBuscarAluno.Location = new Point(45, 544);
+            btnBuscarAluno.Location = new Point(54, 545);
             btnBuscarAluno.Name = "btnBuscarAluno";
-            btnBuscarAluno.Size = new Size(109, 47);
+            btnBuscarAluno.Size = new Size(147, 47);
             btnBuscarAluno.TabIndex = 4;
             btnBuscarAluno.Text = "Buscar aluno";
             btnBuscarAluno.UseVisualStyleBackColor = true;
@@ -274,7 +274,7 @@
             // 
             // btnConsultarAluno
             // 
-            btnConsultarAluno.Location = new Point(161, 652);
+            btnConsultarAluno.Location = new Point(288, 633);
             btnConsultarAluno.Name = "btnConsultarAluno";
             btnConsultarAluno.Size = new Size(145, 51);
             btnConsultarAluno.TabIndex = 27;

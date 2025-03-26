@@ -10,9 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ScottPlot.WinForms" Version="5.0.55" />
+    <PackageReference Include="MetroModernUI" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Maui.Graphics" Version="9.0.50" />
+    <PackageReference Include="ScottPlot" Version="4.1.74" />
+    <PackageReference Include="ScottPlot.WinForms" Version="4.1.74" />
     <PackageReference Include="SendGrid" Version="9.29.3" />
     <PackageReference Include="Syncfusion.Tools.Windows" Version="29.1.33" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.3" />
+    <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

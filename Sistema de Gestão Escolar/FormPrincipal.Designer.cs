@@ -36,11 +36,13 @@
             btnSair = new Button();
             btnCreditos = new Button();
             btnEvento = new Button();
+            btnFormRelatorio = new Button();
+            btnFormHorario = new Button();
             SuspendLayout();
             // 
             // btnDisciplinas
             // 
-            btnDisciplinas.Location = new Point(292, 60);
+            btnDisciplinas.Location = new Point(242, 73);
             btnDisciplinas.Name = "btnDisciplinas";
             btnDisciplinas.Size = new Size(116, 50);
             btnDisciplinas.TabIndex = 0;
@@ -50,7 +52,7 @@
             // 
             // btnNotas
             // 
-            btnNotas.Location = new Point(300, 168);
+            btnNotas.Location = new Point(242, 168);
             btnNotas.Name = "btnNotas";
             btnNotas.Size = new Size(116, 52);
             btnNotas.TabIndex = 1;
@@ -60,7 +62,7 @@
             // 
             // btnProfessores
             // 
-            btnProfessores.Location = new Point(164, 254);
+            btnProfessores.Location = new Point(83, 256);
             btnProfessores.Name = "btnProfessores";
             btnProfessores.Size = new Size(109, 54);
             btnProfessores.TabIndex = 2;
@@ -70,7 +72,7 @@
             // 
             // btnAlunos
             // 
-            btnAlunos.Location = new Point(311, 254);
+            btnAlunos.Location = new Point(418, 160);
             btnAlunos.Name = "btnAlunos";
             btnAlunos.Size = new Size(114, 51);
             btnAlunos.TabIndex = 3;
@@ -80,7 +82,7 @@
             // 
             // btnTurmas
             // 
-            btnTurmas.Location = new Point(135, 60);
+            btnTurmas.Location = new Point(83, 73);
             btnTurmas.Name = "btnTurmas";
             btnTurmas.Size = new Size(104, 50);
             btnTurmas.TabIndex = 4;
@@ -90,9 +92,9 @@
             // 
             // btnSair
             // 
-            btnSair.Location = new Point(251, 343);
+            btnSair.Location = new Point(254, 358);
             btnSair.Name = "btnSair";
-            btnSair.Size = new Size(94, 44);
+            btnSair.Size = new Size(113, 44);
             btnSair.TabIndex = 5;
             btnSair.Text = "Sair";
             btnSair.UseVisualStyleBackColor = true;
@@ -100,7 +102,7 @@
             // 
             // btnCreditos
             // 
-            btnCreditos.Location = new Point(135, 176);
+            btnCreditos.Location = new Point(83, 168);
             btnCreditos.Name = "btnCreditos";
             btnCreditos.Size = new Size(94, 44);
             btnCreditos.TabIndex = 6;
@@ -110,19 +112,41 @@
             // 
             // btnEvento
             // 
-            btnEvento.Location = new Point(418, 358);
+            btnEvento.Location = new Point(242, 258);
             btnEvento.Name = "btnEvento";
-            btnEvento.Size = new Size(94, 52);
+            btnEvento.Size = new Size(116, 52);
             btnEvento.TabIndex = 7;
             btnEvento.Text = "Evento";
             btnEvento.UseVisualStyleBackColor = true;
             btnEvento.Click += btnEvento_Click;
+            // 
+            // btnFormRelatorio
+            // 
+            btnFormRelatorio.Location = new Point(418, 258);
+            btnFormRelatorio.Name = "btnFormRelatorio";
+            btnFormRelatorio.Size = new Size(113, 52);
+            btnFormRelatorio.TabIndex = 8;
+            btnFormRelatorio.Text = "Relatório";
+            btnFormRelatorio.UseVisualStyleBackColor = true;
+            btnFormRelatorio.Click += btnFormRelatorio_Click;
+            // 
+            // btnFormHorario
+            // 
+            btnFormHorario.Location = new Point(419, 71);
+            btnFormHorario.Name = "btnFormHorario";
+            btnFormHorario.Size = new Size(113, 52);
+            btnFormHorario.TabIndex = 9;
+            btnFormHorario.Text = "Horários";
+            btnFormHorario.UseVisualStyleBackColor = true;
+            btnFormHorario.Click += btnFormHorario_Click;
             // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(620, 450);
+            Controls.Add(btnFormHorario);
+            Controls.Add(btnFormRelatorio);
             Controls.Add(btnEvento);
             Controls.Add(btnCreditos);
             Controls.Add(btnSair);
@@ -147,5 +171,7 @@
         private Button btnSair;
         private Button btnCreditos;
         private Button btnEvento;
+        private Button btnFormRelatorio;
+        private Button btnFormHorario;
     }
 }
