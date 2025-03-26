@@ -44,10 +44,6 @@
             btnSelecionarEvento = new Button();
             lblAlunos = new Label();
             lblProfessores = new Label();
-            btnRemoverAluno = new Button();
-            btnAssociarAluno = new Button();
-            btnAssociarProfessor = new Button();
-            btnRemoverProfessor = new Button();
             lstAlunos = new ListBox();
             lstProfessores = new ListBox();
             SuspendLayout();
@@ -78,7 +74,7 @@
             // 
             // btnAdicionarEvento
             // 
-            btnAdicionarEvento.Location = new Point(894, 619);
+            btnAdicionarEvento.Location = new Point(417, 456);
             btnAdicionarEvento.Name = "btnAdicionarEvento";
             btnAdicionarEvento.Size = new Size(144, 54);
             btnAdicionarEvento.TabIndex = 3;
@@ -88,7 +84,7 @@
             // 
             // btnRemoverEvento
             // 
-            btnRemoverEvento.Location = new Point(885, 541);
+            btnRemoverEvento.Location = new Point(417, 607);
             btnRemoverEvento.Name = "btnRemoverEvento";
             btnRemoverEvento.Size = new Size(144, 64);
             btnRemoverEvento.TabIndex = 4;
@@ -146,7 +142,7 @@
             // 
             // btnEditarEvento
             // 
-            btnEditarEvento.Location = new Point(663, 725);
+            btnEditarEvento.Location = new Point(424, 703);
             btnEditarEvento.Name = "btnEditarEvento";
             btnEditarEvento.Size = new Size(157, 50);
             btnEditarEvento.TabIndex = 13;
@@ -165,7 +161,7 @@
             // 
             // btnSelecionarEvento
             // 
-            btnSelecionarEvento.Location = new Point(434, 525);
+            btnSelecionarEvento.Location = new Point(424, 516);
             btnSelecionarEvento.Name = "btnSelecionarEvento";
             btnSelecionarEvento.Size = new Size(127, 64);
             btnSelecionarEvento.TabIndex = 15;
@@ -191,46 +187,6 @@
             lblProfessores.TabIndex = 17;
             lblProfessores.Text = "Selecionar Professor:";
             // 
-            // btnRemoverAluno
-            // 
-            btnRemoverAluno.Location = new Point(671, 634);
-            btnRemoverAluno.Name = "btnRemoverAluno";
-            btnRemoverAluno.Size = new Size(149, 48);
-            btnRemoverAluno.TabIndex = 18;
-            btnRemoverAluno.Text = "Remover Aluno";
-            btnRemoverAluno.UseVisualStyleBackColor = true;
-            btnRemoverAluno.Click += btnRemoverAluno_Click;
-            // 
-            // btnAssociarAluno
-            // 
-            btnAssociarAluno.Location = new Point(894, 715);
-            btnAssociarAluno.Name = "btnAssociarAluno";
-            btnAssociarAluno.Size = new Size(135, 49);
-            btnAssociarAluno.TabIndex = 19;
-            btnAssociarAluno.Text = "Associar Aluno";
-            btnAssociarAluno.UseVisualStyleBackColor = true;
-            btnAssociarAluno.Click += btnAssociarAluno_Click;
-            // 
-            // btnAssociarProfessor
-            // 
-            btnAssociarProfessor.Location = new Point(434, 614);
-            btnAssociarProfessor.Name = "btnAssociarProfessor";
-            btnAssociarProfessor.Size = new Size(135, 59);
-            btnAssociarProfessor.TabIndex = 21;
-            btnAssociarProfessor.Text = "Associar Professor";
-            btnAssociarProfessor.UseVisualStyleBackColor = true;
-            btnAssociarProfessor.Click += btnAssociarProfessor_Click;
-            // 
-            // btnRemoverProfessor
-            // 
-            btnRemoverProfessor.Location = new Point(425, 705);
-            btnRemoverProfessor.Name = "btnRemoverProfessor";
-            btnRemoverProfessor.Size = new Size(149, 59);
-            btnRemoverProfessor.TabIndex = 20;
-            btnRemoverProfessor.Text = "Remover Professor";
-            btnRemoverProfessor.UseVisualStyleBackColor = true;
-            btnRemoverProfessor.Click += btnRemoverProfessor_Click;
-            // 
             // lstAlunos
             // 
             lstAlunos.FormattingEnabled = true;
@@ -238,6 +194,7 @@
             lstAlunos.Name = "lstAlunos";
             lstAlunos.Size = new Size(338, 204);
             lstAlunos.TabIndex = 22;
+            lstAlunos.DoubleClick += lstAlunos_DoubleClick;
             // 
             // lstProfessores
             // 
@@ -246,6 +203,7 @@
             lstProfessores.Name = "lstProfessores";
             lstProfessores.Size = new Size(343, 184);
             lstProfessores.TabIndex = 23;
+            lstProfessores.DoubleClick += lstProfessores_DoubleClick;
             // 
             // FormEvento
             // 
@@ -254,10 +212,6 @@
             ClientSize = new Size(1132, 807);
             Controls.Add(lstProfessores);
             Controls.Add(lstAlunos);
-            Controls.Add(btnAssociarProfessor);
-            Controls.Add(btnRemoverProfessor);
-            Controls.Add(btnAssociarAluno);
-            Controls.Add(btnRemoverAluno);
             Controls.Add(lblProfessores);
             Controls.Add(lblAlunos);
             Controls.Add(btnSelecionarEvento);
@@ -298,10 +252,6 @@
         private Button btnSelecionarEvento;
         private Label lblAlunos;
         private Label lblProfessores;
-        private Button btnRemoverAluno;
-        private Button btnAssociarAluno;
-        private Button btnAssociarProfessor;
-        private Button btnRemoverProfessor;
         private ListBox lstAlunos;
         private ListBox lstProfessores;
     }

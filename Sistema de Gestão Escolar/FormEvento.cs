@@ -44,7 +44,7 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-     
+
 
         private void btnSelecionarEvento_Click(object sender, EventArgs e)
         {
@@ -60,48 +60,6 @@ namespace Sistema_de_Gestão_Escolar
             dtpDataEvento.Value = eventoSelecionado.Data;
 
             AtualizarListaEventos();
-        }
-
-        private void btnAssociarProfessor_Click(object sender, EventArgs e)
-        {
-            if (eventoSelecionado == null || cmbProfessor.SelectedItem == null)
-            {
-                MessageBox.Show("Selecione um evento e um professor!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int professorId = (int)cmbProfessor.SelectedValue;
-            gestor.AssociarProfessorEvento(eventoSelecionado.Id, professorId);
-            AtualizarListaParticipantes();
-        }
-
-        private void btnRemoverProfessor_Click(object sender, EventArgs e)
-        {
-            if (eventoSelecionado == null || lstProfessores.SelectedItem == null)
-            {
-                MessageBox.Show("Selecione um evento e um professor!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int professorId = (int)lstProfessores.SelectedValue;
-            eventoSelecionado.ProfessoresIds.Remove(professorId);
-            gestor.SalvarDados();
-            AtualizarListaParticipantes();
-        }
-
-        private void btnRemoverAluno_Click(object sender, EventArgs e)
-        {
-
-            if (eventoSelecionado == null || lstAlunos.SelectedItem == null)
-            {
-                MessageBox.Show("Selecione um evento e um aluno!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int alunoId = (int)lstAlunos.SelectedValue;
-            eventoSelecionado.AlunosIds.Remove(alunoId);
-            gestor.SalvarDados();
-            AtualizarListaParticipantes();
         }
 
         private void btnEditarEvento_Click(object sender, EventArgs e)
@@ -140,18 +98,6 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-        private void btnAssociarAluno_Click(object sender, EventArgs e)
-        {
-            if (eventoSelecionado == null || cmbAluno.SelectedItem == null)
-            {
-                MessageBox.Show("Selecione um evento e um aluno!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int alunoId = (int)cmbAluno.SelectedValue;
-            gestor.AssociarAlunoEvento(eventoSelecionado.Id, alunoId);
-            AtualizarListaParticipantes();
-        }
 
 
 
@@ -161,9 +107,19 @@ namespace Sistema_de_Gestão_Escolar
         private void AtualizarListaEventos()
         {
             lstEventos.Items.Clear();
+
             foreach (var evento in gestor.Eventos)
             {
-                lstEventos.Items.Add($"{evento.Data:dd/MM/yyyy} - {evento.Nome}");
+                string alunos = string.Join(", ", evento.AlunosIds
+                    .Select(id => gestor.Alunos.FirstOrDefault(a => a.Id == id)?.Nome)
+                    .Where(nome => !string.IsNullOrEmpty(nome)));
+
+                string professores = string.Join(", ", evento.ProfessoresIds
+                    .Select(id => gestor.Professores.FirstOrDefault(p => p.Id == id)?.Nome)
+                    .Where(nome => !string.IsNullOrEmpty(nome)));
+
+                string participantes = $"Alunos: {alunos} | Professores: {professores}";
+                lstEventos.Items.Add($"{evento.Data:dd/MM/yyyy} - {evento.Nome} ({participantes})");
             }
         }
 
@@ -191,14 +147,29 @@ namespace Sistema_de_Gestão_Escolar
         }
         // 🔄 Carregar Alunos e Professores disponíveis
         private void CarregarDados()
-        {
+        { // Preencher a ComboBox com alunos
             cmbAluno.DataSource = gestor.Alunos;
             cmbAluno.DisplayMember = "Nome";
             cmbAluno.ValueMember = "Id";
 
+            // Preencher a ComboBox com professores
             cmbProfessor.DataSource = gestor.Professores;
             cmbProfessor.DisplayMember = "Nome";
             cmbProfessor.ValueMember = "Id";
+
+            // Adicionar alunos na ListBox (disponíveis)
+            lstAlunos.Items.Clear();
+            foreach (var aluno in gestor.Alunos)
+            {
+                lstAlunos.Items.Add(aluno.Nome);
+            }
+
+            // Adicionar professores na ListBox (disponíveis)
+            lstProfessores.Items.Clear();
+            foreach (var professor in gestor.Professores)
+            {
+                lstProfessores.Items.Add(professor.Nome);
+            }
         }
 
         // 🗑 Limpar campos
@@ -212,5 +183,62 @@ namespace Sistema_de_Gestão_Escolar
             eventoSelecionado = null;
         }
 
+        private void lstAlunos_DoubleClick(object sender, EventArgs e)
+        {
+            if (lstAlunos.SelectedItem == null || eventoSelecionado == null)
+                return;
+
+            string nomeAluno = lstAlunos.SelectedItem.ToString();
+            Aluno alunoSelecionado = gestor.Alunos.FirstOrDefault(a => a.Nome == nomeAluno);
+
+            if (alunoSelecionado != null)
+            {
+                if (eventoSelecionado.AlunosIds.Contains(alunoSelecionado.Id))
+                {
+                    // Remove o aluno se já estiver no evento
+                    eventoSelecionado.AlunosIds.Remove(alunoSelecionado.Id);
+                    MessageBox.Show($"Aluno {alunoSelecionado.Nome} removido do evento!", "Removido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    // Adiciona o aluno se ainda não estiver no evento
+                    eventoSelecionado.AlunosIds.Add(alunoSelecionado.Id);
+                    MessageBox.Show($"Aluno {alunoSelecionado.Nome} adicionado ao evento!", "Adicionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+
+            gestor.SalvarDados();
+            AtualizarListaParticipantes();
+            AtualizarListaEventos();
+        }
+
+        private void lstProfessores_DoubleClick(object sender, EventArgs e)
+        {
+            if (lstProfessores.SelectedItem == null || eventoSelecionado == null)
+                return;
+
+            string nomeProfessor = lstProfessores.SelectedItem.ToString();
+            Professor professorSelecionado = gestor.Professores.FirstOrDefault(p => p.Nome == nomeProfessor);
+
+            if (professorSelecionado != null)
+            {
+                if (eventoSelecionado.ProfessoresIds.Contains(professorSelecionado.Id))
+                {
+                    // Remove o professor se já estiver no evento
+                    eventoSelecionado.ProfessoresIds.Remove(professorSelecionado.Id);
+                    MessageBox.Show($"Professor {professorSelecionado.Nome} removido do evento!", "Removido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    // Adiciona o professor se ainda não estiver no evento
+                    eventoSelecionado.ProfessoresIds.Add(professorSelecionado.Id);
+                    MessageBox.Show($"Professor {professorSelecionado.Nome} adicionado ao evento!", "Adicionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+
+            gestor.SalvarDados();
+            AtualizarListaParticipantes();
+            AtualizarListaEventos();
+        }
     }
 }
