@@ -24,7 +24,7 @@ namespace Sistema_de_Gestão_Escolar
             SetRoundButton(btnEvento);
             SetRoundButton(btnFormRelatorio);
             SetRoundButton(btnFormHorario);
-            SetRoundButton(btnPresencasEfaltas);
+         
         }
 
         private void SetRoundButton(Button button)
@@ -105,11 +105,6 @@ namespace Sistema_de_Gestão_Escolar
             formHorario.Show();
         }
 
-        private void btnPresencasEfaltas_Click(object sender, EventArgs e)
-        {
-            //var dados = gestorPersistencia.CarregarDados();
-            //FormPresencasEfaltas form = new FormPresencasEfaltas(dados.Item1, dados.Item3, dados.Item8);
-            //form.Show();
-        }
+      
     }
 }

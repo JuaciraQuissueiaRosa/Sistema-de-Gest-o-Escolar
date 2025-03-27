@@ -9,18 +9,19 @@ namespace Bibilioteca_Sistema_de_Gestão_Escolar
     public class Presenca
     {
         public int Id { get; set; }
-        public List<Aluno> Alunos { get; set; } // Agora pode armazenar vários alunos
-        public List<Disciplina> Disciplinas { get; set; } // Agora pode armazenar várias disciplinas
+        public List<int> AlunosIds { get; set; }
+        public List<int> DisciplinasIds { get; set; }
         public DateTime Data { get; set; }
-        public bool Compareceu { get; set; }
+        public bool Compareceu { get; set; } // true = presente, false = falta
 
-        public Presenca(int id, List<Aluno> alunos, List<Disciplina> disciplinas, DateTime data, bool compareceu)
+        public Presenca(int id, List<int> alunosIds, List<int> disciplinasIds, DateTime data, bool compareceu)
         {
             Id = id;
-            Alunos = alunos;
-            Disciplinas = disciplinas;
+            AlunosIds = alunosIds;
+            DisciplinasIds = disciplinasIds;
             Data = data;
             Compareceu = compareceu;
         }
     }
 }
+

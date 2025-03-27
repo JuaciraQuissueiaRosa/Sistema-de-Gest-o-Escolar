@@ -1,4 +1,4 @@
-using Syncfusion.Licensing;
+
 
 namespace Sistema_de_Gestão_Escolar
 {

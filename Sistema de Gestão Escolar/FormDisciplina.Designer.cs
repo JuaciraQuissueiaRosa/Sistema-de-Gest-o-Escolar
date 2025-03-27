@@ -1,4 +1,4 @@
-﻿using Syncfusion.Windows.Forms;
+﻿
 
 namespace Sistema_de_Gestão_Escolar
 {
@@ -41,7 +41,7 @@ namespace Sistema_de_Gestão_Escolar
             btnConsultarDisciplina = new Button();
             btnEditarDisciplina = new Button();
             btnSalvarEdicaoDisciplina = new Button();
-            colorPickerButton1 = new ColorPickerButton();
+          
             txtProfessoresDisciplina = new TextBox();
             cmbNomeDisciplina = new ComboBox();
             cmbCargaHoraria = new ComboBox();
@@ -144,14 +144,7 @@ namespace Sistema_de_Gestão_Escolar
             // 
             // colorPickerButton1
             // 
-            colorPickerButton1.AccessibilityEnabled = true;
-            colorPickerButton1.BeforeTouchSize = new Size(94, 29);
-            colorPickerButton1.Location = new Point(656, 489);
-            colorPickerButton1.MetroColor = Color.FromArgb(192, 192, 255);
-            colorPickerButton1.Name = "colorPickerButton1";
-            colorPickerButton1.Size = new Size(94, 29);
-            colorPickerButton1.TabIndex = 17;
-            colorPickerButton1.Text = "colorPickerButton1";
+        
             // 
             // txtProfessoresDisciplina
             // 
@@ -191,7 +184,7 @@ namespace Sistema_de_Gestão_Escolar
             Controls.Add(txtIdDisciplina);
             Controls.Add(cmbCargaHoraria);
             Controls.Add(cmbNomeDisciplina);
-            Controls.Add(colorPickerButton1);
+         
             Controls.Add(btnSalvarEdicaoDisciplina);
             Controls.Add(btnEditarDisciplina);
             Controls.Add(btnConsultarDisciplina);
@@ -225,7 +218,6 @@ namespace Sistema_de_Gestão_Escolar
         private Button btnConsultarDisciplina;
         private Button btnEditarDisciplina;
         private Button btnSalvarEdicaoDisciplina;
-        private Syncfusion.Windows.Forms.ColorPickerButton colorPickerButton1;
         private TextBox txtProfessoresDisciplina;
         private ComboBox cmbNomeDisciplina;
         private ComboBox cmbCargaHoraria;
