@@ -38,6 +38,7 @@
             btnEvento = new Button();
             btnFormRelatorio = new Button();
             btnFormHorario = new Button();
+            btnPresencasEfaltas = new Button();
             SuspendLayout();
             // 
             // btnDisciplinas
@@ -140,11 +141,22 @@
             btnFormHorario.UseVisualStyleBackColor = true;
             btnFormHorario.Click += btnFormHorario_Click;
             // 
+            // btnPresencasEfaltas
+            // 
+            btnPresencasEfaltas.Location = new Point(401, 350);
+            btnPresencasEfaltas.Name = "btnPresencasEfaltas";
+            btnPresencasEfaltas.Size = new Size(113, 52);
+            btnPresencasEfaltas.TabIndex = 10;
+            btnPresencasEfaltas.Text = "Presenças e faltas";
+            btnPresencasEfaltas.UseVisualStyleBackColor = true;
+            btnPresencasEfaltas.Click += btnPresencasEfaltas_Click;
+            // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(620, 450);
+            ClientSize = new Size(620, 468);
+            Controls.Add(btnPresencasEfaltas);
             Controls.Add(btnFormHorario);
             Controls.Add(btnFormRelatorio);
             Controls.Add(btnEvento);
@@ -173,5 +185,6 @@
         private Button btnEvento;
         private Button btnFormRelatorio;
         private Button btnFormHorario;
+        private Button btnPresencasEfaltas;
     }
 }

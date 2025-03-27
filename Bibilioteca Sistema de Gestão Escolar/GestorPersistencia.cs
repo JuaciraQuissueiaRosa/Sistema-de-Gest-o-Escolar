@@ -6,7 +6,7 @@ public class GestorPersistencia
 
     private string CaminhoArquivo(string nomeArquivo) => Path.Combine(PastaDados, nomeArquivo);
 
-    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>, List<Evento>, List<Horario>) CarregarDados()
+    public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>, List<Evento>, List<Horario>, List<Presenca>) CarregarDados()
     {
         List<Aluno> alunos = new List<Aluno>();
         List<Professor> professores = new List<Professor>();
@@ -15,6 +15,7 @@ public class GestorPersistencia
         List<Nota> notas = new List<Nota>();
         List<Evento> eventos = new List<Evento>();
         List<Horario> horarios = new List<Horario>();
+        List<Presenca> presencas = new List<Presenca>();
 
         // Criar diretório caso não exista
         if (!Directory.Exists(PastaDados))
@@ -139,12 +140,35 @@ public class GestorPersistencia
                 }
             }
         }
+        // Carregar presenças
+        if (File.Exists(CaminhoArquivo("presencas.txt")))
+        {
+            foreach (var linha in File.ReadAllLines(CaminhoArquivo("presencas.txt")))
+            {
+                var partes = linha.Split(';');
+                if (partes.Length == 4)
+                {
+                    int alunoId = int.Parse(partes[0]);
+                    int disciplinaId = int.Parse(partes[1]);
+                    DateTime data = DateTime.Parse(partes[2]);
+                    bool compareceu = bool.Parse(partes[3]);
 
-        return (alunos, professores, disciplinas, turmas, notas, eventos, horarios);
+                    // Buscar os objetos Aluno e Disciplina
+                    Aluno aluno = alunos.FirstOrDefault(a => a.Id == alunoId);
+                    Disciplina disciplina = disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
+
+                    if (aluno != null && disciplina != null)
+                    {
+                        presencas.Add(new Presenca(presencas.Count + 1, aluno, disciplina, data, compareceu));
+                    }
+                }
+            }
+        }
+        return (alunos, professores, disciplinas, turmas, notas, eventos, horarios, presencas);
     }
 
     public void SalvarDados(List<Aluno> alunos, List<Professor> professores, List<Disciplina> disciplinas, List<Turma> turmas, List<Nota> notas, List<Evento> eventos,
-         List<Horario> horarios )
+         List<Horario> horarios, List<Presenca> presencas)
     {
         if (!Directory.Exists(PastaDados))
             Directory.CreateDirectory(PastaDados);
@@ -227,6 +251,14 @@ public class GestorPersistencia
             foreach (var horario in horarios)
             {
                 sw.WriteLine($"{horario.Id};{horario.DisciplinaId};{horario.ProfessorId};{horario.TurmaId};{(int)horario.DiaSemana};{horario.HoraInicio};{horario.HoraFim}");
+            }
+        }
+        // Salvar presenças
+        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("presencas.txt")))
+        {
+            foreach (var presenca in presencas)
+            {
+                sw.WriteLine($"{presenca.Aluno.Id};{presenca.Disciplina.Id};{presenca.Data:yyyy-MM-dd};{presenca.Compareceu}");
             }
         }
     }

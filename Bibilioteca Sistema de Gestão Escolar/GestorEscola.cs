@@ -16,6 +16,8 @@ public class GestorEscola
     public List<Nota> Notas { get; set; } = new List<Nota>();
     public List<Evento> Eventos { get; set; } = new List<Evento>();
 
+    public List<Presenca> Presencas { get; set; } = new List<Presenca>();
+
 
     // 🔹 Carregar dados ao iniciar o programa
     public GestorEscola()
@@ -27,12 +29,70 @@ public class GestorEscola
         Turmas = dados.Item4;
         Notas = dados.Item5;
         Eventos = dados.Item6;
-        Horarios = dados.Item7; 
+        Horarios = dados.Item7;
+        Presencas = dados.Item8;
     }
 
     public void SalvarDados()
     {
-        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Eventos, Horarios);
+        persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Eventos, Horarios, Presencas);
+    }
+
+    //------------- Dados para gerir faltas e presenças--------------------------
+
+    public void RegistarPresenca(int alunoId, int disciplinaId, DateTime data, bool compareceu)
+    {
+        int id = Presencas.Count + 1;
+        Presenca novaPresenca = new Presenca(id, alunoId, disciplinaId, data, compareceu);
+        Presencas.Add(novaPresenca);
+    }
+
+    public void VerificarFaltasExcessivas()
+    {
+        int limiteFaltas = 5; // Limite de faltas para envio de alerta
+
+        foreach (var aluno in Alunos)
+        {
+            foreach (var disciplina in Disciplinas)
+            {
+                int faltas = Presencas.Count(p => p.AlunoId == aluno.Id && p.DisciplinaId == disciplina.Id && !p.Compareceu);
+
+                if (faltas >= limiteFaltas)
+                {
+                    EnviarEmailAlerta(aluno.Email, aluno.Nome, disciplina.Nome, faltas);
+                }
+            }
+        }
+    }
+
+    public static void EnviarEmailAlerta(string emailAluno, string nomeAluno, string nomeDisciplina, int totalFaltas)
+    {
+        try
+        {
+            string remetente = "seuemail@gmail.com"; // Seu e-mail
+            string senha = "suaSenhaGerada"; // Senha gerada no Google
+            string assunto = "⚠ Alerta de Faltas Excessivas ⚠";
+            string corpo = $"Prezado(a) {nomeAluno},\n\n" +
+                           $"Você atingiu {totalFaltas} faltas na disciplina {nomeDisciplina}. " +
+                           "Entre em contato com a coordenação.\n\nAtenciosamente,\nCoordenação Escolar";
+
+            using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+            {
+                smtp.Credentials = new NetworkCredential(remetente, senha);
+                smtp.EnableSsl = true;
+
+                using (MailMessage mensagem = new MailMessage(remetente, emailAluno, assunto, corpo))
+                {
+                    smtp.Send(mensagem);
+                }
+            }
+
+            Console.WriteLine($"✅ E-mail enviado para {emailAluno}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erro ao enviar e-mail: {ex.Message}");
+        }
     }
     //--------------------------metodo para gerir horarios
 
