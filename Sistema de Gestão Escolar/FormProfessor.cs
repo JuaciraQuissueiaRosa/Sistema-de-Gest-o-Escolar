@@ -121,7 +121,7 @@ namespace Sistema_de_Gestão_Escolar
             {
                 lstProfessores.Items.Clear();
 
-                var professoresFormatados = gestor.Professores.Select(professor =>
+                foreach (var professor in gestor.Professores)
                 {
                     var disciplinasProfessor = gestor.Disciplinas
                         .Where(d => d.ProfessoresIds.Contains(professor.Id))
@@ -130,10 +130,18 @@ namespace Sistema_de_Gestão_Escolar
 
                     string disciplinasTexto = disciplinasProfessor.Any() ? string.Join(", ", disciplinasProfessor) : "Nenhuma";
 
-                    return $"ID: {professor.Id} | Nome: {professor.Nome} | Contato: {professor.Contato} | Email: {professor.Email} | Área: {professor.AreaEnsino} | Disciplinas: {disciplinasTexto}";
-                });
+                    // Criar item da ListView e definir o Tag como o ID do professor
+                    ListViewItem item = new ListViewItem(professor.Id.ToString()); // Primeira coluna (ID)
+                    item.SubItems.Add(professor.Nome);
+                    item.SubItems.Add(professor.Contato);
+                    item.SubItems.Add(professor.Email);
+                    item.SubItems.Add(professor.AreaEnsino);
+                    item.SubItems.Add(disciplinasTexto);
 
-                lstProfessores.Items.AddRange(professoresFormatados.ToArray());
+                    item.Tag = professor.Id; // 🔹 Armazena o ID corretamente no Tag
+
+                    lstProfessores.Items.Add(item);
+                }
             }
             catch (Exception ex)
             {
@@ -145,7 +153,7 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Definir as áreas de ensino diretamente no ComboBox usando LINQ
+                // Definir as áreas de ensino diretamente no ComboBox
                 string[] areasEnsino =
                 {
             "Línguas e Humanidades",
@@ -156,7 +164,25 @@ namespace Sistema_de_Gestão_Escolar
             "Informática e Tecnologias"
         };
 
+                cmbAreaEnsino.Items.Clear();
                 cmbAreaEnsino.Items.AddRange(areasEnsino);
+
+                // Configurar ListView corretamente
+                lstProfessores.View = View.Details;
+                lstProfessores.FullRowSelect = true;
+                lstProfessores.GridLines = true;
+                lstProfessores.MultiSelect = false; // Apenas um item pode ser selecionado
+
+                // Limpar e adicionar colunas ao ListView apenas se necessário
+                if (lstProfessores.Columns.Count == 0)
+                {
+                    lstProfessores.Columns.Add("ID", 50);
+                    lstProfessores.Columns.Add("Nome", 150);
+                    lstProfessores.Columns.Add("Contato", 100);
+                    lstProfessores.Columns.Add("Email", 150);
+                    lstProfessores.Columns.Add("Área", 150);
+                    lstProfessores.Columns.Add("Disciplinas", 200);
+                }
 
                 // Atualizar lista de professores ao abrir o formulário
                 AtualizarListaProfessores();
@@ -166,16 +192,12 @@ namespace Sistema_de_Gestão_Escolar
                 MessageBox.Show($"Erro ao carregar formulário de professores: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-
-
             // Definir botões redondos
-
             SetRoundButton(btnSalvarEdicaoProfessor);
             SetRoundButton(btnConsultarProfessor);
             SetRoundButton(btnRemoverProfessor);
             SetRoundButton(btnAdicionarProfessor);
             SetRoundButton(btnEditarProfessor);
-
 
 
         }
@@ -196,7 +218,7 @@ namespace Sistema_de_Gestão_Escolar
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
         }
-    
+
 
         private bool ValidarEmail(string email) =>
       Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
@@ -205,14 +227,15 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstProfessores.SelectedIndex == -1)
+                if (lstProfessores.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione um professor para consultar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obter professor selecionado com LINQ
-                Professor professor = gestor.Professores.ElementAtOrDefault(lstProfessores.SelectedIndex);
+                // Obtém o ID do professor selecionado a partir da Tag do ListView
+                int professorId = (int)lstProfessores.SelectedItems[0].Tag;
+                Professor professor = gestor.Professores.FirstOrDefault(p => p.Id == professorId);
 
                 if (professor == null)
                 {
@@ -233,14 +256,15 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstProfessores.SelectedIndex == -1)
+                if (lstProfessores.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione um professor primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obter professor selecionado com LINQ
-                Professor professorSelecionado = gestor.Professores.ElementAtOrDefault(lstProfessores.SelectedIndex);
+                // Obtém o ID do professor selecionado
+                int professorId = (int)lstProfessores.SelectedItems[0].Tag;
+                Professor professorSelecionado = gestor.Professores.FirstOrDefault(p => p.Id == professorId);
 
                 if (professorSelecionado == null)
                 {
@@ -267,16 +291,31 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnSalvarEdicaoProfessor_Click(object sender, EventArgs e)
         {
+
             try
             {
-                if (lstProfessores.SelectedIndex == -1)
+                if (lstProfessores.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Nenhum professor selecionado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obter professor selecionado com LINQ
-                Professor professorSelecionado = gestor.Professores.ElementAtOrDefault(lstProfessores.SelectedIndex);
+                // 🔹 Teste se o Tag está definido corretamente
+                if (lstProfessores.SelectedItems[0].Tag == null)
+                {
+                    MessageBox.Show("Erro: O professor selecionado não tem um ID válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 🔹 Converter o ID corretamente
+                if (!int.TryParse(lstProfessores.SelectedItems[0].Tag.ToString(), out int professorId))
+                {
+                    MessageBox.Show("Erro: ID do professor inválido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 🔹 Teste se o professor foi encontrado na lista
+                Professor professorSelecionado = gestor.Professores.FirstOrDefault(p => p.Id == professorId);
 
                 if (professorSelecionado == null)
                 {
@@ -311,18 +350,19 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Editar professor no sistema (mantendo o ID original)
-                if (!gestor.EditarProfessor(professorSelecionado.Id, novoNome, novaAreaEnsino, novoContato, novoEmail))
-                {
-                    MessageBox.Show("Erro ao editar o professor!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                // ✅ Salvar os dados após editar professor
+                // Atualizar dados do professor
+                professorSelecionado.Nome = novoNome;
+                professorSelecionado.Email = novoEmail;
+                professorSelecionado.AreaEnsino = novaAreaEnsino;
+                professorSelecionado.Contato = novoContato;
+
+                // Salvar alterações no sistema
                 gestor.SalvarDados();
+
                 // Atualizar lista de professores
                 AtualizarListaProfessores();
 
-                // Resetar e desabilitar o campo ID
+                // Resetar e habilitar campo ID
                 txtIdProfessor.Clear();
                 txtIdProfessor.Enabled = true;
 
@@ -334,6 +374,47 @@ namespace Sistema_de_Gestão_Escolar
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao salvar alterações do professor: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void lstProfessores_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstProfessores.SelectedItems.Count == 0)
+                    return;
+
+                // 🔹 Garantir que o Tag não seja nulo antes de converter
+                if (lstProfessores.SelectedItems[0].Tag is int professorId)
+                {
+                    // 🔹 Buscar o professor correto na lista
+                    Professor professorSelecionado = gestor.Professores.FirstOrDefault(p => p.Id == professorId);
+
+                    if (professorSelecionado != null)
+                    {
+                        // Preencher os campos do formulário com os dados do professor
+                        txtIdProfessor.Text = professorSelecionado.Id.ToString();
+                        txtNomeProfessor.Text = professorSelecionado.Nome;
+                        txtEmailProfessor.Text = professorSelecionado.Email;
+                        cmbAreaEnsino.SelectedItem = professorSelecionado.AreaEnsino;
+                        mtbContatoProfessor.Text = professorSelecionado.Contato;
+
+                        // Habilitar botão de edição
+                        btnSalvarEdicaoProfessor.Enabled = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erro: Professor não encontrado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Erro: ID do professor inválido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao selecionar professor: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

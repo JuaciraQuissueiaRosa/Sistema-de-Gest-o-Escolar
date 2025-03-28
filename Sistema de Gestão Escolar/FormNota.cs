@@ -14,14 +14,24 @@ namespace Sistema_de_Gestão_Escolar
             InitializeComponent();
             this.gestor = gestor;
             AtualizarListaNotas();
-            ConfiguraListBox();
+            ConfiguraListView();
 
 
         }
-        private void ConfiguraListBox()
+        private void ConfiguraListView()
         {
-            lstNotas.Width = 200;  // Ajuste a largura
-            lstNotas.Height = 500; // Ajuste a altura
+            // Definir o modo de visualização da ListView como detalhes
+            lstNotas.View = View.Details;
+
+            // Adicionar as colunas à ListView
+            lstNotas.Columns.Add("Aluno ID", 100);
+            lstNotas.Columns.Add("Aluno", 200);
+            lstNotas.Columns.Add("Disciplina ID", 100);
+            lstNotas.Columns.Add("Disciplina", 200);
+            lstNotas.Columns.Add("Tipo Avaliação", 150);
+            lstNotas.Columns.Add("Nota", 100);
+            lstNotas.Columns.Add("Período Letivo", 150);
+            lstNotas.Columns.Add("Turma", 300);
         }
         private void btnRemoverNota_Click(object sender, EventArgs e)
         {
@@ -49,12 +59,9 @@ namespace Sistema_de_Gestão_Escolar
                 if (gestor.RemoverNota(alunoId, disciplinaId, periodo))
                 {
                     MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-
                     // ✅ Salvar os dados após remover nota 
                     gestor.SalvarDados();
                     AtualizarListaNotas();
-                  
                 }
                 else
                 {
@@ -143,10 +150,6 @@ namespace Sistema_de_Gestão_Escolar
             {
                 lstNotas.Items.Clear();
 
-                var notasAgrupadas = gestor.Notas
-                    .GroupBy(n => new { n.AlunoId, n.DisciplinaId })
-                    .ToDictionary(g => g.Key, g => g.Select(n => n.ValorNota).ToList());
-
                 foreach (var nota in gestor.Notas)
                 {
                     string nomeDisciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == nota.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
@@ -154,16 +157,16 @@ namespace Sistema_de_Gestão_Escolar
                     string turmaInfo = gestor.Turmas.FirstOrDefault(t => t.Id == gestor.Alunos.FirstOrDefault(a => a.Id == nota.AlunoId)?.TurmaId)?.Curso ?? "Turma não encontrada";
                     string tipoAvaliacao = string.IsNullOrEmpty(nota.TipoAvaliacao) ? "Não Informado" : nota.TipoAvaliacao;
 
-                    string infoNota = $"Ano Letivo: {nota.PeriodoLetivo} | Tipo: {tipoAvaliacao} | Nota: {nota.ValorNota} " +
-                                      $"| Disciplina: {nota.DisciplinaId} - {nomeDisciplina} | Aluno: {nota.AlunoId} - {nomeAluno} | Turma: {turmaInfo}";
+                    ListViewItem item = new ListViewItem(nota.AlunoId.ToString());
+                    item.SubItems.Add(nomeAluno);
+                    item.SubItems.Add(nota.DisciplinaId.ToString());
+                    item.SubItems.Add(nomeDisciplina);
+                    item.SubItems.Add(tipoAvaliacao);
+                    item.SubItems.Add(nota.ValorNota.ToString());
+                    item.SubItems.Add(nota.PeriodoLetivo);
+                    item.SubItems.Add(turmaInfo);
 
-                    lstNotas.Items.Add(infoNota);
-                }
-
-                foreach (var chave in notasAgrupadas.Keys)
-                {
-                    double media = notasAgrupadas[chave].Average();
-                    lstNotas.Items.Add($"Aluno ID {chave.AlunoId} | Disciplina ID {chave.DisciplinaId} | Média Final: {media:F2}");
+                    lstNotas.Items.Add(item);
                 }
             }
             catch (Exception ex)
@@ -192,6 +195,7 @@ namespace Sistema_de_Gestão_Escolar
                     cmbProfessorNota.Items.Add("Nenhum professor disponível");
                     cmbProfessorNota.SelectedIndex = 0;
                 }
+
                 // ✅ Carregar tipos de avaliação
                 string[] tiposAvaliacao = { "Teste", "Trabalho", "Exame" };
                 cmbTipoAvaliacao.Items.AddRange(tiposAvaliacao);
@@ -206,12 +210,13 @@ namespace Sistema_de_Gestão_Escolar
             }
 
             // Definir botões redondos
-         
             SetRoundButton(btnEditarNota);
             SetRoundButton(btnAdicionarNota);
             SetRoundButton(btnRemoverNota);
             SetRoundButton(btnSalvarEdicaoNota);
             SetRoundButton(btnConsultarNota);
+
+            lstNotas.GridLines = true;
 
 
         }
@@ -257,13 +262,21 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstNotas.SelectedIndex == -1)
+                // Verifica se há algum item selecionado
+                if (lstNotas.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione uma nota primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
+                // Obtém o primeiro item selecionado
+                ListViewItem itemSelecionado = lstNotas.SelectedItems[0];
+
+                // Obtém o índice do item selecionado
+                int indexSelecionado = itemSelecionado.Index;
+
+                // Acessa a Nota correspondente ao índice selecionado
+                Nota notaSelecionada = gestor.Notas.ElementAtOrDefault(indexSelecionado);
 
                 bool alunoExiste = gestor.Alunos.Any(a => a.Id == notaSelecionada.AlunoId);
                 bool disciplinaExiste = gestor.Disciplinas.Any(d => d.Id == notaSelecionada.DisciplinaId);
@@ -293,20 +306,27 @@ namespace Sistema_de_Gestão_Escolar
                 MessageBox.Show($"Erro ao carregar nota para edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-
         }
 
         private void btnConsultarNota_Click(object sender, EventArgs e)
         {
             try
             {
-                if (lstNotas.SelectedIndex == -1)
+                // Verifica se há algum item selecionado
+                if (lstNotas.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione uma nota para consultar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                Nota notaSelecionada = gestor.Notas.ElementAtOrDefault(lstNotas.SelectedIndex);
+                // Obtém o primeiro item selecionado
+                ListViewItem itemSelecionado = lstNotas.SelectedItems[0];
+
+                // Obtém o índice do item selecionado
+                int indexSelecionado = itemSelecionado.Index;
+
+                // Acessa a Nota correspondente ao índice selecionado
+                Nota notaSelecionada = gestor.Notas.ElementAtOrDefault(indexSelecionado);
                 if (notaSelecionada == null)
                 {
                     MessageBox.Show("Erro: Selecione uma nota válida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -318,12 +338,12 @@ namespace Sistema_de_Gestão_Escolar
                 string turmaInfo = gestor.Turmas.FirstOrDefault(t => t.Id == gestor.Alunos.FirstOrDefault(a => a.Id == notaSelecionada.AlunoId)?.TurmaId)?.Curso ?? "Turma não encontrada";
 
                 MessageBox.Show($"Ano Letivo: {notaSelecionada.PeriodoLetivo}\n" +
-                                $"Tipo de Avaliação: {notaSelecionada.TipoAvaliacao ?? "Não Informado"}\n" +
-                                $"Valor da Nota: {notaSelecionada.ValorNota}\n" +
-                                $"Disciplina: {notaSelecionada.DisciplinaId} - {nomeDisciplina}\n" +
-                                $"Aluno: {notaSelecionada.AlunoId} - {nomeAluno}\n" +
-                                $"Turma: {turmaInfo}",
-                                "Detalhes da Nota", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                 $"Tipo de Avaliação: {notaSelecionada.TipoAvaliacao ?? "Não Informado"}\n" +
+                                 $"Valor da Nota: {notaSelecionada.ValorNota}\n" +
+                                 $"Disciplina: {notaSelecionada.DisciplinaId} - {nomeDisciplina}\n" +
+                                 $"Aluno: {notaSelecionada.AlunoId} - {nomeAluno}\n" +
+                                 $"Turma: {turmaInfo}",
+                                 "Detalhes da Nota", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -335,13 +355,21 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstNotas.SelectedIndex == -1)
+                // Verifica se há algum item selecionado
+                if (lstNotas.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Nenhuma nota selecionada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                Nota notaSelecionada = gestor.Notas[lstNotas.SelectedIndex];
+                // Obtém o primeiro item selecionado
+                ListViewItem itemSelecionado = lstNotas.SelectedItems[0];
+
+                // Obtém o índice do item selecionado
+                int indexSelecionado = itemSelecionado.Index;
+
+                // Acessa a Nota correspondente ao índice selecionado
+                Nota notaSelecionada = gestor.Notas.ElementAtOrDefault(indexSelecionado);
 
                 if (!int.TryParse(txtAlunoIdNota.Text, out int novoAlunoId) ||
                     !int.TryParse(txtDisciplinaIdNota.Text, out int novaDisciplinaId) ||
@@ -375,7 +403,10 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-      
+        private void lstNotas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

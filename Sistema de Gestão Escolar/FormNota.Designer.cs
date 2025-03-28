@@ -37,7 +37,6 @@
             txtPeriodoNota = new TextBox();
             btnAdicionarNota = new Button();
             btnRemoverNota = new Button();
-            lstNotas = new ListBox();
             lblPeriodoNota = new Label();
             lblProfessorResponsavel = new Label();
             cmbProfessorNota = new ComboBox();
@@ -46,6 +45,7 @@
             btnConsultarNota = new Button();
             btnEditarNota = new Button();
             btnSalvarEdicaoNota = new Button();
+            lstNotas = new ListView();
             SuspendLayout();
             // 
             // lblValorNota
@@ -123,14 +123,6 @@
             btnRemoverNota.UseVisualStyleBackColor = true;
             btnRemoverNota.Click += btnRemoverNota_Click;
             // 
-            // lstNotas
-            // 
-            lstNotas.FormattingEnabled = true;
-            lstNotas.Location = new Point(543, 42);
-            lstNotas.Name = "lstNotas";
-            lstNotas.Size = new Size(609, 304);
-            lstNotas.TabIndex = 9;
-            // 
             // lblPeriodoNota
             // 
             lblPeriodoNota.AutoSize = true;
@@ -143,7 +135,7 @@
             // lblProfessorResponsavel
             // 
             lblProfessorResponsavel.AutoSize = true;
-            lblProfessorResponsavel.Location = new Point(678, 410);
+            lblProfessorResponsavel.Location = new Point(765, 509);
             lblProfessorResponsavel.Name = "lblProfessorResponsavel";
             lblProfessorResponsavel.Size = new Size(159, 20);
             lblProfessorResponsavel.TabIndex = 11;
@@ -153,7 +145,7 @@
             // 
             cmbProfessorNota.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProfessorNota.FormattingEnabled = true;
-            cmbProfessorNota.Location = new Point(860, 407);
+            cmbProfessorNota.Location = new Point(947, 506);
             cmbProfessorNota.Name = "cmbProfessorNota";
             cmbProfessorNota.Size = new Size(172, 28);
             cmbProfessorNota.TabIndex = 12;
@@ -206,11 +198,20 @@
             btnSalvarEdicaoNota.UseVisualStyleBackColor = true;
             btnSalvarEdicaoNota.Click += btnSalvarEdicaoNota_Click;
             // 
+            // lstNotas
+            // 
+            lstNotas.Location = new Point(679, 49);
+            lstNotas.Name = "lstNotas";
+            lstNotas.Size = new Size(455, 384);
+            lstNotas.TabIndex = 18;
+            lstNotas.UseCompatibleStateImageBehavior = false;
+            // 
             // FormNota
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1231, 620);
+            Controls.Add(lstNotas);
             Controls.Add(btnSalvarEdicaoNota);
             Controls.Add(btnEditarNota);
             Controls.Add(btnConsultarNota);
@@ -219,7 +220,6 @@
             Controls.Add(cmbProfessorNota);
             Controls.Add(lblProfessorResponsavel);
             Controls.Add(lblPeriodoNota);
-            Controls.Add(lstNotas);
             Controls.Add(btnRemoverNota);
             Controls.Add(btnAdicionarNota);
             Controls.Add(txtPeriodoNota);
@@ -248,7 +248,6 @@
         private TextBox txtPeriodoNota;
         private Button btnAdicionarNota;
         private Button btnRemoverNota;
-        private ListBox lstNotas;
         private Label lblPeriodoNota;
         private Label lblProfessorResponsavel;
         private ComboBox cmbProfessorNota;
@@ -257,5 +256,6 @@
         private Button btnConsultarNota;
         private Button btnEditarNota;
         private Button btnSalvarEdicaoNota;
+        private ListView lstNotas;
     }
 }

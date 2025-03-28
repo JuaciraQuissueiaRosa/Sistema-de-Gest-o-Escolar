@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lstAlunos = new ListBox();
             btnAdicionarAluno = new Button();
             btnRemoverAluno = new Button();
             btnMudarTurma = new Button();
@@ -54,16 +53,8 @@
             btnSalvarAlteracoesAluno = new Button();
             btnEditarAluno = new Button();
             btnConsultarAluno = new Button();
+            lstAlunos = new ListView();
             SuspendLayout();
-            // 
-            // lstAlunos
-            // 
-            lstAlunos.FormattingEnabled = true;
-            lstAlunos.Location = new Point(12, 12);
-            lstAlunos.Name = "lstAlunos";
-            lstAlunos.Size = new Size(675, 424);
-            lstAlunos.TabIndex = 0;
-            lstAlunos.SelectedIndexChanged += lstAlunos_SelectedIndexChanged;
             // 
             // btnAdicionarAluno
             // 
@@ -282,11 +273,20 @@
             btnConsultarAluno.UseVisualStyleBackColor = true;
             btnConsultarAluno.Click += btnConsultarAluno_Click;
             // 
+            // lstAlunos
+            // 
+            lstAlunos.Location = new Point(23, 28);
+            lstAlunos.Name = "lstAlunos";
+            lstAlunos.Size = new Size(548, 371);
+            lstAlunos.TabIndex = 28;
+            lstAlunos.UseCompatibleStateImageBehavior = false;
+            // 
             // FormAluno
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1320, 783);
+            Controls.Add(lstAlunos);
             Controls.Add(btnConsultarAluno);
             Controls.Add(btnEditarAluno);
             Controls.Add(btnSalvarAlteracoesAluno);
@@ -312,7 +312,6 @@
             Controls.Add(btnMudarTurma);
             Controls.Add(btnRemoverAluno);
             Controls.Add(btnAdicionarAluno);
-            Controls.Add(lstAlunos);
             Name = "FormAluno";
             Text = "FormAluno";
             Load += FormAluno_Load;
@@ -321,8 +320,6 @@
         }
 
         #endregion
-
-        private ListBox lstAlunos;
         private Button btnAdicionarAluno;
         private Button btnRemoverAluno;
         private Button btnMudarTurma;
@@ -348,5 +345,6 @@
         private Button btnSalvarAlteracoesAluno;
         private Button btnEditarAluno;
         private Button btnConsultarAluno;
+        private ListView lstAlunos;
     }
 }

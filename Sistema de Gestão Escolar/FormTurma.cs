@@ -60,40 +60,65 @@ namespace Sistema_de_Gestão_Escolar
                     MessageBox.Show("Erro: Já existe uma turma com esse ID!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+
                 string curso = cmbCursoTurma.SelectedItem?.ToString();
                 string turno = cmbTurnoTurma.SelectedItem?.ToString();
-                if (string.IsNullOrEmpty(curso) || string.IsNullOrEmpty(turno))
+                string anoLetivo = txtAnoLetivoTurma.Text.Trim();
+
+                if (string.IsNullOrEmpty(curso) || string.IsNullOrEmpty(turno) || string.IsNullOrEmpty(anoLetivo))
                 {
                     MessageBox.Show("Erro: Preencha todos os campos corretamente!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (!gestor.ValidarAnoLetivo(txtAnoLetivoTurma.Text.Trim()))
+
+                if (!gestor.ValidarAnoLetivo(anoLetivo))
                 {
                     MessageBox.Show("Erro: O ano letivo deve estar no formato 'AAAA/AAAA'!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
+                // ✅ Capturar disciplinas selecionadas
                 var disciplinasSelecionadas = lstDisciplinasTurma.SelectedItems
                     .Cast<string>()
                     .Select(item => int.TryParse(item.Split(' ')[0], out int disciplinaId) ? disciplinaId : (int?)null)
                     .Where(idDisciplina => idDisciplina.HasValue)
                     .Select(idDisciplina => idDisciplina.Value)
                     .ToList();
+
                 if (!disciplinasSelecionadas.Any())
                 {
                     MessageBox.Show("Erro: Selecione pelo menos uma disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                gestor.Turmas.Add(new Turma(id, curso, txtAnoLetivoTurma.Text.Trim(), turno)
+                // ✅ Capturar professores selecionados
+                var professoresSelecionados = lstProfessoresTurma.SelectedItems
+                    .Cast<string>()
+                    .Select(item => int.Parse(item.Split(' ')[0]))
+                    .ToList();
+
+                if (!professoresSelecionados.Any())
+                {
+                    MessageBox.Show("Erro: Selecione pelo menos um professor!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // ✅ Criar e adicionar turma
+                gestor.Turmas.Add(new Turma(id, curso, anoLetivo, turno)
                 {
                     DisciplinasIds = disciplinasSelecionadas
                 });
 
-                txtIdTurma.Enabled = false;
+                // ✅ Associar professores às disciplinas
+                foreach (var disciplinaId in disciplinasSelecionadas)
+                {
+                    Disciplina disciplina = gestor.Disciplinas.Find(d => d.Id == disciplinaId);
+                    if (disciplina != null)
+                    {
+                        disciplina.ProfessoresIds = professoresSelecionados;
+                    }
+                }
 
-
-                // ✅ Salvar os dados após adicionar turma
                 gestor.SalvarDados();
                 AtualizarListaTurmas();
                 MessageBox.Show("Turma adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -114,30 +139,41 @@ namespace Sistema_de_Gestão_Escolar
 
                 if (!gestor.Turmas.Any())
                 {
-                    lstTurmas.Items.Add("Nenhuma turma cadastrada.");
+                    lstTurmas.Items.Add(new ListViewItem("Nenhuma turma cadastrada."));
                     return;
                 }
 
-                lstTurmas.Items.AddRange(gestor.Turmas.Select(t =>
+                foreach (var turma in gestor.Turmas)
                 {
+                    // Cria um novo item para a ListView
+                    var item = new ListViewItem(turma.Id.ToString());
+
+                    // Adiciona os subitens para Curso, Ano Letivo, Turno, Disciplinas e Professores
+                    item.SubItems.Add(turma.Curso);
+                    item.SubItems.Add(turma.AnoLetivo);
+                    item.SubItems.Add(turma.Turno);
+
+                    // Disciplinas
                     var disciplinasTexto = gestor.Disciplinas
-                        .Where(d => t.DisciplinasIds.Contains(d.Id))
+                        .Where(d => turma.DisciplinasIds.Contains(d.Id))
                         .Select(d => d.Nome)
                         .DefaultIfEmpty("Nenhuma")
                         .Aggregate((atual, proximo) => $"{atual}, {proximo}");
+                    item.SubItems.Add(disciplinasTexto);
 
+                    // Professores
                     var professoresTexto = gestor.Disciplinas
-                        .Where(d => t.DisciplinasIds.Contains(d.Id))
+                        .Where(d => turma.DisciplinasIds.Contains(d.Id))
                         .SelectMany(d => d.ProfessoresIds)
                         .Distinct()
                         .Select(idProf => gestor.Professores.FirstOrDefault(p => p.Id == idProf)?.Nome ?? "Desconhecido")
                         .DefaultIfEmpty("Nenhum")
                         .Aggregate((atual, proximo) => $"{atual}, {proximo}");
+                    item.SubItems.Add(professoresTexto);
 
-                    return $"ID: {t.Id} | Curso: {t.Curso} | Ano Letivo: {t.AnoLetivo} | Turno: {t.Turno} | " +
-                           $"Disciplinas: {disciplinasTexto} | Professores: {professoresTexto}";
-
-                }).ToArray());
+                    // Adiciona o item à ListView
+                    lstTurmas.Items.Add(item);
+                }
             }
             catch (Exception ex)
             {
@@ -162,7 +198,7 @@ namespace Sistema_de_Gestão_Escolar
 
                 CarregarDisciplinasDisponiveis();
                 AtualizarListaTurmas();
-                CarregarProfessoresDisponiveis();
+
             }
             catch (Exception ex)
             {
@@ -179,8 +215,36 @@ namespace Sistema_de_Gestão_Escolar
             SetRoundButton(btnSalvarEdicaoTurma);
             SetRoundButton(btnConsultarTurma);
 
+            CarregarProfessoresNaListBox();
+            // Limpar as colunas existentes, se houver
+            lstTurmas.Columns.Clear();
+
+            // Adicionando as colunas
+            lstTurmas.Columns.Add("ID", 50);               // Coluna ID
+            lstTurmas.Columns.Add("Curso", 250);            // Coluna Curso
+            lstTurmas.Columns.Add("Ano Letivo", 300);      // Coluna Ano Letivo
+            lstTurmas.Columns.Add("Turno", 300);
+            lstTurmas.Columns.Add("Disciplinas", 300);
+            lstTurmas.Columns.Add("Professores", 300);
+     
+
+            // Configurar o modo de exibição do ListView para exibir em detalhes
+            lstTurmas.View = View.Details;
+            lstTurmas.FullRowSelect = true;// Seleção da linha inteira
+            lstTurmas.GridLines = true;
 
         }
+
+
+        private void CarregarProfessoresNaListBox()
+        {
+            lstProfessoresTurma.Items.Clear();
+            foreach (var professor in gestor.Professores)
+            {
+                lstProfessoresTurma.Items.Add($"{professor.Id} - {professor.Nome}");
+            }
+        }
+
 
         private void SetRoundButton(Button button)
         {
@@ -198,7 +262,7 @@ namespace Sistema_de_Gestão_Escolar
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
         }
-    
+
 
         private void AtualizarFormAluno()
         {
@@ -243,58 +307,62 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnEditarTurma_Click(object sender, EventArgs e)
         {
+
             try
             {
-                if (lstTurmas.SelectedIndex == -1)
+                if (lstTurmas.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione uma turma para editar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obter a turma selecionada
-                Turma turmaSelecionada = gestor.Turmas[lstTurmas.SelectedIndex];
+                // ✅ Obter a turma selecionada pelo ID, que é único e seguro
+                ListViewItem itemSelecionado = lstTurmas.SelectedItems[0];
+                int idTurma = int.Parse(itemSelecionado.SubItems[0].Text); // O ID está na primeira coluna
+                Turma turmaSelecionada = gestor.Turmas.FirstOrDefault(t => t.Id == idTurma);
 
-                // Preencher os campos
+                if (turmaSelecionada == null)
+                {
+                    MessageBox.Show("Erro: Turma não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // ✅ Preencher os campos com os dados da turma selecionada
                 txtIdTurma.Text = turmaSelecionada.Id.ToString();
-                txtIdTurma.Enabled = false; // Bloquear edição do ID
+                txtIdTurma.Enabled = false;  // Não permite editar o ID da turma
                 txtAnoLetivoTurma.Text = turmaSelecionada.AnoLetivo;
                 cmbTurnoTurma.SelectedItem = turmaSelecionada.Turno;
                 cmbCursoTurma.SelectedItem = turmaSelecionada.Curso;
 
-                // Preencher ListBox de Disciplinas
+                // ✅ Preencher ListBox de Disciplinas
                 lstDisciplinasTurma.Items.Clear();
                 foreach (Disciplina disciplina in gestor.Disciplinas)
                 {
                     string item = $"{disciplina.Id} - {disciplina.Nome}";
                     lstDisciplinasTurma.Items.Add(item);
-
-                    // Marcar as disciplinas associadas à turma
                     if (turmaSelecionada.DisciplinasIds.Contains(disciplina.Id))
                     {
                         lstDisciplinasTurma.SetSelected(lstDisciplinasTurma.Items.Count - 1, true);
                     }
                 }
 
-                // Preencher ComboBox de Professores
-                cmbProfessorTurma.Items.Clear();
-                foreach (Professor professor in gestor.Professores)
+                // ✅ Preencher ListBox de Professores
+                lstProfessoresTurma.ClearSelected();
+                foreach (int professorId in gestor.Professores.Select(p => p.Id))
                 {
-                    string item = $"{professor.Id} - {professor.Nome}";
-                    cmbProfessorTurma.Items.Add(item);
-
-                    // Selecionar o primeiro professor encontrado para uma disciplina da turma
-                    foreach (int disciplinaId in turmaSelecionada.DisciplinasIds)
+                    if (gestor.Disciplinas.Any(d => turmaSelecionada.DisciplinasIds.Contains(d.Id) && d.ProfessoresIds.Contains(professorId)))
                     {
-                        Disciplina disciplinaEncontrada = gestor.Disciplinas.Find(d => d.Id == disciplinaId);
-                        if (disciplinaEncontrada != null && disciplinaEncontrada.ProfessoresIds.Contains(professor.Id))
+                        for (int i = 0; i < lstProfessoresTurma.Items.Count; i++)
                         {
-                            cmbProfessorTurma.SelectedItem = item;
-                            break;
+                            if (lstProfessoresTurma.Items[i].ToString().StartsWith(professorId.ToString()))
+                            {
+                                lstProfessoresTurma.SetSelected(i, true);
+                            }
                         }
                     }
                 }
 
-                // Habilitar botão de salvar edição
+                // ✅ Habilitar o botão para salvar as alterações
                 btnSalvarEdicaoTurma.Enabled = true;
             }
             catch (Exception ex)
@@ -307,16 +375,32 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstTurmas.SelectedIndex == -1)
+                // Verifica se algum item foi selecionado no ListView
+                if (lstTurmas.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione uma turma para consultar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                var turma = gestor.Turmas[lstTurmas.SelectedIndex];
+                // Acessa o item selecionado no ListView
+                ListViewItem itemSelecionado = lstTurmas.SelectedItems[0];
 
-                MessageBox.Show($"ID: {turma.Id}\nCurso: {turma.Curso}\nAno Letivo: {turma.AnoLetivo}\nTurno: {turma.Turno}",
-                                "Detalhes da Turma", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Obtém o ID da turma a partir da primeira coluna do ListView
+                int idTurma = int.Parse(itemSelecionado.SubItems[0].Text);
+
+                // Recupera a turma a partir do gestor de turmas usando o ID
+                var turma = gestor.Turmas.FirstOrDefault(t => t.Id == idTurma);
+
+                // Exibe os detalhes da turma se encontrada
+                if (turma != null)
+                {
+                    MessageBox.Show($"ID: {turma.Id}\nCurso: {turma.Curso}\nAno Letivo: {turma.AnoLetivo}\nTurno: {turma.Turno}",
+                                    "Detalhes da Turma", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Erro: Turma não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -324,109 +408,137 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-        private void CarregarProfessoresDisponiveis()
-        {
-            try
-            {
-                cmbProfessorTurma.Items.Clear();
 
-                var professores = gestor.Professores
-                    .Select(p => $"{p.Id} - {p.Nome}")
-                    .ToList();
-
-                cmbProfessorTurma.Items.AddRange(professores.Any() ? professores.ToArray() : new[] { "Nenhum professor disponível" });
-                cmbProfessorTurma.SelectedIndex = 0;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao carregar professores: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void lstTurmas_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lstTurmas.SelectedIndex == -1) return;
-
-            try
-            {
-                Turma turmaSelecionada = gestor.Turmas[lstTurmas.SelectedIndex];
-
-                txtIdTurma.Text = turmaSelecionada.Id.ToString();
-                txtAnoLetivoTurma.Text = turmaSelecionada.AnoLetivo;
-                cmbTurnoTurma.SelectedItem = turmaSelecionada.Turno;
-                cmbCursoTurma.SelectedItem = turmaSelecionada.Curso;
-
-                MessageBox.Show("Turma carregada para edição.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao carregar turma para edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+      
 
         private void btnSalvarEdicaoTurma_Click(object sender, EventArgs e)
         {
             try
             {
-                if (lstTurmas.SelectedIndex == -1)
+                if (lstTurmas.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Nenhuma turma selecionada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                var turmaSelecionada = gestor.Turmas[lstTurmas.SelectedIndex];
+                // Obter a turma selecionada
+                ListViewItem itemSelecionado = lstTurmas.SelectedItems[0];
+                int idTurma = int.Parse(itemSelecionado.SubItems[0].Text); // O ID está na primeira coluna
+                var turmaSelecionada = gestor.Turmas.FirstOrDefault(t => t.Id == idTurma);
 
-                // Garantir que os campos obrigatórios estão preenchidos
-                string novoCurso = cmbCursoTurma.SelectedItem?.ToString();
-                string novoAnoLetivo = txtAnoLetivoTurma.Text.Trim();
-                string novoTurno = cmbTurnoTurma.SelectedItem?.ToString();
-
-                if (string.IsNullOrEmpty(novoCurso) || string.IsNullOrEmpty(novoAnoLetivo) || string.IsNullOrEmpty(novoTurno))
+                if (turmaSelecionada == null)
                 {
-                    MessageBox.Show("Erro: Preencha todos os campos corretamente!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Turma não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Validar formato do ano letivo
-                if (!gestor.ValidarAnoLetivo(novoAnoLetivo))
+                // Atualizar os dados da turma com os valores do formulário
+                turmaSelecionada.AnoLetivo = txtAnoLetivoTurma.Text;
+                turmaSelecionada.Turno = cmbTurnoTurma.SelectedItem.ToString();
+                turmaSelecionada.Curso = cmbCursoTurma.SelectedItem.ToString();
+
+                // Atualizar as disciplinas associadas à turma
+                turmaSelecionada.DisciplinasIds.Clear();
+                foreach (var item in lstDisciplinasTurma.SelectedItems)
                 {
-                    MessageBox.Show("Erro: O ano letivo deve estar no formato 'AAAA/AAAA'!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    int disciplinaId = int.Parse(item.ToString().Split(' ')[0]); // Extrair o ID da disciplina
+                    turmaSelecionada.DisciplinasIds.Add(disciplinaId);
                 }
 
-                // Atualizar os dados da turma
-                turmaSelecionada.Curso = novoCurso;
-                turmaSelecionada.AnoLetivo = novoAnoLetivo;
-                turmaSelecionada.Turno = novoTurno;
+                // Aqui, você deve associar os professores às disciplinas de forma indireta.
+                // Exemplo: se você tem uma lista de professores para cada disciplina, adicione a lógica de associação.
 
-                // Atualizar disciplinas associadas à turma
-                turmaSelecionada.DisciplinasIds = lstDisciplinasTurma.SelectedItems
-                    .Cast<string>()
-                    .Select(item => int.Parse(item.Split(' ')[0]))
-                    .ToList();
+                // Para cada disciplina associada à turma, adicione os professores associados
+                foreach (var disciplinaId in turmaSelecionada.DisciplinasIds)
+                {
+                    var disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
+                    if (disciplina != null)
+                    {
+                        // Atualizar os professores dessa disciplina, se necessário
+                        // Exemplo: Adicionar ou remover professores dessa disciplina
+                        foreach (var professorId in lstProfessoresTurma.SelectedItems)
+                        {
+                            int idProfessor = int.Parse(professorId.ToString().Split(' ')[0]); // Extrair o ID do professor
+                            if (!disciplina.ProfessoresIds.Contains(idProfessor))
+                            {
+                                disciplina.ProfessoresIds.Add(idProfessor);
+                            }
+                        }
+                    }
+                }
 
-                // Atualizar professores associados às disciplinas da turma
-                int professorId = cmbProfessorTurma.SelectedItem != null
-                    ? int.Parse(cmbProfessorTurma.SelectedItem.ToString().Split(' ')[0])
-                    : -1;
-
-                gestor.Disciplinas
-                    .Where(d => turmaSelecionada.DisciplinasIds.Contains(d.Id))
-                    .ToList()
-                    .ForEach(d => d.ProfessoresIds = professorId != -1 ? new List<int> { professorId } : new List<int>());
-
-                AtualizarListaTurmas();
-                MessageBox.Show("Turma editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                btnSalvarEdicaoTurma.Enabled = false;
-
-
-                // ✅ Salvar os dados após editar turma
+                // Salvar os dados atualizados
                 gestor.SalvarDados();
+
+                // Atualizar a ListView com os novos dados da turma
+                AtualizarListaTurmas();
+
+                // Exibir uma mensagem de sucesso
+                MessageBox.Show("Turma editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btnSalvarEdicaoTurma.Enabled = false; // Desabilitar o botão após salvar
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao salvar alterações da turma: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao salvar a edição da turma: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void lstTurmas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstTurmas.SelectedItems.Count == 0) return;
+
+            try
+            {
+                // Pega o item selecionado
+                var itemSelecionado = lstTurmas.SelectedItems[0];
+
+                // Obtém o ID da turma
+                int turmaId = int.Parse(itemSelecionado.Text);
+
+                // Procura a turma pelo ID
+                Turma turmaSelecionada = gestor.Turmas.FirstOrDefault(t => t.Id == turmaId);
+
+                if (turmaSelecionada != null)
+                {
+                    // Atualiza os campos com as informações da turma selecionada
+                    txtIdTurma.Text = turmaSelecionada.Id.ToString();
+                    txtAnoLetivoTurma.Text = turmaSelecionada.AnoLetivo;
+                    cmbTurnoTurma.SelectedItem = turmaSelecionada.Turno;
+                    cmbCursoTurma.SelectedItem = turmaSelecionada.Curso;
+
+                    // Marca as disciplinas e professores corretamente
+                    lstDisciplinasTurma.Items.Clear();
+                    foreach (Disciplina disciplina in gestor.Disciplinas)
+                    {
+                        string item = $"{disciplina.Id} - {disciplina.Nome}";
+                        lstDisciplinasTurma.Items.Add(item);
+                        if (turmaSelecionada.DisciplinasIds.Contains(disciplina.Id))
+                        {
+                            lstDisciplinasTurma.SetSelected(lstDisciplinasTurma.Items.Count - 1, true);
+                        }
+                    }
+
+                    lstProfessoresTurma.ClearSelected();
+                    foreach (int professorId in gestor.Professores.Select(p => p.Id))
+                    {
+                        if (gestor.Disciplinas.Any(d => turmaSelecionada.DisciplinasIds.Contains(d.Id) && d.ProfessoresIds.Contains(professorId)))
+                        {
+                            for (int i = 0; i < lstProfessoresTurma.Items.Count; i++)
+                            {
+                                if (lstProfessoresTurma.Items[i].ToString().StartsWith(professorId.ToString()))
+                                {
+                                    lstProfessoresTurma.SetSelected(i, true);
+                                }
+                            }
+                        }
+                    }
+
+                    MessageBox.Show("Turma carregada para edição.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar turma para edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

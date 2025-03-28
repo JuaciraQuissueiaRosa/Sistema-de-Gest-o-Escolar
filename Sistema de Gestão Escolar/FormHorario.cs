@@ -56,7 +56,6 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Validar seleção de turma, professor e disciplina
                 if (cmbTurma.SelectedValue == null || cmbProfessor.SelectedValue == null || cmbDisciplina.SelectedValue == null)
                 {
                     MessageBox.Show("Selecione uma turma, professor e disciplina.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -70,41 +69,10 @@ namespace Sistema_de_Gestão_Escolar
                 TimeSpan horaInicio = dtpHoraInicio.Value.TimeOfDay;
                 TimeSpan horaFim = dtpHoraFim.Value.TimeOfDay;
 
-                // ✅ 1. Validar se o dia da semana NÃO é sábado ou domingo
-                if (diaSemana == DayOfWeek.Saturday || diaSemana == DayOfWeek.Sunday)
-                {
-                    MessageBox.Show("As aulas só podem ser marcadas de segunda a sexta-feira.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                if (!ValidarHorario(diaSemana, horaInicio, horaFim)) return;
 
-                // ✅ 2. Validar horário permitido (08h30 às 22h30)
-                TimeSpan horarioMinimo = new TimeSpan(8, 30, 0);
-                TimeSpan horarioMaximo = new TimeSpan(22, 30, 0);
-
-                if (horaInicio < horarioMinimo || horaFim > horarioMaximo)
-                {
-                    MessageBox.Show("As aulas devem ser marcadas entre 08h30 e 22h30.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // ✅ 3. Validar se a hora de início é menor que a hora de fim
-                if (horaInicio >= horaFim)
-                {
-                    MessageBox.Show("A hora de início deve ser menor que a hora de fim.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Criar objeto Horário
                 Horario novoHorario = new Horario(gestor.Horarios.Count + 1, disciplinaId, professorId, turmaId, diaSemana, horaInicio, horaFim);
 
-                // ✅ 4. Verificar conflitos de horários
-                if (gestor.VerificarConflitoHorario(novoHorario))
-                {
-                    MessageBox.Show("Conflito de horário detectado! O professor ou a turma já tem uma aula nesse horário.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Adicionar horário
                 gestor.AdicionarHorario(novoHorario);
                 gestor.SalvarDados();
 
@@ -119,16 +87,26 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnRemoverHorario_Click(object sender, EventArgs e)
         {
-            if (lstHorarios.SelectedItems.Count == 0)
+            try
             {
-                MessageBox.Show("Selecione um horário para remover.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                if (lstHorarios.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show("Selecione um horário para remover.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-            int id = (int)lstHorarios.SelectedItems[0].Tag;
-            gestor.RemoverHorario(id);
-            gestor.SalvarDados();
-            AtualizarListaHorarios();
+                int id = (int)lstHorarios.SelectedItems[0].Tag;
+
+                gestor.RemoverHorario(id);
+                gestor.SalvarDados();
+
+                MessageBox.Show("Horário removido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                AtualizarListaHorarios();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao remover horário: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
@@ -138,36 +116,58 @@ namespace Sistema_de_Gestão_Escolar
 
             foreach (var horario in gestor.Horarios)
             {
-                var turma = gestor.Turmas.FirstOrDefault(t => t.Id == horario.TurmaId)?.Curso ?? "Turma não encontrada";
-                var professor = gestor.Professores.FirstOrDefault(p => p.Id == horario.ProfessorId)?.Nome ?? "Professor não encontrado";
-                var disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == horario.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
+                string turma = gestor.Turmas.FirstOrDefault(t => t.Id == horario.TurmaId)?.Curso ?? "Turma não encontrada";
+                string professor = gestor.Professores.FirstOrDefault(p => p.Id == horario.ProfessorId)?.Nome ?? "Professor não encontrado";
+                string disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == horario.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
 
-                ListViewItem item = new ListViewItem(new[] {
-                horario.DiaSemana.ToString(),
-                horario.HoraInicio.ToString(@"hh\:mm"),
-                horario.HoraFim.ToString(@"hh\:mm"),
-                disciplina,
-                professor,
-                turma
-            });
+                string descricaoHorario = $"{horario.DiaSemana} - {horario.HoraInicio:hh\\:mm} às {horario.HoraFim:hh\\:mm}";
+
+                ListViewItem item = new ListViewItem(descricaoHorario); // Coluna 0: Horário
+                item.SubItems.Add(disciplina);  // Coluna 1: Disciplina
+                item.SubItems.Add(professor);   // Coluna 2: Professor
+                item.SubItems.Add(turma);       // Coluna 3: Turma
 
                 item.Tag = horario.Id;
                 lstHorarios.Items.Add(item);
             }
         }
 
+        private bool ValidarHorario(DayOfWeek diaSemana, TimeSpan horaInicio, TimeSpan horaFim)
+        {
+            if (diaSemana == DayOfWeek.Saturday || diaSemana == DayOfWeek.Sunday)
+            {
+                MessageBox.Show("As aulas só podem ser marcadas de segunda a sexta-feira.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            TimeSpan horarioMinimo = new TimeSpan(8, 30, 0);
+            TimeSpan horarioMaximo = new TimeSpan(22, 30, 0);
+
+            if (horaInicio < horarioMinimo || horaFim > horarioMaximo)
+            {
+                MessageBox.Show("As aulas devem ser marcadas entre 08h30 e 22h30.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (horaInicio >= horaFim)
+            {
+                MessageBox.Show("A hora de início deve ser menor que a hora de fim.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
         private void btnEditarHorario_Click(object sender, EventArgs e)
         {
             try
             {
-                // ✅ 1. Validar se um horário foi selecionado
                 if (lstHorarios.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Selecione um horário para editar.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // ✅ 2. Obter o ID do horário selecionado
                 int id = (int)lstHorarios.SelectedItems[0].Tag;
                 Horario horarioSelecionado = gestor.Horarios.FirstOrDefault(h => h.Id == id);
 
@@ -177,7 +177,6 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // ✅ 3. Obter os novos valores do formulário
                 int turmaId = (int)cmbTurma.SelectedValue;
                 int professorId = (int)cmbProfessor.SelectedValue;
                 int disciplinaId = (int)cmbDisciplina.SelectedValue;
@@ -185,40 +184,10 @@ namespace Sistema_de_Gestão_Escolar
                 TimeSpan horaInicio = dtpHoraInicio.Value.TimeOfDay;
                 TimeSpan horaFim = dtpHoraFim.Value.TimeOfDay;
 
-                // ✅ 4. Validar Finais de Semana
-                if (diaSemana == DayOfWeek.Saturday || diaSemana == DayOfWeek.Sunday)
-                {
-                    MessageBox.Show("As aulas só podem ser marcadas de segunda a sexta-feira.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                if (!ValidarHorario(diaSemana, horaInicio, horaFim)) return;
 
-                // ✅ 5. Validar Horário Permitido
-                TimeSpan horarioMinimo = new TimeSpan(8, 30, 0);
-                TimeSpan horarioMaximo = new TimeSpan(22, 30, 0);
-
-                if (horaInicio < horarioMinimo || horaFim > horarioMaximo)
-                {
-                    MessageBox.Show("As aulas devem ser marcadas entre 08h30 e 22h30.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (horaInicio >= horaFim)
-                {
-                    MessageBox.Show("A hora de início deve ser menor que a hora de fim.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // ✅ 6. Criar objeto atualizado
                 Horario horarioAtualizado = new Horario(id, disciplinaId, professorId, turmaId, diaSemana, horaInicio, horaFim);
 
-                // ✅ 7. Verificar Conflito de Horário
-                if (gestor.VerificarConflitoHorario(horarioAtualizado))
-                {
-                    MessageBox.Show("Conflito de horário detectado! O professor ou a turma já tem uma aula nesse horário.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // ✅ 8. Atualizar o horário no sistema
                 gestor.EditarHorario(horarioAtualizado);
                 gestor.SalvarDados();
 
@@ -252,7 +221,21 @@ namespace Sistema_de_Gestão_Escolar
         }
 
         private void FormHorario_Load(object sender, EventArgs e)
-        {
+        {  
+            // Configuração da ListView
+            lstHorarios.View = View.Details; // Exibir detalhes com colunas
+            lstHorarios.FullRowSelect = true; // Selecionar a linha toda
+            lstHorarios.GridLines = true; // Exibir linhas de grade
+
+            // Definir colunas
+            lstHorarios.Columns.Clear();
+            lstHorarios.Columns.Add("Horário", 300);
+            lstHorarios.Columns.Add("Disciplina", 300);
+            lstHorarios.Columns.Add("Professor", 300);
+            lstHorarios.Columns.Add("Turma", 300);
+
+            // Atualizar a lista
+            AtualizarListaHorarios();
 
             // Definir botões redondos
             SetRoundButton(btnEditarHorario);

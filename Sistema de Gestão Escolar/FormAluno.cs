@@ -129,13 +129,13 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstAlunos.SelectedIndex == -1)
+                if (lstAlunos.SelectedItems.Count == -1)
                 {
                     MessageBox.Show("Erro: Selecione um aluno para consultar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                var alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+                var alunoSelecionado = gestor.Alunos.FirstOrDefault(a => a.Id == (int)lstAlunos.SelectedItems[0].Tag);
 
                 var nomeTurma = gestor.Turmas.FirstOrDefault(t => t.Id == alunoSelecionado.TurmaId)?.Curso ?? "Turma não encontrada";
 
@@ -162,13 +162,13 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstAlunos.SelectedIndex == -1)
+                if (lstAlunos.SelectedItems.Count == -1)
                 {
                     MessageBox.Show("Erro: Selecione um aluno primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+                Aluno alunoSelecionado = gestor.Alunos.FirstOrDefault(a => a.Id == int.Parse(lstAlunos.SelectedItems[0].Text));
 
                 if (cmbNovaTurmaAluno.SelectedItem == null)
                 {
@@ -214,18 +214,23 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
+                // Limpar a ListView antes de atualizar
                 lstAlunos.Items.Clear();
 
+                // Verificar se há alunos cadastrados
                 if (!gestor.Alunos.Any())
                 {
-                    lstAlunos.Items.Add("Nenhum aluno cadastrado.");
+                    var item = new ListViewItem("Nenhum aluno cadastrado.");
+                    lstAlunos.Items.Add(item);
                     return;
                 }
-                var alunosFormatados = gestor.Alunos.Select(a =>
+
+                // Adicionar dados na ListView
+                foreach (var aluno in gestor.Alunos)
                 {
-                    var nomeTurma = gestor.Turmas.FirstOrDefault(t => t.Id == a.TurmaId)?.Curso ?? "Turma não encontrada";
+                    var nomeTurma = gestor.Turmas.FirstOrDefault(t => t.Id == aluno.TurmaId)?.Curso ?? "Turma não encontrada";
                     var historicoNotas = gestor.Notas
-                        .Where(n => n.AlunoId == a.Id)
+                        .Where(n => n.AlunoId == aluno.Id)
                         .Select(n =>
                         {
                             var nomeDisciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == n.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
@@ -234,11 +239,18 @@ namespace Sistema_de_Gestão_Escolar
                         .DefaultIfEmpty("Sem notas registradas")
                         .Aggregate((atual, proximo) => $"{atual} | {proximo}");
 
-                    return $"ID: {a.Id} | Nome: {a.Nome} | Nascimento: {a.DataNascimento.ToShortDateString()} | " +
-                           $"Contato: {a.Contato} | Morada: {a.Morada} | Turma: {a.TurmaId} - {nomeTurma} | Histórico: {historicoNotas}";
-                });
+                    // Criar um novo item de ListView com os dados formatados
+                    var item = new ListViewItem(aluno.Id.ToString());
+                    item.SubItems.Add(aluno.Nome);
+                    item.SubItems.Add(aluno.DataNascimento.ToShortDateString());
+                    item.SubItems.Add(aluno.Contato);
+                    item.SubItems.Add(aluno.Morada);
+                    item.SubItems.Add($"{aluno.TurmaId} - {nomeTurma}");
+                    item.SubItems.Add(historicoNotas);
 
-                lstAlunos.Items.AddRange(alunosFormatados.ToArray());
+                    // Adicionar o item à ListView
+                    lstAlunos.Items.Add(item);
+                }
             }
             catch (Exception ex)
             {
@@ -280,21 +292,28 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstAlunos.SelectedIndex == -1)
+                if (lstAlunos.SelectedItems.Count == 0)
                 {
                     return; // Se nada estiver selecionado, não faz nada
                 }
 
-                // Obter aluno selecionado
-                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+                // Obter o item selecionado
+                var itemSelecionado = lstAlunos.SelectedItems[0];
 
-                // Exibir os dados do aluno nos campos de texto (se houver no formulário)
-                txtNomeAluno.Text = alunoSelecionado.Nome;
-                txtIdAluno.Text = alunoSelecionado.Id.ToString();
-                txtTurmaAluno.Text = alunoSelecionado.TurmaId.ToString(); // Mostra a turma atual
+                // Buscar o aluno correspondente ao ID selecionado
+                int alunoId = int.Parse(itemSelecionado.Text); // O ID do aluno está na primeira coluna
+                Aluno alunoSelecionado = gestor.Alunos.FirstOrDefault(a => a.Id == alunoId);
 
-                // Atualizar a lista de turmas disponíveis para transferência
-                CarregarTurmasDisponiveis(alunoSelecionado.TurmaId);
+                if (alunoSelecionado != null)
+                {
+                    // Exibir os dados do aluno nos campos de texto (se houver no formulário)
+                    txtNomeAluno.Text = alunoSelecionado.Nome;
+                    txtIdAluno.Text = alunoSelecionado.Id.ToString();
+                    txtTurmaAluno.Text = alunoSelecionado.TurmaId.ToString(); // Mostra a turma atual
+
+                    // Atualizar a lista de turmas disponíveis para transferência
+                    CarregarTurmasDisponiveis(alunoSelecionado.TurmaId);
+                }
             }
             catch (Exception ex)
             {
@@ -344,6 +363,24 @@ namespace Sistema_de_Gestão_Escolar
             SetRoundButton(btnConsultarAluno);
 
 
+
+            // Configuração da ListView
+            lstAlunos.View = View.Details; // Exibir detalhes com colunas
+            lstAlunos.FullRowSelect = true; // Selecionar a linha toda
+            lstAlunos.GridLines = true; // Exibir linhas de grade
+
+            // Definir colunas
+            lstAlunos.Columns.Clear();
+            lstAlunos.Columns.Add("ID", 300);
+            lstAlunos.Columns.Add("Nome", 300);
+            lstAlunos.Columns.Add("Data de Nascimento", 300);
+            lstAlunos.Columns.Add("Contato", 300);
+            lstAlunos.Columns.Add("Morada", 300);
+            lstAlunos.Columns.Add("Email", 300);
+            lstAlunos.Columns.Add("TurmaId", 1000);
+
+
+
         }
 
         private void SetRoundButton(Button button)
@@ -380,14 +417,22 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstAlunos.SelectedIndex == -1)
+                if (lstAlunos.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione um aluno para salvar as alterações!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obter aluno selecionado
-                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+                // Obter o item selecionado
+                var itemSelecionado = lstAlunos.SelectedItems[0];
+                int alunoId = int.Parse(itemSelecionado.Text); // O ID do aluno está na primeira coluna
+                Aluno alunoSelecionado = gestor.Alunos.FirstOrDefault(a => a.Id == alunoId);
+
+                if (alunoSelecionado == null)
+                {
+                    MessageBox.Show("Erro: Aluno não encontrado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 // Garantir que o ID original seja mantido
                 int idOriginal = alunoSelecionado.Id;
@@ -402,8 +447,6 @@ namespace Sistema_de_Gestão_Escolar
 
                 // Validar data de nascimento
                 DateTime novaDataNascimento = dtpNascimentoAluno.Value;
-
-                // 📌 ✅ Verificação da idade mínima (12 anos) ao editar
                 int idade = CalcularIdade(novaDataNascimento);
                 if (idade < 12)
                 {
@@ -427,11 +470,20 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
+                // Validar morada
+                string novaMorada = txtMoradaAluno.Text.Trim();
+                if (string.IsNullOrEmpty(novaMorada))
+                {
+                    MessageBox.Show("Erro: A morada não pode estar vazia!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 // Aplicar alterações
                 alunoSelecionado.Nome = novoNome;
                 alunoSelecionado.DataNascimento = novaDataNascimento;
                 alunoSelecionado.Contato = novoContato;
                 alunoSelecionado.Email = novoEmail;
+                alunoSelecionado.Morada = novaMorada; // Atualizar a morada
 
                 // ✅ Salvar as mudanças
                 gestor.SalvarDados();
@@ -447,60 +499,49 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show("Erro ao salvar alterações do aluno: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void btnConsultarAluno_Click(object sender, EventArgs e)
         {
             try
             {
-                if (lstAlunos.SelectedIndex == -1)
+                if (lstAlunos.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione um aluno para consultar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obter o aluno selecionado
-                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+                // Obter o item selecionado
+                var itemSelecionado = lstAlunos.SelectedItems[0];
+                int alunoId = int.Parse(itemSelecionado.Text); // O ID do aluno está na primeira coluna
+                Aluno alunoSelecionado = gestor.Alunos.FirstOrDefault(a => a.Id == alunoId);
+
+                if (alunoSelecionado == null)
+                {
+                    MessageBox.Show("Erro: Aluno não encontrado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 // Buscar o nome da turma correspondente
                 string nomeTurma = "Turma não encontrada";
-                for (int j = 0; j < gestor.Turmas.Count; j++)
+                var turma = gestor.Turmas.FirstOrDefault(t => t.Id == alunoSelecionado.TurmaId);
+                if (turma != null)
                 {
-                    if (gestor.Turmas[j].Id == alunoSelecionado.TurmaId)
-                    {
-                        nomeTurma = gestor.Turmas[j].Id + " - " + gestor.Turmas[j].Curso;
-                        break;
-                    }
+                    nomeTurma = $"{turma.Id} - {turma.Curso}";
                 }
 
-                // Construir o histórico de notas do aluno manualmente
+                // Construir o histórico de notas do aluno
                 string historicoNotas = "Sem notas registradas";
-                List<string> notasLista = new List<string>();
-
-                for (int j = 0; j < gestor.Notas.Count; j++)
-                {
-                    Nota nota = gestor.Notas[j];
-
-                    if (nota.AlunoId == alunoSelecionado.Id)
+                var notasLista = gestor.Notas
+                    .Where(n => n.AlunoId == alunoSelecionado.Id)
+                    .Select(n =>
                     {
-                        // Buscar o nome da disciplina associada à nota
-                        string nomeDisciplina = "Disciplina não encontrada";
-                        for (int k = 0; k < gestor.Disciplinas.Count; k++)
-                        {
-                            if (gestor.Disciplinas[k].Id == nota.DisciplinaId)
-                            {
-                                nomeDisciplina = gestor.Disciplinas[k].Nome;
-                                break;
-                            }
-                        }
+                        var disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == n.DisciplinaId);
+                        return $"ID: {n.DisciplinaId} | {disciplina?.Nome ?? "Disciplina não encontrada"}: {n.ValorNota} ({n.PeriodoLetivo})";
+                    })
+                    .ToList();
 
-                        // Adicionar a nota ao histórico do aluno
-                        notasLista.Add("ID: " + nota.DisciplinaId + " | " + nomeDisciplina + ": " + nota.ValorNota + " (" + nota.PeriodoLetivo + ")");
-                    }
-                }
-
-                if (notasLista.Count > 0)
+                if (notasLista.Any())
                 {
                     historicoNotas = string.Join("\n", notasLista);
                 }
@@ -519,14 +560,22 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstAlunos.SelectedIndex == -1)
+                if (lstAlunos.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Selecione um aluno para editar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obter aluno selecionado
-                Aluno alunoSelecionado = gestor.Alunos[lstAlunos.SelectedIndex];
+                // Obter o item selecionado
+                var itemSelecionado = lstAlunos.SelectedItems[0];
+                int alunoId = int.Parse(itemSelecionado.Text); // O ID do aluno está na primeira coluna
+                Aluno alunoSelecionado = gestor.Alunos.FirstOrDefault(a => a.Id == alunoId);
+
+                if (alunoSelecionado == null)
+                {
+                    MessageBox.Show("Erro: Aluno não encontrado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 // Preencher os campos
                 txtIdAluno.Text = alunoSelecionado.Id.ToString();

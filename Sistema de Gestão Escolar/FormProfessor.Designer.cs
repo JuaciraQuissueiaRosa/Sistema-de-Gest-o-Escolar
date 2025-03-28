@@ -38,12 +38,12 @@
             txtEmailProfessor = new TextBox();
             btnAdicionarProfessor = new Button();
             btnRemoverProfessor = new Button();
-            lstProfessores = new ListBox();
             cmbAreaEnsino = new ComboBox();
             mtbContatoProfessor = new MaskedTextBox();
             btnEditarProfessor = new Button();
             btnConsultarProfessor = new Button();
             btnSalvarEdicaoProfessor = new Button();
+            lstProfessores = new ListView();
             SuspendLayout();
             // 
             // lblIdProfessor
@@ -132,14 +132,6 @@
             btnRemoverProfessor.UseVisualStyleBackColor = true;
             btnRemoverProfessor.Click += btnRemoverProfessor_Click;
             // 
-            // lstProfessores
-            // 
-            lstProfessores.FormattingEnabled = true;
-            lstProfessores.Location = new Point(527, 33);
-            lstProfessores.Name = "lstProfessores";
-            lstProfessores.Size = new Size(766, 424);
-            lstProfessores.TabIndex = 12;
-            // 
             // cmbAreaEnsino
             // 
             cmbAreaEnsino.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -187,17 +179,26 @@
             btnSalvarEdicaoProfessor.UseVisualStyleBackColor = true;
             btnSalvarEdicaoProfessor.Click += btnSalvarEdicaoProfessor_Click;
             // 
+            // lstProfessores
+            // 
+            lstProfessores.Location = new Point(545, 44);
+            lstProfessores.Name = "lstProfessores";
+            lstProfessores.Size = new Size(598, 401);
+            lstProfessores.TabIndex = 18;
+            lstProfessores.UseCompatibleStateImageBehavior = false;
+            lstProfessores.SelectedIndexChanged += lstProfessores_SelectedIndexChanged;
+            // 
             // FormProfessor
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1353, 604);
+            Controls.Add(lstProfessores);
             Controls.Add(btnSalvarEdicaoProfessor);
             Controls.Add(btnEditarProfessor);
             Controls.Add(btnConsultarProfessor);
             Controls.Add(mtbContatoProfessor);
             Controls.Add(cmbAreaEnsino);
-            Controls.Add(lstProfessores);
             Controls.Add(btnRemoverProfessor);
             Controls.Add(btnAdicionarProfessor);
             Controls.Add(txtEmailProfessor);
@@ -227,11 +228,11 @@
         private TextBox txtEmailProfessor;
         private Button btnAdicionarProfessor;
         private Button btnRemoverProfessor;
-        private ListBox lstProfessores;
         private ComboBox cmbAreaEnsino;
         private MaskedTextBox mtbContatoProfessor;
         private Button btnEditarProfessor;
         private Button btnConsultarProfessor;
         private Button btnSalvarEdicaoProfessor;
+        private ListView lstProfessores;
     }
 }
