@@ -36,7 +36,6 @@ namespace Sistema_de_Gestão_Escolar
             lblIdDisciplina = new Label();
             btnAdicionarDisciplina = new Button();
             btnRemoverDisciplina = new Button();
-            lstDisciplinas = new ListBox();
             btnConsultarDisciplina = new Button();
             btnEditarDisciplina = new Button();
             btnSalvarEdicaoDisciplina = new Button();
@@ -44,6 +43,7 @@ namespace Sistema_de_Gestão_Escolar
             cmbNomeDisciplina = new ComboBox();
             cmbCargaHoraria = new ComboBox();
             txtIdDisciplina = new TextBox();
+            lstDisciplinas = new ListView();
             SuspendLayout();
             // 
             // lblNomeDisciplina
@@ -101,15 +101,6 @@ namespace Sistema_de_Gestão_Escolar
             btnRemoverDisciplina.Text = "Remover disciplina selecionada";
             btnRemoverDisciplina.UseVisualStyleBackColor = true;
             btnRemoverDisciplina.Click += btnRemoverDisciplina_Click;
-            // 
-            // lstDisciplinas
-            // 
-            lstDisciplinas.FormattingEnabled = true;
-            lstDisciplinas.Location = new Point(576, 42);
-            lstDisciplinas.Name = "lstDisciplinas";
-            lstDisciplinas.Size = new Size(773, 404);
-            lstDisciplinas.TabIndex = 10;
-            lstDisciplinas.SelectedIndexChanged += lstDisciplinas_SelectedIndexChanged;
             // 
             // btnConsultarDisciplina
             // 
@@ -171,18 +162,26 @@ namespace Sistema_de_Gestão_Escolar
             txtIdDisciplina.Size = new Size(125, 27);
             txtIdDisciplina.TabIndex = 23;
             // 
+            // lstDisciplinas
+            // 
+            lstDisciplinas.Location = new Point(643, 42);
+            lstDisciplinas.Name = "lstDisciplinas";
+            lstDisciplinas.Size = new Size(456, 473);
+            lstDisciplinas.TabIndex = 24;
+            lstDisciplinas.UseCompatibleStateImageBehavior = false;
+            // 
             // FormDisciplina
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1412, 639);
+            Controls.Add(lstDisciplinas);
             Controls.Add(txtIdDisciplina);
             Controls.Add(cmbCargaHoraria);
             Controls.Add(cmbNomeDisciplina);
             Controls.Add(btnSalvarEdicaoDisciplina);
             Controls.Add(btnEditarDisciplina);
             Controls.Add(btnConsultarDisciplina);
-            Controls.Add(lstDisciplinas);
             Controls.Add(btnRemoverDisciplina);
             Controls.Add(btnAdicionarDisciplina);
             Controls.Add(txtProfessoresDisciplina);
@@ -206,7 +205,6 @@ namespace Sistema_de_Gestão_Escolar
 
         private Button btnAdicionarDisciplina;
         private Button btnRemoverDisciplina;
-        private ListBox lstDisciplinas;
 
 
         private Button btnConsultarDisciplina;
@@ -216,6 +214,7 @@ namespace Sistema_de_Gestão_Escolar
         private ComboBox cmbNomeDisciplina;
         private ComboBox cmbCargaHoraria;
         private TextBox txtIdDisciplina;
+        private ListView lstDisciplinas;
     }
 }
        
