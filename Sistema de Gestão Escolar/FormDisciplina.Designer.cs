@@ -30,7 +30,6 @@ namespace Sistema_de_Gestão_Escolar
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             lblNomeDisciplina = new Label();
             lblProfessoresDisc = new Label();
             lblCargaHoraria = new Label();
@@ -41,7 +40,6 @@ namespace Sistema_de_Gestão_Escolar
             btnConsultarDisciplina = new Button();
             btnEditarDisciplina = new Button();
             btnSalvarEdicaoDisciplina = new Button();
-          
             txtProfessoresDisciplina = new TextBox();
             cmbNomeDisciplina = new ComboBox();
             cmbCargaHoraria = new ComboBox();
@@ -111,6 +109,7 @@ namespace Sistema_de_Gestão_Escolar
             lstDisciplinas.Name = "lstDisciplinas";
             lstDisciplinas.Size = new Size(773, 404);
             lstDisciplinas.TabIndex = 10;
+            lstDisciplinas.SelectedIndexChanged += lstDisciplinas_SelectedIndexChanged;
             // 
             // btnConsultarDisciplina
             // 
@@ -141,10 +140,6 @@ namespace Sistema_de_Gestão_Escolar
             btnSalvarEdicaoDisciplina.Text = "Salvar disciplina editada";
             btnSalvarEdicaoDisciplina.UseVisualStyleBackColor = true;
             btnSalvarEdicaoDisciplina.Click += btnSalvarEdicaoDisciplina_Click;
-            // 
-            // colorPickerButton1
-            // 
-        
             // 
             // txtProfessoresDisciplina
             // 
@@ -184,7 +179,6 @@ namespace Sistema_de_Gestão_Escolar
             Controls.Add(txtIdDisciplina);
             Controls.Add(cmbCargaHoraria);
             Controls.Add(cmbNomeDisciplina);
-         
             Controls.Add(btnSalvarEdicaoDisciplina);
             Controls.Add(btnEditarDisciplina);
             Controls.Add(btnConsultarDisciplina);

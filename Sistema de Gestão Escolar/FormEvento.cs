@@ -22,40 +22,47 @@ namespace Sistema_de_Gestão_Escolar
         {
             InitializeComponent();
             this.gestor = gestor;
+            ConfigurarListView();
             AtualizarListaEventos();
             CarregarDados();
         }
 
+        // 🔄 Configura a ListView para eventos
+        private void ConfigurarListView()
+        {
+            lstEventos.View = View.Details;
+            lstEventos.FullRowSelect = true;
+            lstEventos.Columns.Add("Data", 100);
+            lstEventos.Columns.Add("Nome", 150);
+            lstEventos.Columns.Add("Participantes", 250);
+        }
         private void btnRemoverEvento_Click(object sender, EventArgs e)
         {
 
             if (eventoSelecionado == null)
             {
-                MessageBox.Show("Selecione um evento primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione um evento!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            DialogResult resultado = MessageBox.Show("Tem certeza que deseja remover este evento?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (resultado == DialogResult.Yes)
-            {
-                gestor.RemoverEvento(eventoSelecionado.Id);
-                AtualizarListaEventos();
-                LimparCampos();
-                MessageBox.Show("Evento removido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            gestor.RemoverEvento(eventoSelecionado.Id);
+            AtualizarListaEventos();
+            LimparCampos();
+            MessageBox.Show("Evento removido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+    
 
 
 
         private void btnSelecionarEvento_Click(object sender, EventArgs e)
         {
-            if (lstEventos.SelectedIndex == -1)
+            if (lstEventos.SelectedItems.Count == 0)
             {
                 MessageBox.Show("Selecione um evento!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            eventoSelecionado = gestor.Eventos[lstEventos.SelectedIndex];
+            eventoSelecionado = (Evento)lstEventos.SelectedItems[0].Tag;
             txtNomeEvento.Text = eventoSelecionado.Nome;
             txtDescricaoEvento.Text = eventoSelecionado.Descricao;
             dtpDataEvento.Value = eventoSelecionado.Data;
@@ -82,22 +89,16 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnAdicionarEvento_Click(object sender, EventArgs e)
         {
-            try
-            {
-                int id = gestor.Eventos.Count + 1;
-                string nome = txtNomeEvento.Text.Trim();
-                string descricao = txtDescricaoEvento.Text.Trim();
-                DateTime data = dtpDataEvento.Value;
+            int id = gestor.Eventos.Count + 1;
+            string nome = txtNomeEvento.Text.Trim();
+            string descricao = txtDescricaoEvento.Text.Trim();
+            DateTime data = dtpDataEvento.Value;
 
-                gestor.AdicionarEvento(id, nome, descricao, data);
-                AtualizarListaEventos();
-                MessageBox.Show("Evento cadastrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao adicionar evento: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            gestor.AdicionarEvento(id, nome, descricao, data);
+            AtualizarListaEventos();
+            MessageBox.Show("Evento cadastrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+    
 
 
 
@@ -105,6 +106,7 @@ namespace Sistema_de_Gestão_Escolar
         //-------------------------------------------
 
         // 🔄 Atualizar lista de eventos
+        // 🔄 Atualiza a ListView de eventos
         private void AtualizarListaEventos()
         {
             lstEventos.Items.Clear();
@@ -120,53 +122,57 @@ namespace Sistema_de_Gestão_Escolar
                     .Where(nome => !string.IsNullOrEmpty(nome)));
 
                 string participantes = $"Alunos: {alunos} | Professores: {professores}";
-                lstEventos.Items.Add($"{evento.Data:dd/MM/yyyy} - {evento.Nome} ({participantes})");
+
+                ListViewItem item = new ListViewItem(evento.Data.ToString("dd/MM/yyyy"));
+                item.SubItems.Add(evento.Nome);
+                item.SubItems.Add(participantes);
+                item.Tag = evento;
+
+                lstEventos.Items.Add(item);
             }
         }
 
         // 🔄 Atualizar lista de alunos e professores participantes
         private void AtualizarListaParticipantes()
         {
-            lstAlunos.Items.Clear();
-            lstProfessores.Items.Clear();
-
             if (eventoSelecionado == null) return;
 
-            foreach (var alunoId in eventoSelecionado.AlunosIds)
-            {
-                Aluno aluno = gestor.Alunos.FirstOrDefault(a => a.Id == alunoId);
-                if (aluno != null)
-                    lstAlunos.Items.Add(aluno.Nome);
-            }
-
-            foreach (var professorId in eventoSelecionado.ProfessoresIds)
-            {
-                Professor professor = gestor.Professores.FirstOrDefault(p => p.Id == professorId);
-                if (professor != null)
-                    lstProfessores.Items.Add(professor.Nome);
-            }
+            AtualizarListaEventos(); // 🔄 Garante que o evento exibe os participantes certos
         }
-        // 🔄 Carregar Alunos e Professores disponíveis
-        private void CarregarDados()
+
+        private void AtualizarListaAlunos()
         {
-
-
-            // Adicionar alunos na ListBox (disponíveis)
             lstAlunos.Items.Clear();
             foreach (var aluno in gestor.Alunos)
             {
-                lstAlunos.Items.Add(aluno.Nome);
-            }
-
-            // Adicionar professores na ListBox (disponíveis)
-            lstProfessores.Items.Clear();
-            foreach (var professor in gestor.Professores)
-            {
-                lstProfessores.Items.Add(professor.Nome);
+                if (eventoSelecionado == null || !eventoSelecionado.AlunosIds.Contains(aluno.Id))
+                {
+                    lstAlunos.Items.Add(aluno.Nome);
+                }
             }
         }
 
+        private void AtualizarListaProfessores()
+        {
+            lstProfessores.Items.Clear();
+            foreach (var professor in gestor.Professores)
+            {
+                if (eventoSelecionado == null || !eventoSelecionado.ProfessoresIds.Contains(professor.Id))
+                {
+                    lstProfessores.Items.Add(professor.Nome);
+                }
+            }
+        }
+        // 🔄 Carregar Alunos e Professores disponíveis
+        // 📥 Carrega os dados iniciais na lista de alunos e professores
+        private void CarregarDados()
+        {
+            AtualizarListaAlunos();
+            AtualizarListaProfessores();
+        }
+
         // 🗑 Limpar campos
+        // 🗑 Limpa os campos do formulário
         private void LimparCampos()
         {
             txtNomeEvento.Text = "";
@@ -176,7 +182,6 @@ namespace Sistema_de_Gestão_Escolar
             lstProfessores.Items.Clear();
             eventoSelecionado = null;
         }
-
         private void lstAlunos_DoubleClick(object sender, EventArgs e)
         {
             if (lstAlunos.SelectedItem == null || eventoSelecionado == null)
@@ -189,20 +194,16 @@ namespace Sistema_de_Gestão_Escolar
             {
                 if (eventoSelecionado.AlunosIds.Contains(alunoSelecionado.Id))
                 {
-                    // Remove o aluno se já estiver no evento
                     eventoSelecionado.AlunosIds.Remove(alunoSelecionado.Id);
-                    MessageBox.Show($"Aluno {alunoSelecionado.Nome} removido do evento!", "Removido", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    // Adiciona o aluno se ainda não estiver no evento
                     eventoSelecionado.AlunosIds.Add(alunoSelecionado.Id);
-                    MessageBox.Show($"Aluno {alunoSelecionado.Nome} adicionado ao evento!", "Adicionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
 
             gestor.SalvarDados();
-            AtualizarListaParticipantes();
+            AtualizarListaAlunos();
             AtualizarListaEventos();
         }
 
@@ -218,20 +219,16 @@ namespace Sistema_de_Gestão_Escolar
             {
                 if (eventoSelecionado.ProfessoresIds.Contains(professorSelecionado.Id))
                 {
-                    // Remove o professor se já estiver no evento
                     eventoSelecionado.ProfessoresIds.Remove(professorSelecionado.Id);
-                    MessageBox.Show($"Professor {professorSelecionado.Nome} removido do evento!", "Removido", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    // Adiciona o professor se ainda não estiver no evento
                     eventoSelecionado.ProfessoresIds.Add(professorSelecionado.Id);
-                    MessageBox.Show($"Professor {professorSelecionado.Nome} adicionado ao evento!", "Adicionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
 
             gestor.SalvarDados();
-            AtualizarListaParticipantes();
+            AtualizarListaProfessores();
             AtualizarListaEventos();
         }
 
@@ -271,6 +268,19 @@ namespace Sistema_de_Gestão_Escolar
             button.FlatAppearance.BorderSize = 0;
         }
 
+        private void lstEventos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstEventos.SelectedItems.Count == 0) return;
+
+            eventoSelecionado = (Evento)lstEventos.SelectedItems[0].Tag;
+            txtNomeEvento.Text = eventoSelecionado.Nome;
+            txtDescricaoEvento.Text = eventoSelecionado.Descricao;
+            dtpDataEvento.Value = eventoSelecionado.Data;
+
+            AtualizarListaAlunos();
+            AtualizarListaProfessores();
+        }
     }
+    
 }
 

@@ -128,9 +128,9 @@
             // 
             // btnRemoverTurma
             // 
-            btnRemoverTurma.Location = new Point(885, 532);
+            btnRemoverTurma.Location = new Point(1012, 390);
             btnRemoverTurma.Name = "btnRemoverTurma";
-            btnRemoverTurma.Size = new Size(139, 63);
+            btnRemoverTurma.Size = new Size(159, 63);
             btnRemoverTurma.TabIndex = 13;
             btnRemoverTurma.Text = "Remover turma selecionada";
             btnRemoverTurma.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@
             // 
             // btnAdicionarTurma
             // 
-            btnAdicionarTurma.Location = new Point(672, 530);
+            btnAdicionarTurma.Location = new Point(1012, 295);
             btnAdicionarTurma.Name = "btnAdicionarTurma";
             btnAdicionarTurma.Size = new Size(156, 59);
             btnAdicionarTurma.TabIndex = 14;
@@ -157,9 +157,9 @@
             // 
             // btnEditarTurma
             // 
-            btnEditarTurma.Location = new Point(885, 656);
+            btnEditarTurma.Location = new Point(1012, 586);
             btnEditarTurma.Name = "btnEditarTurma";
-            btnEditarTurma.Size = new Size(149, 59);
+            btnEditarTurma.Size = new Size(156, 59);
             btnEditarTurma.TabIndex = 18;
             btnEditarTurma.Text = "Editar turma";
             btnEditarTurma.UseVisualStyleBackColor = true;
@@ -167,7 +167,7 @@
             // 
             // btnConsultarTurma
             // 
-            btnConsultarTurma.Location = new Point(672, 656);
+            btnConsultarTurma.Location = new Point(1012, 688);
             btnConsultarTurma.Name = "btnConsultarTurma";
             btnConsultarTurma.Size = new Size(156, 59);
             btnConsultarTurma.TabIndex = 19;
@@ -177,9 +177,9 @@
             // 
             // btnSalvarEdicaoTurma
             // 
-            btnSalvarEdicaoTurma.Location = new Point(1069, 534);
+            btnSalvarEdicaoTurma.Location = new Point(1012, 486);
             btnSalvarEdicaoTurma.Name = "btnSalvarEdicaoTurma";
-            btnSalvarEdicaoTurma.Size = new Size(135, 59);
+            btnSalvarEdicaoTurma.Size = new Size(159, 59);
             btnSalvarEdicaoTurma.TabIndex = 22;
             btnSalvarEdicaoTurma.Text = "Salvar edição turma";
             btnSalvarEdicaoTurma.UseVisualStyleBackColor = true;
@@ -188,7 +188,7 @@
             // lstDisciplinasTurma
             // 
             lstDisciplinasTurma.FormattingEnabled = true;
-            lstDisciplinasTurma.Location = new Point(19, 517);
+            lstDisciplinasTurma.Location = new Point(18, 480);
             lstDisciplinasTurma.Name = "lstDisciplinasTurma";
             lstDisciplinasTurma.SelectionMode = SelectionMode.MultiExtended;
             lstDisciplinasTurma.Size = new Size(286, 304);
@@ -197,7 +197,7 @@
             // lstProfessoresTurma
             // 
             lstProfessoresTurma.FormattingEnabled = true;
-            lstProfessoresTurma.Location = new Point(324, 517);
+            lstProfessoresTurma.Location = new Point(345, 480);
             lstProfessoresTurma.Name = "lstProfessoresTurma";
             lstProfessoresTurma.SelectionMode = SelectionMode.MultiExtended;
             lstProfessoresTurma.Size = new Size(291, 304);
@@ -206,7 +206,7 @@
             // lblProfessores
             // 
             lblProfessores.AutoSize = true;
-            lblProfessores.Location = new Point(324, 481);
+            lblProfessores.Location = new Point(345, 444);
             lblProfessores.Name = "lblProfessores";
             lblProfessores.Size = new Size(165, 20);
             lblProfessores.TabIndex = 21;
@@ -215,7 +215,7 @@
             // lblDisciplinas
             // 
             lblDisciplinas.AutoSize = true;
-            lblDisciplinas.Location = new Point(27, 481);
+            lblDisciplinas.Location = new Point(26, 444);
             lblDisciplinas.Name = "lblDisciplinas";
             lblDisciplinas.Size = new Size(161, 20);
             lblDisciplinas.TabIndex = 25;
@@ -223,7 +223,7 @@
             // 
             // lstTurmas
             // 
-            lstTurmas.Location = new Point(648, 41);
+            lstTurmas.Location = new Point(463, 19);
             lstTurmas.Name = "lstTurmas";
             lstTurmas.Size = new Size(471, 411);
             lstTurmas.TabIndex = 26;
@@ -234,7 +234,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1446, 879);
+            ClientSize = new Size(1446, 796);
             Controls.Add(lstTurmas);
             Controls.Add(lblDisciplinas);
             Controls.Add(lstProfessoresTurma);

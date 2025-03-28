@@ -18,6 +18,7 @@ namespace Sistema_de_Gestão_Escolar
 
         }
 
+     
         private void btnRemoverTurma_Click(object sender, EventArgs e)
         {
             try
@@ -102,6 +103,8 @@ namespace Sistema_de_Gestão_Escolar
                     MessageBox.Show("Erro: Selecione pelo menos um professor!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
+             
 
                 // ✅ Criar e adicionar turma
                 gestor.Turmas.Add(new Turma(id, curso, anoLetivo, turno)
@@ -445,20 +448,17 @@ namespace Sistema_de_Gestão_Escolar
                     turmaSelecionada.DisciplinasIds.Add(disciplinaId);
                 }
 
-                // Aqui, você deve associar os professores às disciplinas de forma indireta.
-                // Exemplo: se você tem uma lista de professores para cada disciplina, adicione a lógica de associação.
+               
 
-                // Para cada disciplina associada à turma, adicione os professores associados
+                // Associar professores às disciplinas
                 foreach (var disciplinaId in turmaSelecionada.DisciplinasIds)
                 {
                     var disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
                     if (disciplina != null)
                     {
-                        // Atualizar os professores dessa disciplina, se necessário
-                        // Exemplo: Adicionar ou remover professores dessa disciplina
                         foreach (var professorId in lstProfessoresTurma.SelectedItems)
                         {
-                            int idProfessor = int.Parse(professorId.ToString().Split(' ')[0]); // Extrair o ID do professor
+                            int idProfessor = int.Parse(professorId.ToString().Split(' ')[0]);
                             if (!disciplina.ProfessoresIds.Contains(idProfessor))
                             {
                                 disciplina.ProfessoresIds.Add(idProfessor);
@@ -469,13 +469,9 @@ namespace Sistema_de_Gestão_Escolar
 
                 // Salvar os dados atualizados
                 gestor.SalvarDados();
-
-                // Atualizar a ListView com os novos dados da turma
                 AtualizarListaTurmas();
-
-                // Exibir uma mensagem de sucesso
                 MessageBox.Show("Turma editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                btnSalvarEdicaoTurma.Enabled = false; // Desabilitar o botão após salvar
+                btnSalvarEdicaoTurma.Enabled = false;
             }
             catch (Exception ex)
             {

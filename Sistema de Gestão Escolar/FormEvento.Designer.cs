@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lstEventos = new ListBox();
             btnAdicionarEvento = new Button();
             btnRemoverEvento = new Button();
             txtNomeEvento = new TextBox();
@@ -42,15 +41,8 @@
             btnSelecionarEvento = new Button();
             lstAlunos = new ListBox();
             lstProfessores = new ListBox();
+            lstEventos = new ListView();
             SuspendLayout();
-            // 
-            // lstEventos
-            // 
-            lstEventos.FormattingEnabled = true;
-            lstEventos.Location = new Point(24, 46);
-            lstEventos.Name = "lstEventos";
-            lstEventos.Size = new Size(480, 244);
-            lstEventos.TabIndex = 2;
             // 
             // btnAdicionarEvento
             // 
@@ -168,11 +160,21 @@
             lstProfessores.TabIndex = 23;
             lstProfessores.DoubleClick += lstProfessores_DoubleClick;
             // 
+            // lstEventos
+            // 
+            lstEventos.Location = new Point(24, 67);
+            lstEventos.Name = "lstEventos";
+            lstEventos.Size = new Size(426, 226);
+            lstEventos.TabIndex = 24;
+            lstEventos.UseCompatibleStateImageBehavior = false;
+            lstEventos.SelectedIndexChanged += lstEventos_SelectedIndexChanged;
+            // 
             // FormEvento
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1132, 807);
+            Controls.Add(lstEventos);
             Controls.Add(lstProfessores);
             Controls.Add(lstAlunos);
             Controls.Add(btnSelecionarEvento);
@@ -186,7 +188,6 @@
             Controls.Add(txtNomeEvento);
             Controls.Add(btnRemoverEvento);
             Controls.Add(btnAdicionarEvento);
-            Controls.Add(lstEventos);
             Name = "FormEvento";
             Text = "FormEvento";
             Load += FormEvento_Load;
@@ -195,7 +196,6 @@
         }
 
         #endregion
-        private ListBox lstEventos;
         private Button btnAdicionarEvento;
         private Button btnRemoverEvento;
         private TextBox txtNomeEvento;
@@ -209,5 +209,6 @@
         private Button btnSelecionarEvento;
         private ListBox lstAlunos;
         private ListBox lstProfessores;
+        private ListView lstEventos;
     }
 }

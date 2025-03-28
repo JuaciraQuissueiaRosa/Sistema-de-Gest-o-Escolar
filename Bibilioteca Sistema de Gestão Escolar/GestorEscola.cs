@@ -442,7 +442,56 @@ public class GestorEscola
         {
             return false; // Em caso de erro, retorna falso sem quebrar o sistema
         }
+
+     
     }
 
-   
+    // Método para verificar se o professor pode lecionar uma disciplina
+    // Método para verificar se o professor pode lecionar uma disciplina
+    // Método para verificar se o professor pode lecionar uma disciplina
+    public bool PodeLecionarDisciplina(int professorId, int disciplinaId, out string mensagemErro)
+    {
+        mensagemErro = string.Empty; // Inicializar a mensagem de erro como vazia
+        var professor = Professores.FirstOrDefault(p => p.Id == professorId);
+        var disciplina = Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
+
+        // Se o professor ou a disciplina não existirem, retornar false e a mensagem de erro
+        if (professor == null || disciplina == null)
+        {
+            mensagemErro = "Erro: Professor ou disciplina não encontrados.";
+            return false;
+        }
+
+        // Mapeamento das áreas de ensino e as disciplinas que podem ser lecionadas
+        Dictionary<string, List<string>> mapeamentoAreaDisciplinas = new Dictionary<string, List<string>>
+    {
+        { "Línguas e Humanidades", new List<string> { "Português", "Inglês", "Francês", "Espanhol", "Filosofia", "História" } },
+        { "Ciências e Tecnologias", new List<string> { "Matemática", "Física e Química", "Biologia e Geologia", "Geometria Descritiva", "Programação", "Robótica" } },
+        { "Ciências Socioeconómicas", new List<string> { "Economia", "Geografia", "Sociologia", "Direito" } },
+        { "Artes Visuais", new List<string> { "Educação Visual", "Desenho", "História da Cultura e das Artes" } },
+        { "Educação Física e Desporto", new List<string> { "Educação Física", "Ciências do Desporto" } },
+        { "Informática e Tecnologias", new List<string> { "Tecnologias de Informação e Comunicação (TIC)", "Programação", "Robótica" } }
+    };
+
+        // Verificar se a área do professor está no mapeamento
+        if (mapeamentoAreaDisciplinas.ContainsKey(professor.AreaEnsino))
+        {
+            // Verificar se a disciplina está na lista de disciplinas compatíveis com a área do professor
+            if (mapeamentoAreaDisciplinas[professor.AreaEnsino].Contains(disciplina.Nome))
+            {
+                return true; // O professor pode lecionar a disciplina
+            }
+            else
+            {
+                mensagemErro = $"Erro: O professor {professor.Nome} não pode lecionar a disciplina {disciplina.Nome} porque ela não corresponde à sua área de ensino ({professor.AreaEnsino}).";
+                return false;
+            }
+        }
+        else
+        {
+            mensagemErro = $"Erro: A área de ensino '{professor.AreaEnsino}' do professor {professor.Nome} não está mapeada para nenhuma disciplina válida.";
+            return false;
+        }
+    }
+
 }
