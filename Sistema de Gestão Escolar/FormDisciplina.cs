@@ -366,17 +366,34 @@ namespace Sistema_de_Gestão_Escolar
                 }
 
                 // ✅ Capturar IDs dos professores
-                List<int> novosProfessoresIds = cmbCargaHoraria.Text
-                    .Split(',')
-                    .Select(p => p.Trim()) // Remover espaços extras
-                    .Where(p => int.TryParse(p, out _)) // Verificar se é número válido
-                    .Select(int.Parse) // Converter para inteiro
-                    .Where(pid => gestor.Professores.Any(p => p.Id == pid)) // Verificar se o professor existe
-                    .ToList();
+                string professoresTexto = txtProfessoresDisciplina.Text.Trim();
+                List<int> novosProfessoresIds = new List<int>();
 
-                if (!string.IsNullOrWhiteSpace(cmbCargaHoraria.Text) && novosProfessoresIds.Count == 0)
+                if (!string.IsNullOrEmpty(professoresTexto))
                 {
-                    MessageBox.Show("Erro: Um ou mais IDs de professores são inválidos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string[] idsTexto = professoresTexto.Split(',');
+
+                    foreach (string idStr in idsTexto)
+                    {
+                        if (int.TryParse(idStr.Trim(), out int professorId))
+                        {
+                            if (!gestor.Professores.Any(p => p.Id == professorId))
+                            {
+                                MessageBox.Show($"Erro: O professor com ID {professorId} não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                return;
+                            }
+                            novosProfessoresIds.Add(professorId);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Erro: O ID '{idStr}' não é válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Erro: Pelo menos um professor deve ser informado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -384,7 +401,6 @@ namespace Sistema_de_Gestão_Escolar
                 disciplinaSelecionada.Nome = novoNome;
                 disciplinaSelecionada.CargaHoraria = novaCargaHoraria;
                 disciplinaSelecionada.ProfessoresIds = novosProfessoresIds;
-
 
                 // ✅ Salvar os dados após editar disciplina 
                 gestor.SalvarDados();

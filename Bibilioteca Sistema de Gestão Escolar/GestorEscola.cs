@@ -443,4 +443,6 @@ public class GestorEscola
             return false; // Em caso de erro, retorna falso sem quebrar o sistema
         }
     }
+
+   
 }

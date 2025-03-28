@@ -45,6 +45,14 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
+                // 📌 ✅ Verificação da idade mínima (12 anos)
+                int idade = CalcularIdade(dataNascimento);
+                if (idade < 12)
+                {
+                    MessageBox.Show("Erro: O aluno deve ter pelo menos 12 anos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 string contato = txtContatoAluno.Text.Trim();
                 if (!ValidarContato(contato))
                 {
@@ -82,7 +90,6 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show($"Erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-          
 
         }
 
@@ -384,6 +391,7 @@ namespace Sistema_de_Gestão_Escolar
 
                 // Garantir que o ID original seja mantido
                 int idOriginal = alunoSelecionado.Id;
+
                 // Validar nome
                 string novoNome = txtNomeAluno.Text.Trim();
                 if (string.IsNullOrEmpty(novoNome))
@@ -394,6 +402,14 @@ namespace Sistema_de_Gestão_Escolar
 
                 // Validar data de nascimento
                 DateTime novaDataNascimento = dtpNascimentoAluno.Value;
+
+                // 📌 ✅ Verificação da idade mínima (12 anos) ao editar
+                int idade = CalcularIdade(novaDataNascimento);
+                if (idade < 12)
+                {
+                    MessageBox.Show("Erro: O aluno deve ter pelo menos 12 anos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 // Validar contato
                 string novoContato = txtContatoAluno.Text.Trim();
@@ -431,7 +447,6 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show("Erro ao salvar alterações do aluno: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
 
         }
 
@@ -531,6 +546,13 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show("Erro ao carregar aluno para edição: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private int CalcularIdade(DateTime dataNascimento)
+        {
+            int idade = DateTime.Now.Year - dataNascimento.Year;
+            if (DateTime.Now < dataNascimento.AddYears(idade)) idade--;
+            return idade;
         }
     }
 }

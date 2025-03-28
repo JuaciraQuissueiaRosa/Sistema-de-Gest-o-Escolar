@@ -37,16 +37,20 @@ public class GestorPersistencia
             }
         }
 
-        // Carregar professores
-        if (File.Exists(CaminhoArquivo("professores.txt")))
+        // 📌 Carregar Professores
+        string caminhoProfessores = CaminhoArquivo("professores.txt");
+        if (File.Exists(caminhoProfessores))
         {
-            foreach (var linha in File.ReadAllLines(CaminhoArquivo("professores.txt")))
+            foreach (var linha in File.ReadAllLines(caminhoProfessores))
             {
                 var partes = linha.Split(';');
-                if (partes.Length == 6)
+                if (partes.Length >= 5)
                 {
                     var professor = new Professor(int.Parse(partes[0]), partes[1], partes[2], partes[3], partes[4]);
-                    professor.DisciplinasIds = partes[5].Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+
+                    if (partes.Length > 5)
+                        professor.DisciplinasIds = partes[5].Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+
                     professores.Add(professor);
                 }
             }
@@ -160,13 +164,17 @@ public class GestorPersistencia
         }
 
         // Salvar professores
-        using (StreamWriter sw = new StreamWriter(CaminhoArquivo("professores.txt")))
+        // 📌 Salvar Professores
+        string caminhoProfessores = CaminhoArquivo("professores.txt");
+        using (StreamWriter sw = new StreamWriter(caminhoProfessores, false))
         {
             foreach (var professor in professores)
             {
-                sw.WriteLine($"{professor.Id};{professor.Nome};{professor.Contato};{professor.Email};{professor.AreaEnsino}");
+                string disciplinasIds = professor.DisciplinasIds != null ? string.Join(",", professor.DisciplinasIds) : "";
+                sw.WriteLine($"{professor.Id};{professor.Nome};{professor.Contato};{professor.Email};{professor.AreaEnsino};{disciplinasIds}");
             }
         }
+    
 
         // Salvar disciplinas
         using (StreamWriter sw = new StreamWriter(CaminhoArquivo("disciplinas.txt")))
