@@ -452,6 +452,8 @@ public class GestorEscola
     public bool PodeLecionarDisciplina(int professorId, int disciplinaId, out string mensagemErro)
     {
         mensagemErro = string.Empty; // Inicializar a mensagem de erro como vazia
+
+        // Procurar professor e disciplina pelo ID
         var professor = Professores.FirstOrDefault(p => p.Id == professorId);
         var disciplina = Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
 

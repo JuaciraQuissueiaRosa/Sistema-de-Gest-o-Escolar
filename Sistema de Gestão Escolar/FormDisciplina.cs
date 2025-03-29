@@ -31,6 +31,7 @@ namespace Sistema_de_Gestão_Escolar
                     MessageBox.Show("Erro: Já existe uma disciplina com esse ID!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+
                 // Validar nome da disciplina
                 if (cmbNomeDisciplina.SelectedItem == null)
                 {
@@ -39,12 +40,20 @@ namespace Sistema_de_Gestão_Escolar
                 }
                 string nomeDisciplina = cmbNomeDisciplina.SelectedItem.ToString();
 
+                // Verificar se o nome da disciplina já existe
+                if (gestor.Disciplinas.Any(d => d.Nome.Equals(nomeDisciplina, StringComparison.OrdinalIgnoreCase)))
+                {
+                    MessageBox.Show("Erro: Já existe uma disciplina com esse nome!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // Validar carga horária
                 if (!int.TryParse(cmbCargaHoraria.SelectedItem?.ToString(), out int cargaHoraria))
                 {
                     MessageBox.Show("Erro: Selecione uma carga horária válida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
                 // Criar nova disciplina
                 Disciplina novaDisciplina = new Disciplina(id, nomeDisciplina, cargaHoraria);
 
@@ -55,10 +64,27 @@ namespace Sistema_de_Gestão_Escolar
                     .Select(int.Parse)
                     .ToList();
 
-                if (professoresIds.Any())
+                List<string> mensagensErroProfessores = new List<string>();
+
+                foreach (var professorId in professoresIds)
                 {
-                    novaDisciplina.ProfessoresIds = professoresIds;
+                    // Verificar se o professor pode lecionar a disciplina
+                    if (gestor.PodeLecionarDisciplina(professorId, id, out string mensagemErro))
+                    {
+                        novaDisciplina.ProfessoresIds.Add(professorId);
+                    }
+                    else
+                    {
+                        mensagensErroProfessores.Add(mensagemErro);
+                    }
                 }
+
+                if (mensagensErroProfessores.Any())
+                {
+                    MessageBox.Show(string.Join("\n", mensagensErroProfessores), "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 // Adicionar disciplina ao sistema
                 gestor.Disciplinas.Add(novaDisciplina);
                 gestor.SalvarDados();
@@ -104,27 +130,23 @@ namespace Sistema_de_Gestão_Escolar
 
         private void AtualizarListaDisciplinas()
         {
-            try
-            {
-                lstDisciplinas.Items.Clear();
+            lstDisciplinas.Items.Clear();
 
-                foreach (var disciplina in gestor.Disciplinas)
+            foreach (var disciplina in gestor.Disciplinas)
+            {
+                string professoresNomes = string.Join(", ", disciplina.ProfessoresIds
+                    .Select(id => gestor.Professores.FirstOrDefault(p => p.Id == id)?.Nome ?? "Desconhecido"));
+
+                var item = new ListViewItem(new[]
                 {
-                    List<string> professoresNomes = new List<string>();
-                    foreach (var profId in disciplina.ProfessoresIds)
-                    {
-                        var professor = gestor.Professores.FirstOrDefault(p => p.Id == profId);
-                        professoresNomes.Add(professor != null ? $"{profId} - {professor.Nome}" : $"{profId} - Desconhecido");
-                    }
+            disciplina.Id.ToString(),
+            disciplina.Nome,
+            disciplina.CargaHoraria.ToString(),
+            professoresNomes // Mostrar nomes dos professores
+        });
 
-                    string professoresTexto = professoresNomes.Any() ? string.Join(", ", professoresNomes) : "Nenhum";
-                    string infoDisciplina = $"ID: {disciplina.Id} | Nome: {disciplina.Nome} | Carga Horária: {disciplina.CargaHoraria}h/semana | Professores: {professoresTexto}";
-                    lstDisciplinas.Items.Add(infoDisciplina);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao atualizar lista de disciplinas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                item.Tag = disciplina.Id;
+                lstDisciplinas.Items.Add(item);
             }
         }
 
@@ -162,16 +184,15 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show($"Erro ao carregar formulário de disciplinas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             lstDisciplinas.GridLines = true;
+            lstDisciplinas.View = View.Details;
+            lstDisciplinas.FullRowSelect = true;
+
             lstDisciplinas.Columns.Clear();
-            lstDisciplinas.Columns.Add("ID", 1200);
-         
-
-            lstDisciplinas.View = View.Details; // Exibir detalhes com colunas
-            lstDisciplinas.FullRowSelect = true; // Selecionar a linha toda
-          
-
+            lstDisciplinas.Columns.Add("ID", 80);
+            lstDisciplinas.Columns.Add("Nome", 200);
+            lstDisciplinas.Columns.Add("Carga Horária", 120);
+            lstDisciplinas.Columns.Add("Professores", 250);
 
         }
 
@@ -226,24 +247,41 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstDisciplinas.SelectedItems.Count == 0) return;
-
-                ListViewItem itemSelecionado = lstDisciplinas.SelectedItems[0];
-                int idDisciplina = int.Parse(itemSelecionado.SubItems[0].Text);
-                var disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == idDisciplina);
-
-                if (disciplina != null)
+                // Verificar se uma disciplina foi selecionada
+                if (lstDisciplinas.SelectedItems.Count == 0)
                 {
-                    txtIdDisciplina.Text = disciplina.Id.ToString();
-                    cmbNomeDisciplina.SelectedItem = disciplina.Nome;
-                    cmbCargaHoraria.SelectedItem = disciplina.CargaHoraria.ToString();
-                    txtProfessoresDisciplina.Text = string.Join(",", disciplina.ProfessoresIds);
-                    btnSalvarEdicaoDisciplina.Enabled = true;
+                    MessageBox.Show("Erro: Selecione uma disciplina para editar!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
+
+                // Obter o ID da disciplina selecionada
+                int idDisciplinaSelecionada = int.Parse(lstDisciplinas.SelectedItems[0].SubItems[0].Text);
+                Disciplina disciplinaSelecionada = gestor.Disciplinas.FirstOrDefault(d => d.Id == idDisciplinaSelecionada);
+
+                if (disciplinaSelecionada == null)
+                {
+                    MessageBox.Show("Erro: Disciplina não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Preencher os campos com os dados da disciplina
+                txtIdDisciplina.Text = disciplinaSelecionada.Id.ToString();
+                cmbNomeDisciplina.SelectedItem = disciplinaSelecionada.Nome;
+                cmbCargaHoraria.SelectedItem = disciplinaSelecionada.CargaHoraria.ToString();
+
+                // Preencher os IDs dos professores
+                txtProfessoresDisciplina.Text = string.Join(",", disciplinaSelecionada.ProfessoresIds);
+
+                // Habilitar o campo para edição
+                btnSalvarEdicaoDisciplina.Enabled = true;
+                btnAdicionarDisciplina.Enabled = false;
+
+                // Marcar a disciplina em edição
+                txtIdDisciplina.Tag = disciplinaSelecionada.Id;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar disciplina: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao editar disciplina: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -251,35 +289,103 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                int idDisciplina = int.Parse(txtIdDisciplina.Text.Trim());
-                var disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == idDisciplina);
-
-                if (disciplina != null)
+                // Verificar se há uma disciplina em edição
+                if (txtIdDisciplina.Tag == null)
                 {
-                    disciplina.Nome = cmbNomeDisciplina.SelectedItem.ToString();
-                    disciplina.CargaHoraria = int.Parse(cmbCargaHoraria.SelectedItem.ToString());
-
-                    List<int> professoresIds = txtProfessoresDisciplina.Text.Split(',')
-                        .Select(p => p.Trim())
-                        .Where(p => int.TryParse(p, out _))
-                        .Select(int.Parse)
-                        .ToList();
-
-                    disciplina.ProfessoresIds = professoresIds;
-
-                    gestor.SalvarDados();
-                    AtualizarListaDisciplinas();
-                    MessageBox.Show("Alterações salvas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Erro: Nenhuma disciplina está em edição!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-                else
+
+                // Obter o ID da disciplina em edição
+                int disciplinaId = (int)txtIdDisciplina.Tag;
+                Disciplina disciplinaEditada = gestor.Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
+
+                if (disciplinaEditada == null)
                 {
                     MessageBox.Show("Erro: Disciplina não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
+
+                // Validar nome da disciplina
+                if (cmbNomeDisciplina.SelectedItem == null)
+                {
+                    MessageBox.Show("Erro: Selecione uma disciplina válida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                string nomeDisciplina = cmbNomeDisciplina.SelectedItem.ToString();
+
+                // Verificar se o nome da disciplina já existe (exceto para a disciplina sendo editada)
+                if (gestor.Disciplinas.Any(d => d.Nome.Equals(nomeDisciplina, StringComparison.OrdinalIgnoreCase) && d.Id != disciplinaId))
+                {
+                    MessageBox.Show("Erro: Já existe uma disciplina com esse nome!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Validar carga horária
+                if (!int.TryParse(cmbCargaHoraria.SelectedItem?.ToString(), out int cargaHoraria))
+                {
+                    MessageBox.Show("Erro: Selecione uma carga horária válida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Atualizar os valores da disciplina
+                disciplinaEditada.Nome = nomeDisciplina;
+                disciplinaEditada.CargaHoraria = cargaHoraria;
+
+                // Atualizar os professores
+                List<int> professoresIds = txtProfessoresDisciplina.Text.Split(",")
+                    .Select(p => p.Trim())
+                    .Where(p => int.TryParse(p, out _))
+                    .Select(int.Parse)
+                    .ToList();
+
+                List<string> mensagensErroProfessores = new List<string>();
+
+                foreach (var professorId in professoresIds)
+                {
+                    // Verificar se o professor pode lecionar a disciplina
+                    if (gestor.PodeLecionarDisciplina(professorId, disciplinaId, out string mensagemErro))
+                    {
+                        // Atualiza os professores da disciplina
+                        disciplinaEditada.ProfessoresIds.Add(professorId);
+                    }
+                    else
+                    {
+                        mensagensErroProfessores.Add(mensagemErro);
+                    }
+                }
+
+                if (mensagensErroProfessores.Any())
+                {
+                    MessageBox.Show(string.Join("\n", mensagensErroProfessores), "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Salvar as mudanças
+                gestor.SalvarDados();
+
+                // Atualizar a lista de disciplinas
+                AtualizarListaDisciplinas();
+
+                // Limpar os campos e desativar o modo edição
+                txtIdDisciplina.Clear();
+                txtIdDisciplina.Enabled = true;
+                cmbNomeDisciplina.SelectedIndex = -1;
+                cmbCargaHoraria.SelectedIndex = -1;
+                txtProfessoresDisciplina.Clear();
+                txtIdDisciplina.Tag = null;
+
+                // Restaurar os botões
+                btnSalvarEdicaoDisciplina.Enabled = false;
+                btnAdicionarDisciplina.Enabled = true;
+
+                MessageBox.Show("Disciplina editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao salvar alterações: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao salvar edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
         }
 
         private void cmbNomeDisciplina_SelectedIndexChanged(object sender, EventArgs e)
@@ -310,7 +416,7 @@ namespace Sistema_de_Gestão_Escolar
                     cmbCargaHoraria.SelectedItem = disciplinaSelecionada.CargaHoraria.ToString();
 
                     // Preencher lista de professores associados
-                    cmbCargaHoraria.Text = string.Join(", ", disciplinaSelecionada.ProfessoresIds);
+                    txtProfessoresDisciplina.Text = string.Join(", ", disciplinaSelecionada.ProfessoresIds);
 
                     // Habilitar o botão de salvar alteração
                     btnSalvarEdicaoDisciplina.Enabled = true;

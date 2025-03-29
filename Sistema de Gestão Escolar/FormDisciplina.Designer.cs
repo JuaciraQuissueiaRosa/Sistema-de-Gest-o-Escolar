@@ -94,7 +94,7 @@ namespace Sistema_de_Gestão_Escolar
             // 
             // btnRemoverDisciplina
             // 
-            btnRemoverDisciplina.Location = new Point(188, 348);
+            btnRemoverDisciplina.Location = new Point(193, 378);
             btnRemoverDisciplina.Name = "btnRemoverDisciplina";
             btnRemoverDisciplina.Size = new Size(164, 68);
             btnRemoverDisciplina.TabIndex = 9;
@@ -114,7 +114,7 @@ namespace Sistema_de_Gestão_Escolar
             // 
             // btnEditarDisciplina
             // 
-            btnEditarDisciplina.Location = new Point(221, 473);
+            btnEditarDisciplina.Location = new Point(208, 509);
             btnEditarDisciplina.Name = "btnEditarDisciplina";
             btnEditarDisciplina.Size = new Size(126, 67);
             btnEditarDisciplina.TabIndex = 15;
@@ -124,7 +124,7 @@ namespace Sistema_de_Gestão_Escolar
             // 
             // btnSalvarEdicaoDisciplina
             // 
-            btnSalvarEdicaoDisciplina.Location = new Point(393, 404);
+            btnSalvarEdicaoDisciplina.Location = new Point(420, 453);
             btnSalvarEdicaoDisciplina.Name = "btnSalvarEdicaoDisciplina";
             btnSalvarEdicaoDisciplina.Size = new Size(132, 76);
             btnSalvarEdicaoDisciplina.TabIndex = 16;
@@ -174,7 +174,7 @@ namespace Sistema_de_Gestão_Escolar
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1412, 639);
+            ClientSize = new Size(1412, 623);
             Controls.Add(lstDisciplinas);
             Controls.Add(txtIdDisciplina);
             Controls.Add(cmbCargaHoraria);

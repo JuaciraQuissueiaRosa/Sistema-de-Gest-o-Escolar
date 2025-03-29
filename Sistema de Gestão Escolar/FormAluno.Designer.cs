@@ -280,6 +280,7 @@
             lstAlunos.Size = new Size(548, 371);
             lstAlunos.TabIndex = 28;
             lstAlunos.UseCompatibleStateImageBehavior = false;
+            lstAlunos.SelectedIndexChanged += lstAlunos_SelectedIndexChanged_1;
             // 
             // FormAluno
             // 
