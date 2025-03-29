@@ -20,8 +20,7 @@ namespace Sistema_de_Gestão_Escolar
         }
         private void ConfiguraListView()
         {
-            // Definir o modo de visualização da ListView como detalhes
-            lstNotas.View = View.Details;
+         
 
             // Adicionar as colunas à ListView
             lstNotas.Columns.Add("Aluno ID", 100);
@@ -32,6 +31,12 @@ namespace Sistema_de_Gestão_Escolar
             lstNotas.Columns.Add("Nota", 100);
             lstNotas.Columns.Add("Período Letivo", 150);
             lstNotas.Columns.Add("Turma", 300);
+
+            // Configurações do ListView
+            lstNotas.View = View.Details; // Exibir detalhes com colunas
+            lstNotas.FullRowSelect = true; // Selecionar a linha toda
+            lstNotas.GridLines = true; // Exibir linhas de grade
+            lstNotas.MultiSelect = false; // Para selecionar apenas um item por vez (opcional)
         }
         private void btnRemoverNota_Click(object sender, EventArgs e)
         {
@@ -403,9 +408,43 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-        private void lstNotas_SelectedIndexChanged(object sender, EventArgs e)
+     
+        private void lstNotas_SelectedIndexChanged_1(object sender, EventArgs e)
         {
+            try
+            {
+                // Verificar se algum item foi selecionado
+                if (lstNotas.SelectedItems.Count == 0)
+                    return; // Nenhum item selecionado, nada a fazer
 
+                // Garantir que o Tag não seja nulo antes de converter
+                if (lstNotas.SelectedItems[0].Tag is int notaId)
+                {
+                    // Buscar a nota correta na lista de notas usando o ID
+                    Nota notaSelecionada = gestor.Notas.FirstOrDefault(n => n.AlunoId== notaId);
+
+                    if (notaSelecionada != null)
+                    {
+                        // Preencher os campos do formulário com os dados da nota
+                        txtAlunoIdNota.Text = notaSelecionada.AlunoId.ToString();
+                        txtDisciplinaIdNota.Text = notaSelecionada.DisciplinaId.ToString();
+                        txtValorNota.Text = notaSelecionada.ValorNota.ToString();
+                        txtPeriodoNota.Text = notaSelecionada.PeriodoLetivo;
+                        cmbTipoAvaliacao.SelectedItem = notaSelecionada.TipoAvaliacao;
+
+                     
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erro: Nota não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+             
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao selecionar nota: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 

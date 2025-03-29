@@ -205,6 +205,7 @@
             lstNotas.Size = new Size(455, 384);
             lstNotas.TabIndex = 18;
             lstNotas.UseCompatibleStateImageBehavior = false;
+            lstNotas.SelectedIndexChanged += lstNotas_SelectedIndexChanged_1;
             // 
             // FormNota
             // 
