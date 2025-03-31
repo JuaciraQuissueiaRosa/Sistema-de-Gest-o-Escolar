@@ -67,15 +67,7 @@ public class GestorEscola
        novoHorario.HoraInicio < h.HoraFim);
     }
 
-    public List<Horario> ListarHorariosPorTurma(int turmaId)
-    {
-        return Horarios.Where(h => h.TurmaId == turmaId).ToList();
-    }
-
-    public List<Horario> ListarHorariosPorProfessor(int professorId)
-    {
-        return Horarios.Where(h => h.ProfessorId == professorId).ToList();
-    }
+   
 
     public void EditarHorario(Horario horarioAtualizado)
     {
@@ -161,18 +153,17 @@ public class GestorEscola
         return false;
     }
 
-    public List<Aluno> ListarAlunos()
-    {
-        return Alunos;
-    }
 
-    public void AtualizarAluno(int id, string novoNome, string novoContato)
+    public void AtualizarAluno(int id, string novoNome, string novoContato, DateTime dataDeNascimento, string email, string morada)
     {
         Aluno aluno = Alunos.FirstOrDefault(a => a.Id == id);
         if (aluno != null)
         {
             aluno.Nome = novoNome;
             aluno.Contato = novoContato;
+            aluno.DataNascimento = dataDeNascimento;
+            aluno.Email = email;
+            aluno.Morada = morada;
             SalvarDados();
         }
         else
@@ -383,27 +374,7 @@ public class GestorEscola
         return true;
     }
 
-    // 📌 Associar Aluno ao Evento
-    public void AssociarAlunoEvento(int eventoId, int alunoId)
-    {
-        Evento evento = Eventos.FirstOrDefault(e => e.Id == eventoId);
-        if (evento != null && !evento.AlunosIds.Contains(alunoId))
-        {
-            evento.AlunosIds.Add(alunoId);
-            SalvarDados();
-        }
-    }
-
-    // 📌 Associar Professor ao Evento
-    public void AssociarProfessorEvento(int eventoId, int professorId)
-    {
-        Evento evento = Eventos.FirstOrDefault(e => e.Id == eventoId);
-        if (evento != null && !evento.ProfessoresIds.Contains(professorId))
-        {
-            evento.ProfessoresIds.Add(professorId);
-            SalvarDados();
-        }
-    }
+  
 
     // ----------------- MÉTODOS AUXILIARES -----------------
 

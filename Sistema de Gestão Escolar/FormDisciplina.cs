@@ -16,6 +16,7 @@ namespace Sistema_de_Gestão_Escolar
 
         private void btnAdicionarDisciplina_Click(object sender, EventArgs e)
         {
+
             try
             {
                 // Validar ID
@@ -57,37 +58,36 @@ namespace Sistema_de_Gestão_Escolar
                 // Criar nova disciplina
                 Disciplina novaDisciplina = new Disciplina(id, nomeDisciplina, cargaHoraria);
 
-                // Associar professores (caso necessário)
-                List<int> professoresIds = txtProfessoresDisciplina.Text.Split(",")
+                // Capturar IDs dos professores
+                List<int> professoresIds = txtProfessoresDisciplina.Text
+                    .Split(',')
                     .Select(p => p.Trim())
                     .Where(p => int.TryParse(p, out _))
                     .Select(int.Parse)
                     .ToList();
 
-                List<string> mensagensErroProfessores = new List<string>();
-
-                foreach (var professorId in professoresIds)
+                if (professoresIds.Count == 0)
                 {
-                    // Verificar se o professor pode lecionar a disciplina
-                    if (gestor.PodeLecionarDisciplina(professorId, id, out string mensagemErro))
-                    {
-                        novaDisciplina.ProfessoresIds.Add(professorId);
-                    }
-                    else
-                    {
-                        mensagensErroProfessores.Add(mensagemErro);
-                    }
+                    MessageBox.Show("Aviso: Nenhum professor foi associado à disciplina.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                if (mensagensErroProfessores.Any())
+                // Associar cada professor à nova disciplina utilizando o método AssociarProfessorADisciplina
+                foreach (var professorId in professoresIds)
                 {
-                    MessageBox.Show(string.Join("\n", mensagensErroProfessores), "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    gestor.AssociarProfessorADisciplina(id, professorId); // Chamando o método de associação
+                }
+
+                // Adicionar a disciplina ao gestor
+                if (!gestor.AdicionarDisciplina(novaDisciplina))
+                {
+                    MessageBox.Show("Erro: Não foi possível adicionar a disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Adicionar disciplina ao sistema
-                gestor.Disciplinas.Add(novaDisciplina);
+                // Salvar os dados
                 gestor.SalvarDados();
+
+                // Atualizar ListView
                 AtualizarListaDisciplinas();
 
                 MessageBox.Show("Disciplina adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -98,7 +98,6 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-    
 
 
 
@@ -115,7 +114,7 @@ namespace Sistema_de_Gestão_Escolar
 
                 if (disciplina != null)
                 {
-                    gestor.Disciplinas.Remove(disciplina);
+                    gestor.RemoverDisciplina(disciplina.Id);
                     gestor.SalvarDados();
                     AtualizarListaDisciplinas();
                     MessageBox.Show("Disciplina removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -134,15 +133,17 @@ namespace Sistema_de_Gestão_Escolar
 
             foreach (var disciplina in gestor.Disciplinas)
             {
+                // Busca os nomes dos professores associados à disciplina
                 string professoresNomes = string.Join(", ", disciplina.ProfessoresIds
                     .Select(id => gestor.Professores.FirstOrDefault(p => p.Id == id)?.Nome ?? "Desconhecido"));
 
+                // Cria o item da ListView com as informações da disciplina
                 var item = new ListViewItem(new[]
                 {
             disciplina.Id.ToString(),
             disciplina.Nome,
             disciplina.CargaHoraria.ToString(),
-            professoresNomes // Mostrar nomes dos professores
+            professoresNomes // Mostra os nomes dos professores
         });
 
                 item.Tag = disciplina.Id;

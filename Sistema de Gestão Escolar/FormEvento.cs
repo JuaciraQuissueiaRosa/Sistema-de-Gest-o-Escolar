@@ -78,13 +78,23 @@ namespace Sistema_de_Gestão_Escolar
                 return;
             }
 
-            eventoSelecionado.Nome = txtNomeEvento.Text.Trim();
-            eventoSelecionado.Descricao = txtDescricaoEvento.Text.Trim();
-            eventoSelecionado.Data = dtpDataEvento.Value;
+            // Coletar os novos valores do formulário
+            string novoNome = txtNomeEvento.Text.Trim();
+            string novaDescricao = txtDescricaoEvento.Text.Trim();
+            DateTime novaData = dtpDataEvento.Value;
 
-            gestor.SalvarDados();
-            AtualizarListaEventos();
-            MessageBox.Show("Evento atualizado!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Chamar o método EditarEvento
+            bool sucesso = gestor.EditarEvento(eventoSelecionado.Id, novoNome, novaDescricao, novaData);
+
+            if (sucesso)
+            {
+                AtualizarListaEventos(); // Atualizar a interface gráfica
+                MessageBox.Show("Evento atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Erro ao editar o evento. Verifique se ele ainda existe.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnAdicionarEvento_Click(object sender, EventArgs e)
@@ -132,13 +142,6 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-        // 🔄 Atualizar lista de alunos e professores participantes
-        private void AtualizarListaParticipantes()
-        {
-            if (eventoSelecionado == null) return;
-
-            AtualizarListaEventos(); // 🔄 Garante que o evento exibe os participantes certos
-        }
 
         private void AtualizarListaAlunos()
         {

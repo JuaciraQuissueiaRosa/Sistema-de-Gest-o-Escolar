@@ -192,7 +192,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1353, 604);
+            ClientSize = new Size(1245, 604);
             Controls.Add(lstProfessores);
             Controls.Add(btnSalvarEdicaoProfessor);
             Controls.Add(btnEditarProfessor);

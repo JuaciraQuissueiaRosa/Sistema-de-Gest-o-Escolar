@@ -48,7 +48,7 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                if (lstNotas.SelectedItems[0].Tag is Nota notaParaRemover) // 🔥 Pegamos o objeto diretamente
+                if (lstNotas.SelectedItems[0].Tag is Nota notaParaRemover) // Pegamos o objeto diretamente
                 {
                     if (gestor.VerificarSePeriodoEncerrado(notaParaRemover.PeriodoLetivo))
                     {
@@ -56,11 +56,18 @@ namespace Sistema_de_Gestão_Escolar
                         return;
                     }
 
-                    gestor.Notas.Remove(notaParaRemover);
-                    gestor.SalvarDados();
-                    MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Chama o método RemoverNota com os parâmetros corretos
+                    bool sucessoRemocao = gestor.RemoverNota(notaParaRemover.AlunoId, notaParaRemover.DisciplinaId, notaParaRemover.PeriodoLetivo);
 
-                    AtualizarListaNotas();
+                    if (sucessoRemocao)
+                    {
+                        MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        AtualizarListaNotas(); // Atualiza a lista de notas após a remoção
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erro: Não foi possível remover a nota. Verifique os dados.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {

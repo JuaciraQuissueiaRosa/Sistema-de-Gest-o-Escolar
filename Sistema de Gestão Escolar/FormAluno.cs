@@ -226,6 +226,7 @@ namespace Sistema_de_Gestão_Escolar
                 // Atualizar a turma do aluno
                 alunoSelecionado.TurmaId = novoTurmaId;
 
+                gestor.MudarAlunoDeTurma(alunoId, novoTurmaId);
                 // Salvar as mudanças
                 gestor.SalvarDados();
 
