@@ -42,35 +42,29 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (!int.TryParse(txtAlunoIdNota.Text, out int alunoId) || !int.TryParse(txtDisciplinaIdNota.Text, out int disciplinaId))
+                if (lstNotas.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show("Erro: Os IDs do aluno e da disciplina devem ser números inteiros!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Selecione uma nota para remover!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                string periodo = txtPeriodoNota.Text.Trim();
-                if (string.IsNullOrEmpty(periodo))
+                if (lstNotas.SelectedItems[0].Tag is Nota notaParaRemover) // 🔥 Pegamos o objeto diretamente
                 {
-                    MessageBox.Show("Erro: O período letivo não pode estar vazio!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                    if (gestor.VerificarSePeriodoEncerrado(notaParaRemover.PeriodoLetivo))
+                    {
+                        MessageBox.Show("Erro: O período letivo já foi encerrado. Não é possível remover notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
 
-                if (gestor.VerificarSePeriodoEncerrado(periodo))
-                {
-                    MessageBox.Show("Erro: O período letivo já foi encerrado. Não é possível remover notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (gestor.RemoverNota(alunoId, disciplinaId, periodo))
-                {
-                    MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    // ✅ Salvar os dados após remover nota 
+                    gestor.Notas.Remove(notaParaRemover);
                     gestor.SalvarDados();
+                    MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                     AtualizarListaNotas();
                 }
                 else
                 {
-                    MessageBox.Show("Erro: Nota não encontrada. Verifique os dados informados!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: Não foi possível identificar a nota selecionada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -153,7 +147,7 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                lstNotas.Items.Clear();
+                lstNotas.Items.Clear(); // Limpar a lista antes de atualizar
 
                 foreach (var nota in gestor.Notas)
                 {
@@ -170,6 +164,8 @@ namespace Sistema_de_Gestão_Escolar
                     item.SubItems.Add(nota.ValorNota.ToString());
                     item.SubItems.Add(nota.PeriodoLetivo);
                     item.SubItems.Add(turmaInfo);
+
+                    item.Tag = nota; // 🔥 Guardamos o objeto Nota diretamente!
 
                     lstNotas.Items.Add(item);
                 }
@@ -413,33 +409,21 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Verificar se algum item foi selecionado
                 if (lstNotas.SelectedItems.Count == 0)
-                    return; // Nenhum item selecionado, nada a fazer
+                    return;
 
-                // Garantir que o Tag não seja nulo antes de converter
-                if (lstNotas.SelectedItems[0].Tag is int notaId)
+                if (lstNotas.SelectedItems[0].Tag is Nota notaSelecionada) // 🔥 Agora pegamos a nota diretamente
                 {
-                    // Buscar a nota correta na lista de notas usando o ID
-                    Nota notaSelecionada = gestor.Notas.FirstOrDefault(n => n.AlunoId== notaId);
-
-                    if (notaSelecionada != null)
-                    {
-                        // Preencher os campos do formulário com os dados da nota
-                        txtAlunoIdNota.Text = notaSelecionada.AlunoId.ToString();
-                        txtDisciplinaIdNota.Text = notaSelecionada.DisciplinaId.ToString();
-                        txtValorNota.Text = notaSelecionada.ValorNota.ToString();
-                        txtPeriodoNota.Text = notaSelecionada.PeriodoLetivo;
-                        cmbTipoAvaliacao.SelectedItem = notaSelecionada.TipoAvaliacao;
-
-                     
-                    }
-                    else
-                    {
-                        MessageBox.Show("Erro: Nota não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    txtAlunoIdNota.Text = notaSelecionada.AlunoId.ToString();
+                    txtDisciplinaIdNota.Text = notaSelecionada.DisciplinaId.ToString();
+                    txtValorNota.Text = notaSelecionada.ValorNota.ToString();
+                    txtPeriodoNota.Text = notaSelecionada.PeriodoLetivo;
+                    cmbTipoAvaliacao.SelectedItem = notaSelecionada.TipoAvaliacao;
                 }
-             
+                else
+                {
+                    MessageBox.Show("Erro: Nota não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
