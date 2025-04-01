@@ -63,6 +63,8 @@ namespace Sistema_de_Gestão_Escolar
                     {
                         MessageBox.Show("Nota removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         AtualizarListaNotas(); // Atualiza a lista de notas após a remoção
+                        LimpaCampos();
+
                     }
                     else
                     {
@@ -157,6 +159,7 @@ namespace Sistema_de_Gestão_Escolar
 
                 gestor.SalvarDados();
                 AtualizarListaNotas();
+                LimpaCampos();
 
                 MessageBox.Show("Nota adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -242,6 +245,15 @@ namespace Sistema_de_Gestão_Escolar
             lstNotas.GridLines = true;
 
 
+        }
+
+        private void LimpaCampos()
+        {
+            txtAlunoIdNota.Clear();
+            txtDisciplinaIdNota.Clear();
+            txtValorNota.Clear();
+            txtPeriodoNota.Clear();
+            cmbTipoAvaliacao.SelectedIndex = -1;
         }
 
         private void SetRoundButton(Button button)
@@ -475,6 +487,8 @@ namespace Sistema_de_Gestão_Escolar
 
                 gestor.SalvarDados();
                 AtualizarListaNotas();
+                LimpaCampos();
+
 
                 MessageBox.Show("Nota editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
