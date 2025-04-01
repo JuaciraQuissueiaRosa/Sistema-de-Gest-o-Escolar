@@ -270,48 +270,60 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Verifica se há algum item selecionado
-                if (lstNotas.SelectedItems.Count == 0)
+                // Validar se os campos obrigatórios foram preenchidos
+                if (string.IsNullOrEmpty(txtAlunoIdNota.Text) || string.IsNullOrEmpty(txtDisciplinaIdNota.Text) ||
+                    string.IsNullOrEmpty(txtValorNota.Text) || string.IsNullOrEmpty(txtPeriodoNota.Text))
                 {
-                    MessageBox.Show("Erro: Selecione uma nota primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Erro: Todos os campos devem ser preenchidos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obtém o primeiro item selecionado
-                ListViewItem itemSelecionado = lstNotas.SelectedItems[0];
+                // Obter os valores dos campos de entrada
+                int alunoId = int.Parse(txtAlunoIdNota.Text);
+                int disciplinaId = int.Parse(txtDisciplinaIdNota.Text);
+                double valorNota = double.Parse(txtValorNota.Text);
+                string periodoLetivo = txtPeriodoNota.Text;
+                string tipoAvaliacao = cmbTipoAvaliacao.SelectedItem?.ToString();
 
-                // Obtém o índice do item selecionado
-                int indexSelecionado = itemSelecionado.Index;
-
-                // Acessa a Nota correspondente ao índice selecionado
-                Nota notaSelecionada = gestor.Notas.ElementAtOrDefault(indexSelecionado);
-
-                bool alunoExiste = gestor.Alunos.Any(a => a.Id == notaSelecionada.AlunoId);
-                bool disciplinaExiste = gestor.Disciplinas.Any(d => d.Id == notaSelecionada.DisciplinaId);
-
-                if (!alunoExiste)
+                // Validar o tipo de avaliação
+                if (string.IsNullOrEmpty(tipoAvaliacao))
                 {
-                    MessageBox.Show("Erro: O aluno associado a essa nota foi removido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Erro: Selecione um tipo de avaliação.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                if (!disciplinaExiste)
+                // Verificar se a nota existe
+                Nota notaExistente = gestor.Notas.FirstOrDefault(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.PeriodoLetivo == periodoLetivo);
+                if (notaExistente == null)
                 {
-                    MessageBox.Show("Erro: A disciplina associada a essa nota foi removida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Erro: Nota não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                txtAlunoIdNota.Text = notaSelecionada.AlunoId.ToString();
-                txtDisciplinaIdNota.Text = notaSelecionada.DisciplinaId.ToString();
-                txtValorNota.Text = notaSelecionada.ValorNota.ToString();
-                txtPeriodoNota.Text = notaSelecionada.PeriodoLetivo;
-                cmbTipoAvaliacao.SelectedItem = notaSelecionada.TipoAvaliacao;
+                // Atualizar a nota no sistema
+                bool sucesso = gestor.EditarNota(alunoId, disciplinaId, periodoLetivo, valorNota);
+                if (sucesso)
+                {
+                    // Atualizar o tipo de avaliação
+                    notaExistente.TipoAvaliacao = tipoAvaliacao;
 
-                MessageBox.Show("Nota carregada para edição.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Mostrar mensagem de sucesso
+                    MessageBox.Show("Nota editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Atualizar a interface gráfica, se necessário
+                    AtualizarListaNotas(); // Este método deve ser implementado para atualizar a visualização das notas na interface
+
+                    // Desabilitar o botão de salvar após a edição
+                    btnSalvarEdicaoNota.Enabled = false;
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao editar a nota.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar nota para edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao salvar edição da nota: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }

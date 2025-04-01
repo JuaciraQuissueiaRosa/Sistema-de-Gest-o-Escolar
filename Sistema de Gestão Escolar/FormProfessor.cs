@@ -258,36 +258,42 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstProfessores.SelectedItems.Count == 0)
+                // Obter os dados do formulário
+                int idProfessor = int.Parse(txtIdProfessor.Text); // ID do professor
+                string nome = txtNomeProfessor.Text;
+                string contato = mtbContatoProfessor.Text;
+                string email = txtEmailProfessor.Text;
+                string areaEnsino = cmbAreaEnsino.SelectedItem.ToString();
+
+                // Validar campos obrigatórios
+                if (string.IsNullOrEmpty(nome) || string.IsNullOrEmpty(contato) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(areaEnsino))
                 {
-                    MessageBox.Show("Erro: Selecione um professor primeiro!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Erro: Todos os campos devem ser preenchidos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obtém o ID do professor selecionado
-                int professorId = (int)lstProfessores.SelectedItems[0].Tag;
-                Professor professorSelecionado = gestor.Professores.FirstOrDefault(p => p.Id == professorId);
+                // Chamar o método EditarProfessor para salvar as alterações
+                bool sucesso = gestor.EditarProfessor(idProfessor, nome, areaEnsino, contato, email);
 
-                if (professorSelecionado == null)
+                // Verificar se a edição foi bem-sucedida
+                if (sucesso)
                 {
-                    MessageBox.Show("Erro: Professor não encontrado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    MessageBox.Show("Professor editado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Atualizar a lista na interface gráfica, se necessário
+                    AtualizarListaProfessores(); // Este método precisa ser implementado para atualizar os dados na interface
+
+                    // Desabilitar o botão de salvar alterações após a edição
+                    btnSalvarEdicaoProfessor.Enabled = false;
                 }
-
-                // Preencher os campos com os dados do professor
-                txtIdProfessor.Text = professorSelecionado.Id.ToString();
-                txtIdProfessor.Enabled = false; // Bloquear edição do ID
-                txtNomeProfessor.Text = professorSelecionado.Nome;
-                mtbContatoProfessor.Text = professorSelecionado.Contato;
-                txtEmailProfessor.Text = professorSelecionado.Email;
-                cmbAreaEnsino.SelectedItem = professorSelecionado.AreaEnsino;
-
-                // Habilitar botão "Salvar Alterações"
-                btnSalvarEdicaoProfessor.Enabled = true;
+                else
+                {
+                    MessageBox.Show("Erro: Não foi possível editar o professor.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar professor para edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao salvar alterações: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -172,6 +172,41 @@ public class GestorEscola
         }
     }
 
+
+    // Método para adicionar uma nova turma
+    public bool AdicionarTurma(Turma novaTurma)
+    {
+        // Verifica se já existe uma turma com o mesmo ID
+        if (Turmas.Any(t => t.Id == novaTurma.Id))
+        {
+            return false; // Retorna falso se a turma já existir
+        }
+
+        // Adiciona a turma na lista
+        Turmas.Add(novaTurma);
+        SalvarDados(); // Salva os dados após adicionar a turma
+        return true;
+    }
+
+
+    // Método para editar uma turma existente
+    public bool EditarTurma(int id, string novoCurso, string novoAnoLetivo, string novoTurno)
+    {
+        // Encontrar a turma com o ID especificado
+        Turma turma = Turmas.FirstOrDefault(t => t.Id == id);
+        if (turma != null)
+        {
+            // Atualiza as informações da turma
+            turma.Curso = novoCurso;
+            turma.AnoLetivo = novoAnoLetivo;
+            turma.Turno = novoTurno;
+
+            SalvarDados(); // Salva os dados após editar a turma
+            return true; // Retorna verdadeiro se a edição for bem-sucedida
+        }
+        return false; // Retorna falso se a turma não for encontrada
+    }
+
     public void MudarAlunoDeTurma(int alunoId, int novaTurmaId)
     {
         Aluno aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
@@ -266,6 +301,33 @@ public class GestorEscola
         return true;
     }
 
+
+    public bool EditarDisciplina(int id, string novoNome, List<int> novosProfessoresIds)
+    {
+        // Verificar se o nome da disciplina já existe
+        if (Disciplinas.Any(d => d.Nome.Equals(novoNome, StringComparison.OrdinalIgnoreCase) && d.Id != id))
+        {
+            return false; // Retorna false se já existir uma disciplina com esse nome
+        }
+
+        // Encontrar a disciplina a ser editada
+        Disciplina disciplina = Disciplinas.FirstOrDefault(d => d.Id == id);
+        if (disciplina != null)
+        {
+            // Atualizar o nome da disciplina
+            disciplina.Nome = novoNome;
+
+            // Atualizar os professores associados à disciplina
+            disciplina.ProfessoresIds = novosProfessoresIds;
+
+            // Salvar as alterações
+            SalvarDados();
+
+            return true; // Retorna true se a edição for bem-sucedida
+        }
+
+        return false; // Retorna false se a disciplina não for encontrada
+    }
     public bool RemoverDisciplina(int id)
     {
         for (int i = 0; i < Disciplinas.Count; i++)
@@ -333,7 +395,27 @@ public class GestorEscola
         }
         return false;
     }
+    public bool EditarNota(int alunoId, int disciplinaId, string periodoLetivo, double novaNota)
+    {
+        // Verificar se o período letivo foi encerrado
+        if (VerificarSePeriodoEncerrado(periodoLetivo))
+        {
+            throw new Exception("Notas não podem ser editadas após o término do período letivo.");
+        }
 
+        // Encontrar a nota correspondente ao aluno, disciplina e período letivo
+        Nota notaExistente = Notas.FirstOrDefault(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.PeriodoLetivo == periodoLetivo);
+
+        if (notaExistente != null)
+        {
+            // Atualizar a nota
+            notaExistente.ValorNota = novaNota;
+            SalvarDados(); // Salvar os dados após a edição
+            return true; // Retorna true se a edição foi bem-sucedida
+        }
+
+        return false; // Retorna false se a nota não foi encontrada
+    }
     // ----------------- CRUD PARA EVENTOS -----------------
     // --- Métodos para Eventos ---
     // 📌 Adicionar Evento
@@ -417,8 +499,7 @@ public class GestorEscola
      
     }
 
-    // Método para verificar se o professor pode lecionar uma disciplina
-    // Método para verificar se o professor pode lecionar uma disciplina
+  
     // Método para verificar se o professor pode lecionar uma disciplina
     public bool PodeLecionarDisciplina(int professorId, int disciplinaId, out string mensagemErro)
     {

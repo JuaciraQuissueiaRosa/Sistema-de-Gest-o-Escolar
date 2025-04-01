@@ -329,11 +329,7 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Atualizar os valores da disciplina
-                disciplinaEditada.Nome = nomeDisciplina;
-                disciplinaEditada.CargaHoraria = cargaHoraria;
-
-                // Atualizar os professores
+                // Validar professores
                 List<int> professoresIds = txtProfessoresDisciplina.Text.Split(",")
                     .Select(p => p.Trim())
                     .Where(p => int.TryParse(p, out _))
@@ -342,12 +338,12 @@ namespace Sistema_de_Gestão_Escolar
 
                 List<string> mensagensErroProfessores = new List<string>();
 
+                // Verificar se os professores podem lecionar a disciplina
                 foreach (var professorId in professoresIds)
                 {
-                    // Verificar se o professor pode lecionar a disciplina
                     if (gestor.PodeLecionarDisciplina(professorId, disciplinaId, out string mensagemErro))
                     {
-                        // Atualiza os professores da disciplina
+                        // Caso o professor possa lecionar, atualizar a disciplina
                         disciplinaEditada.ProfessoresIds.Add(professorId);
                     }
                     else
@@ -362,25 +358,35 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Salvar as mudanças
-                gestor.SalvarDados();
+                // Atualizar os valores da disciplina
+                bool resultadoEdicao = gestor.EditarDisciplina(disciplinaId, nomeDisciplina, professoresIds);
 
-                // Atualizar a lista de disciplinas
-                AtualizarListaDisciplinas();
+                if (resultadoEdicao)
+                {
+                    // Salvar as mudanças
+                    gestor.SalvarDados();
 
-                // Limpar os campos e desativar o modo edição
-                txtIdDisciplina.Clear();
-                txtIdDisciplina.Enabled = true;
-                cmbNomeDisciplina.SelectedIndex = -1;
-                cmbCargaHoraria.SelectedIndex = -1;
-                txtProfessoresDisciplina.Clear();
-                txtIdDisciplina.Tag = null;
+                    // Atualizar a lista de disciplinas
+                    AtualizarListaDisciplinas();
 
-                // Restaurar os botões
-                btnSalvarEdicaoDisciplina.Enabled = false;
-                btnAdicionarDisciplina.Enabled = true;
+                    // Limpar os campos e desativar o modo edição
+                    txtIdDisciplina.Clear();
+                    txtIdDisciplina.Enabled = true;
+                    cmbNomeDisciplina.SelectedIndex = -1;
+                    cmbCargaHoraria.SelectedIndex = -1;
+                    txtProfessoresDisciplina.Clear();
+                    txtIdDisciplina.Tag = null;
 
-                MessageBox.Show("Disciplina editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Restaurar os botões
+                    btnSalvarEdicaoDisciplina.Enabled = false;
+                    btnAdicionarDisciplina.Enabled = true;
+
+                    MessageBox.Show("Disciplina editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Erro: Não foi possível editar a disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {

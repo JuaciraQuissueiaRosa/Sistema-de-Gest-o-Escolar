@@ -440,9 +440,6 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Garantir que o ID original seja mantido
-                int idOriginal = alunoSelecionado.Id;
-
                 // Validar nome
                 string novoNome = txtNomeAluno.Text.Trim();
                 if (string.IsNullOrEmpty(novoNome))
@@ -484,15 +481,8 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Aplicar alterações
-                alunoSelecionado.Nome = novoNome;
-                alunoSelecionado.DataNascimento = novaDataNascimento;
-                alunoSelecionado.Contato = novoContato;
-                alunoSelecionado.Email = novoEmail;
-                alunoSelecionado.Morada = novaMorada; // Atualizar a morada
-
-                // ✅ Salvar as mudanças
-                gestor.SalvarDados();
+                // ✅ Atualizar aluno usando o método da classe
+                gestor.AtualizarAluno(alunoId, novoNome, novoContato, novaDataNascimento, novoEmail, novaMorada);
 
                 // Atualizar lista
                 AtualizarListaAlunos();
