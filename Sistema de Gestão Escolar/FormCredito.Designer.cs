@@ -37,35 +37,39 @@
             // lblAutor
             // 
             lblAutor.AutoSize = true;
+            lblAutor.Font = new Font("Segoe UI", 12F);
             lblAutor.Location = new Point(193, 107);
             lblAutor.Name = "lblAutor";
-            lblAutor.Size = new Size(49, 20);
+            lblAutor.Size = new Size(66, 28);
             lblAutor.TabIndex = 0;
             lblAutor.Text = "Autor:";
             // 
             // lblVersao
             // 
             lblVersao.AutoSize = true;
+            lblVersao.Font = new Font("Segoe UI", 12F);
             lblVersao.Location = new Point(193, 249);
             lblVersao.Name = "lblVersao";
-            lblVersao.Size = new Size(56, 20);
+            lblVersao.Size = new Size(74, 28);
             lblVersao.TabIndex = 1;
             lblVersao.Text = "Versão:";
             // 
             // lblData
             // 
             lblData.AutoSize = true;
+            lblData.Font = new Font("Segoe UI", 12F);
             lblData.Location = new Point(193, 177);
             lblData.Name = "lblData";
-            lblData.Size = new Size(44, 20);
+            lblData.Size = new Size(57, 28);
             lblData.TabIndex = 2;
             lblData.Text = "Data:";
             // 
             // btnFechar
             // 
+            btnFechar.Font = new Font("Segoe UI", 12F);
             btnFechar.Location = new Point(343, 339);
             btnFechar.Name = "btnFechar";
-            btnFechar.Size = new Size(94, 29);
+            btnFechar.Size = new Size(94, 43);
             btnFechar.TabIndex = 3;
             btnFechar.Text = "Fechar";
             btnFechar.UseVisualStyleBackColor = true;
@@ -81,6 +85,7 @@
             Controls.Add(lblVersao);
             Controls.Add(lblAutor);
             Name = "FormCredito";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormCredito";
             Load += FormCredito_Load;
             ResumeLayout(false);

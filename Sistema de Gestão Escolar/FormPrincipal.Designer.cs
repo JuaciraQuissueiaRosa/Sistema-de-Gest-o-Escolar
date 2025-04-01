@@ -156,6 +156,7 @@
             Controls.Add(btnNotas);
             Controls.Add(btnDisciplinas);
             Name = "FormPrincipal";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormPrincipal";
             Load += FormPrincipal_Load;
             ResumeLayout(false);

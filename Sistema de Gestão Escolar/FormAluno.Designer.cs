@@ -314,6 +314,7 @@
             Controls.Add(btnRemoverAluno);
             Controls.Add(btnAdicionarAluno);
             Name = "FormAluno";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormAluno";
             Load += FormAluno_Load;
             ResumeLayout(false);

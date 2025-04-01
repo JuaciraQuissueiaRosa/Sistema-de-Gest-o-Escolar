@@ -190,6 +190,7 @@ namespace Sistema_de_Gestão_Escolar
             Controls.Add(lblProfessoresDisc);
             Controls.Add(lblNomeDisciplina);
             Name = "FormDisciplina";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormDisciplina";
             Load += FormDisciplina_Load;
             ResumeLayout(false);

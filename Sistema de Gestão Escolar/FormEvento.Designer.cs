@@ -42,11 +42,13 @@
             lstAlunos = new ListBox();
             lstProfessores = new ListBox();
             lstEventos = new ListView();
+            lblAlunos = new Label();
+            lblProfessores = new Label();
             SuspendLayout();
             // 
             // btnAdicionarEvento
             // 
-            btnAdicionarEvento.Location = new Point(673, 730);
+            btnAdicionarEvento.Location = new Point(664, 760);
             btnAdicionarEvento.Name = "btnAdicionarEvento";
             btnAdicionarEvento.Size = new Size(175, 51);
             btnAdicionarEvento.TabIndex = 3;
@@ -56,7 +58,7 @@
             // 
             // btnRemoverEvento
             // 
-            btnRemoverEvento.Location = new Point(61, 730);
+            btnRemoverEvento.Location = new Point(52, 760);
             btnRemoverEvento.Name = "btnRemoverEvento";
             btnRemoverEvento.Size = new Size(171, 48);
             btnRemoverEvento.TabIndex = 4;
@@ -114,7 +116,7 @@
             // 
             // btnEditarEvento
             // 
-            btnEditarEvento.Location = new Point(264, 730);
+            btnEditarEvento.Location = new Point(255, 760);
             btnEditarEvento.Name = "btnEditarEvento";
             btnEditarEvento.Size = new Size(157, 48);
             btnEditarEvento.TabIndex = 13;
@@ -134,7 +136,7 @@
             // 
             // btnSelecionarEvento
             // 
-            btnSelecionarEvento.Location = new Point(451, 730);
+            btnSelecionarEvento.Location = new Point(442, 760);
             btnSelecionarEvento.Name = "btnSelecionarEvento";
             btnSelecionarEvento.Size = new Size(197, 48);
             btnSelecionarEvento.TabIndex = 15;
@@ -145,7 +147,7 @@
             // lstAlunos
             // 
             lstAlunos.FormattingEnabled = true;
-            lstAlunos.Location = new Point(24, 307);
+            lstAlunos.Location = new Point(24, 322);
             lstAlunos.Name = "lstAlunos";
             lstAlunos.Size = new Size(426, 164);
             lstAlunos.TabIndex = 22;
@@ -154,7 +156,7 @@
             // lstProfessores
             // 
             lstProfessores.FormattingEnabled = true;
-            lstProfessores.Location = new Point(24, 487);
+            lstProfessores.Location = new Point(24, 536);
             lstProfessores.Name = "lstProfessores";
             lstProfessores.Size = new Size(426, 184);
             lstProfessores.TabIndex = 23;
@@ -164,16 +166,36 @@
             // 
             lstEventos.Location = new Point(24, 67);
             lstEventos.Name = "lstEventos";
-            lstEventos.Size = new Size(426, 226);
+            lstEventos.Size = new Size(426, 191);
             lstEventos.TabIndex = 24;
             lstEventos.UseCompatibleStateImageBehavior = false;
             lstEventos.SelectedIndexChanged += lstEventos_SelectedIndexChanged;
+            // 
+            // lblAlunos
+            // 
+            lblAlunos.AutoSize = true;
+            lblAlunos.Location = new Point(24, 279);
+            lblAlunos.Name = "lblAlunos";
+            lblAlunos.Size = new Size(135, 20);
+            lblAlunos.TabIndex = 25;
+            lblAlunos.Text = "Alunos disponíveis:";
+            // 
+            // lblProfessores
+            // 
+            lblProfessores.AutoSize = true;
+            lblProfessores.Location = new Point(24, 504);
+            lblProfessores.Name = "lblProfessores";
+            lblProfessores.Size = new Size(165, 20);
+            lblProfessores.TabIndex = 26;
+            lblProfessores.Text = "Professores disponíveis:";
             // 
             // FormEvento
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1132, 807);
+            ClientSize = new Size(1132, 850);
+            Controls.Add(lblProfessores);
+            Controls.Add(lblAlunos);
             Controls.Add(lstEventos);
             Controls.Add(lstProfessores);
             Controls.Add(lstAlunos);
@@ -189,6 +211,7 @@
             Controls.Add(btnRemoverEvento);
             Controls.Add(btnAdicionarEvento);
             Name = "FormEvento";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormEvento";
             Load += FormEvento_Load;
             ResumeLayout(false);
@@ -210,5 +233,7 @@
         private ListBox lstAlunos;
         private ListBox lstProfessores;
         private ListView lstEventos;
+        private Label lblAlunos;
+        private Label lblProfessores;
     }
 }

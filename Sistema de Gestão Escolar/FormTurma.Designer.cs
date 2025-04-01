@@ -256,6 +256,7 @@
             Controls.Add(lblCursoTurma);
             Controls.Add(lblIdTurma);
             Name = "FormTurma";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormTurma";
             Load += FormTurma_Load;
             ResumeLayout(false);

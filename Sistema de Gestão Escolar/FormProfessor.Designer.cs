@@ -95,7 +95,7 @@
             // 
             txtNomeProfessor.Location = new Point(214, 115);
             txtNomeProfessor.Name = "txtNomeProfessor";
-            txtNomeProfessor.Size = new Size(125, 27);
+            txtNomeProfessor.Size = new Size(158, 27);
             txtNomeProfessor.TabIndex = 5;
             // 
             // txtIdProfessor
@@ -107,9 +107,9 @@
             // 
             // txtEmailProfessor
             // 
-            txtEmailProfessor.Location = new Point(136, 227);
+            txtEmailProfessor.Location = new Point(142, 231);
             txtEmailProfessor.Name = "txtEmailProfessor";
-            txtEmailProfessor.Size = new Size(125, 27);
+            txtEmailProfessor.Size = new Size(236, 27);
             txtEmailProfessor.TabIndex = 7;
             // 
             // btnAdicionarProfessor
@@ -136,9 +136,9 @@
             // 
             cmbAreaEnsino.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbAreaEnsino.FormattingEnabled = true;
-            cmbAreaEnsino.Location = new Point(197, 295);
+            cmbAreaEnsino.Location = new Point(188, 295);
             cmbAreaEnsino.Name = "cmbAreaEnsino";
-            cmbAreaEnsino.Size = new Size(235, 28);
+            cmbAreaEnsino.Size = new Size(244, 28);
             cmbAreaEnsino.TabIndex = 13;
             // 
             // mtbContatoProfessor
@@ -210,6 +210,7 @@
             Controls.Add(lblNomeProfessor);
             Controls.Add(lblIdProfessor);
             Name = "FormProfessor";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormProfessor";
             Load += FormProfessor_Load;
             ResumeLayout(false);

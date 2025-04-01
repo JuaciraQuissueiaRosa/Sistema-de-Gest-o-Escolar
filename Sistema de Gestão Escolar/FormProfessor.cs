@@ -47,6 +47,8 @@ namespace Sistema_de_Gestão_Escolar
                 gestor.SalvarDados();
 
                 AtualizarListaProfessores();
+
+                LimpaCampos();
             }
             catch (Exception ex)
             {
@@ -178,9 +180,9 @@ namespace Sistema_de_Gestão_Escolar
                 {
                     lstProfessores.Columns.Add("ID", 50);
                     lstProfessores.Columns.Add("Nome", 150);
-                    lstProfessores.Columns.Add("Contato", 100);
+                    lstProfessores.Columns.Add("Contato", 185);
                     lstProfessores.Columns.Add("Email", 150);
-                    lstProfessores.Columns.Add("Área", 150);
+                    lstProfessores.Columns.Add("Área", 200);
                     lstProfessores.Columns.Add("Disciplinas", 200);
                 }
 
@@ -378,11 +380,23 @@ namespace Sistema_de_Gestão_Escolar
                 btnSalvarEdicaoProfessor.Enabled = false;
 
                 MessageBox.Show("Professor editado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                LimpaCampos();
+            
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao salvar alterações do professor: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void LimpaCampos()
+        {
+            txtNomeProfessor.Clear();
+            txtEmailProfessor.Clear();
+            mtbContatoProfessor.Clear();
+            txtIdProfessor.Clear();
         }
 
         private void lstProfessores_SelectedIndexChanged(object sender, EventArgs e)

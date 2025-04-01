@@ -38,7 +38,7 @@
             // 
             // btnGerarPauta
             // 
-            btnGerarPauta.Location = new Point(776, 166);
+            btnGerarPauta.Location = new Point(777, 128);
             btnGerarPauta.Name = "btnGerarPauta";
             btnGerarPauta.Size = new Size(148, 50);
             btnGerarPauta.TabIndex = 0;
@@ -49,23 +49,23 @@
             // cmbAluno
             // 
             cmbAluno.FormattingEnabled = true;
-            cmbAluno.Location = new Point(844, 71);
+            cmbAluno.Location = new Point(749, 56);
             cmbAluno.Name = "cmbAluno";
-            cmbAluno.Size = new Size(151, 28);
+            cmbAluno.Size = new Size(234, 28);
             cmbAluno.TabIndex = 1;
             // 
             // cmbTurma
             // 
             cmbTurma.FormattingEnabled = true;
-            cmbTurma.Location = new Point(535, 56);
+            cmbTurma.Location = new Point(431, 56);
             cmbTurma.Name = "cmbTurma";
-            cmbTurma.Size = new Size(151, 28);
+            cmbTurma.Size = new Size(225, 28);
             cmbTurma.TabIndex = 3;
             cmbTurma.SelectedIndexChanged += cmbTurma_SelectedIndexChanged;
             // 
             // btnGerarRelatorio
             // 
-            btnGerarRelatorio.Location = new Point(467, 151);
+            btnGerarRelatorio.Location = new Point(459, 122);
             btnGerarRelatorio.Name = "btnGerarRelatorio";
             btnGerarRelatorio.Size = new Size(159, 56);
             btnGerarRelatorio.TabIndex = 2;
@@ -101,6 +101,7 @@
             Controls.Add(cmbAluno);
             Controls.Add(btnGerarPauta);
             Name = "FormRelatorio";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "FormRelatorio";
             Load += FormRelatorio_Load;
             ResumeLayout(false);
