@@ -166,7 +166,7 @@ namespace Sistema_de_Gestão_Escolar
             // 
             lstDisciplinas.Location = new Point(643, 42);
             lstDisciplinas.Name = "lstDisciplinas";
-            lstDisciplinas.Size = new Size(456, 473);
+            lstDisciplinas.Size = new Size(558, 473);
             lstDisciplinas.TabIndex = 24;
             lstDisciplinas.UseCompatibleStateImageBehavior = false;
             // 
@@ -174,7 +174,7 @@ namespace Sistema_de_Gestão_Escolar
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1412, 623);
+            ClientSize = new Size(1243, 623);
             Controls.Add(lstDisciplinas);
             Controls.Add(txtIdDisciplina);
             Controls.Add(cmbCargaHoraria);

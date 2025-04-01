@@ -108,6 +108,8 @@ namespace Sistema_de_Gestão_Escolar
                 gestor.SalvarDados();
                 AtualizarListaProfessores();
 
+                LimpaCampos();
+
                 MessageBox.Show("Professor adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -181,7 +183,7 @@ namespace Sistema_de_Gestão_Escolar
                     lstProfessores.Columns.Add("ID", 50);
                     lstProfessores.Columns.Add("Nome", 150);
                     lstProfessores.Columns.Add("Contato", 185);
-                    lstProfessores.Columns.Add("Email", 150);
+                    lstProfessores.Columns.Add("Email", 250);
                     lstProfessores.Columns.Add("Área", 200);
                     lstProfessores.Columns.Add("Disciplinas", 200);
                 }
@@ -260,6 +262,7 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
+               
                 // Obter os dados do formulário
                 int idProfessor = int.Parse(txtIdProfessor.Text); // ID do professor
                 string nome = txtNomeProfessor.Text;
@@ -287,6 +290,7 @@ namespace Sistema_de_Gestão_Escolar
 
                     // Desabilitar o botão de salvar alterações após a edição
                     btnSalvarEdicaoProfessor.Enabled = false;
+                    txtIdProfessor.Enabled = false;
                 }
                 else
                 {

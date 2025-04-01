@@ -83,6 +83,7 @@ namespace Sistema_de_Gestão_Escolar
                 // ✅ Atualizar lista e bloquear edição do ID
                 txtIdAluno.Enabled = false;
                 AtualizarListaAlunos();
+                LimpaCampos();
 
                 MessageBox.Show("Aluno adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -118,6 +119,8 @@ namespace Sistema_de_Gestão_Escolar
                 }
 
                 AtualizarListaAlunos();
+
+                LimpaCampos();
             }
             catch (Exception ex)
             {
@@ -296,6 +299,16 @@ namespace Sistema_de_Gestão_Escolar
         {
             string padraoEmail = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             return Regex.IsMatch(email, padraoEmail);
+        }
+
+        private void LimpaCampos()
+        {
+            txtIdAluno.Clear();
+            txtNomeAluno.Clear();
+            txtContatoAluno.Clear();
+            txtMoradaAluno.Clear();
+            txtEmailAluno.Clear();
+            txtTurmaAluno.Clear();
         }
 
         private void CarregarTurmasDisponiveis(int turmaAtualId)
@@ -486,6 +499,7 @@ namespace Sistema_de_Gestão_Escolar
 
                 // Atualizar lista
                 AtualizarListaAlunos();
+                LimpaCampos();
                 MessageBox.Show("Aluno atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Desativar botão após salvar

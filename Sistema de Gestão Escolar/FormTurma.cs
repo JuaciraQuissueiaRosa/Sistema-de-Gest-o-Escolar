@@ -39,6 +39,7 @@ namespace Sistema_de_Gestão_Escolar
                 gestor.SalvarDados();
                 AtualizarListaTurmas();
                 AtualizarFormAluno();
+                LimpaCampos();
             }
             catch (Exception ex)
             {
@@ -129,6 +130,7 @@ namespace Sistema_de_Gestão_Escolar
 
                     gestor.SalvarDados(); // Salvar os dados
                     AtualizarListaTurmas(); // Atualizar a lista de turmas
+                    LimpaCampos();
 
                     MessageBox.Show("Turma adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -238,7 +240,7 @@ namespace Sistema_de_Gestão_Escolar
             lstTurmas.Columns.Add("Curso", 250);            // Coluna Curso
             lstTurmas.Columns.Add("Ano Letivo", 300);      // Coluna Ano Letivo
             lstTurmas.Columns.Add("Turno", 300);
-            lstTurmas.Columns.Add("Disciplinas", 300);
+            lstTurmas.Columns.Add("Disciplinas", 1000);
             lstTurmas.Columns.Add("Professores", 300);
      
 
@@ -460,6 +462,8 @@ namespace Sistema_de_Gestão_Escolar
                     // Atualizar a lista de turmas
                     AtualizarListaTurmas();
 
+                    LimpaCampos();
+
                     // Mensagem de sucesso
                     MessageBox.Show("Turma editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -536,5 +540,21 @@ namespace Sistema_de_Gestão_Escolar
                 MessageBox.Show($"Erro ao carregar turma para edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void LimpaCampos()
+        {
+            // Atualiza os campos com as informações da turma selecionada
+            txtIdTurma.Clear();
+            txtAnoLetivoTurma.Clear();
+            cmbTurnoTurma.SelectedIndex = -1;
+            cmbCursoTurma.SelectedIndex = -1;
+        }
+
+
+
+
+
+
+  
     }
 }

@@ -105,6 +105,22 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
+                // ✅ Validar se um professor foi selecionado
+                if (cmbProfessorNota.SelectedItem == null || cmbProfessorNota.SelectedItem.ToString().Contains("Nenhum professor disponível"))
+                {
+                    MessageBox.Show("Erro: Selecione um professor válido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int professorId = int.Parse(cmbProfessorNota.SelectedItem.ToString().Split('-')[0].Trim());
+
+                // ✅ Verifica se o professor selecionado leciona a disciplina
+                if (!disciplinaEncontrada.ProfessoresIds.Contains(professorId))
+                {
+                    MessageBox.Show("Erro: O professor selecionado não leciona esta disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 if (!double.TryParse(txtValorNota.Text, out double valorNota) || valorNota < 0 || valorNota > 20)
                 {
                     MessageBox.Show("Erro: O valor da nota deve ser um número entre 0 e 20!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -139,7 +155,6 @@ namespace Sistema_de_Gestão_Escolar
 
                 gestor.AdicionarNota(new Nota(alunoId, disciplinaId, valorNota, periodoLetivo, tipoAvaliacao));
 
-                // ✅ Salvar os dados após adicionar nota 
                 gestor.SalvarDados();
                 AtualizarListaNotas();
 
@@ -270,29 +285,49 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Validar se os campos obrigatórios foram preenchidos
-                if (string.IsNullOrEmpty(txtAlunoIdNota.Text) || string.IsNullOrEmpty(txtDisciplinaIdNota.Text) ||
-                    string.IsNullOrEmpty(txtValorNota.Text) || string.IsNullOrEmpty(txtPeriodoNota.Text))
+                if (string.IsNullOrWhiteSpace(txtAlunoIdNota.Text) || string.IsNullOrWhiteSpace(txtDisciplinaIdNota.Text) ||
+                    string.IsNullOrWhiteSpace(txtValorNota.Text) || string.IsNullOrWhiteSpace(txtPeriodoNota.Text))
                 {
                     MessageBox.Show("Erro: Todos os campos devem ser preenchidos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obter os valores dos campos de entrada
-                int alunoId = int.Parse(txtAlunoIdNota.Text);
-                int disciplinaId = int.Parse(txtDisciplinaIdNota.Text);
-                double valorNota = double.Parse(txtValorNota.Text);
-                string periodoLetivo = txtPeriodoNota.Text;
+                if (!int.TryParse(txtAlunoIdNota.Text, out int alunoId) || !int.TryParse(txtDisciplinaIdNota.Text, out int disciplinaId) ||
+                    !double.TryParse(txtValorNota.Text, out double valorNota) || valorNota < 0 || valorNota > 20)
+                {
+                    MessageBox.Show("Erro: IDs e valores devem ser numéricos válidos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string periodoLetivo = txtPeriodoNota.Text.Trim();
                 string tipoAvaliacao = cmbTipoAvaliacao.SelectedItem?.ToString();
 
-                // Validar o tipo de avaliação
                 if (string.IsNullOrEmpty(tipoAvaliacao))
                 {
                     MessageBox.Show("Erro: Selecione um tipo de avaliação.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Verificar se a nota existe
+                Disciplina disciplinaEncontrada = gestor.Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
+                if (disciplinaEncontrada == null)
+                {
+                    MessageBox.Show($"Erro: A disciplina com ID {disciplinaId} não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int professorId = disciplinaEncontrada.ProfessoresIds.FirstOrDefault();
+                if (professorId == 0)
+                {
+                    MessageBox.Show("Erro: Nenhum professor associado a esta disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!gestor.ProfessorPodeGerirNota(professorId, disciplinaId))
+                {
+                    MessageBox.Show("Erro: O professor não tem permissão para gerir notas nesta disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 Nota notaExistente = gestor.Notas.FirstOrDefault(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.PeriodoLetivo == periodoLetivo);
                 if (notaExistente == null)
                 {
@@ -300,20 +335,13 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // Atualizar a nota no sistema
                 bool sucesso = gestor.EditarNota(alunoId, disciplinaId, periodoLetivo, valorNota);
                 if (sucesso)
                 {
-                    // Atualizar o tipo de avaliação
                     notaExistente.TipoAvaliacao = tipoAvaliacao;
 
-                    // Mostrar mensagem de sucesso
                     MessageBox.Show("Nota editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Atualizar a interface gráfica, se necessário
-                    AtualizarListaNotas(); // Este método deve ser implementado para atualizar a visualização das notas na interface
-
-                    // Desabilitar o botão de salvar após a edição
+                    AtualizarListaNotas();
                     btnSalvarEdicaoNota.Enabled = false;
                 }
                 else
@@ -325,7 +353,6 @@ namespace Sistema_de_Gestão_Escolar
             {
                 MessageBox.Show($"Erro ao salvar edição da nota: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void btnConsultarNota_Click(object sender, EventArgs e)
@@ -375,21 +402,21 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Verifica se há algum item selecionado
                 if (lstNotas.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Erro: Nenhuma nota selecionada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Obtém o primeiro item selecionado
                 ListViewItem itemSelecionado = lstNotas.SelectedItems[0];
-
-                // Obtém o índice do item selecionado
                 int indexSelecionado = itemSelecionado.Index;
 
-                // Acessa a Nota correspondente ao índice selecionado
                 Nota notaSelecionada = gestor.Notas.ElementAtOrDefault(indexSelecionado);
+                if (notaSelecionada == null)
+                {
+                    MessageBox.Show("Erro: A nota selecionada não foi encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 if (!int.TryParse(txtAlunoIdNota.Text, out int novoAlunoId) ||
                     !int.TryParse(txtDisciplinaIdNota.Text, out int novaDisciplinaId) ||
@@ -406,15 +433,49 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
+                Disciplina disciplinaEncontrada = gestor.Disciplinas.FirstOrDefault(d => d.Id == novaDisciplinaId);
+                if (disciplinaEncontrada == null)
+                {
+                    MessageBox.Show($"Erro: A disciplina com ID {novaDisciplinaId} não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int professorId = disciplinaEncontrada.ProfessoresIds.FirstOrDefault();
+                if (professorId == 0)
+                {
+                    MessageBox.Show("Erro: Nenhum professor associado a esta disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!gestor.ProfessorPodeGerirNota(professorId, novaDisciplinaId))
+                {
+                    MessageBox.Show("Erro: O professor não tem permissão para gerir notas nesta disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                bool notaDuplicada = gestor.Notas.Any(n => n.AlunoId == novoAlunoId && n.DisciplinaId == novaDisciplinaId && n.TipoAvaliacao == novoTipoAvaliacao && n != notaSelecionada);
+                if (notaDuplicada)
+                {
+                    MessageBox.Show($"Erro: Já existe uma nota do tipo '{novoTipoAvaliacao}' para esta disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string periodoLetivo = txtPeriodoNota.Text.Trim();
+                if (string.IsNullOrEmpty(periodoLetivo) || VerificarEstadoAnoLetivo(periodoLetivo) == "Encerrado")
+                {
+                    MessageBox.Show("Erro: O ano letivo já foi encerrado. Não é possível editar notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 notaSelecionada.AlunoId = novoAlunoId;
                 notaSelecionada.DisciplinaId = novaDisciplinaId;
                 notaSelecionada.ValorNota = novoValorNota;
                 notaSelecionada.TipoAvaliacao = novoTipoAvaliacao;
+                notaSelecionada.PeriodoLetivo = periodoLetivo;
 
-                // ✅ Salvar os dados após editar nota 
                 gestor.SalvarDados();
-
                 AtualizarListaNotas();
+
                 MessageBox.Show("Nota editada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

@@ -416,6 +416,19 @@ public class GestorEscola
 
         return false; // Retorna false se a nota não foi encontrada
     }
+
+    public bool ProfessorPodeGerirNota(int professorId, int disciplinaId)
+    {
+        // Verifica se a disciplina existe
+        Disciplina disciplina = Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
+        if (disciplina == null)
+        {
+            return false;
+        }
+
+        // Verifica se o professor está associado à disciplina
+        return disciplina.ProfessoresIds.Contains(professorId);
+    }
     // ----------------- CRUD PARA EVENTOS -----------------
     // --- Métodos para Eventos ---
     // 📌 Adicionar Evento
