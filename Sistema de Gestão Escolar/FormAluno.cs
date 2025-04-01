@@ -67,11 +67,15 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
-                // ✅ Verificar se a turma existe
-                if (!int.TryParse(txtTurmaAluno.Text, out int turmaId) || !gestor.Turmas.Any(t => t.Id == turmaId))
+                // ✅ Verificar se a turma existe (campo não obrigatório)
+                int turmaId = 0; // Valor padrão para quando não houver turma
+                if (!string.IsNullOrEmpty(txtTurmaAluno.Text) && int.TryParse(txtTurmaAluno.Text, out turmaId))
                 {
-                    MessageBox.Show("Erro: A turma informada não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    if (!gestor.Turmas.Any(t => t.Id == turmaId))
+                    {
+                        MessageBox.Show("Erro: A turma informada não existe!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                 }
 
                 // ✅ Criar e adicionar aluno

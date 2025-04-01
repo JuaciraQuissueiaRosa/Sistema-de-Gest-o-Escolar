@@ -220,25 +220,35 @@ public class GestorEscola
             throw new Exception("Aluno não encontrado.");
         }
     }
-
-    public bool AdicionarAlunoATurma(int alunoId, int turmaId)
+    public string AdicionarAlunoATurma(int alunoId, int turmaId)
     {
-        Aluno aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
-        Turma turma = Turmas.FirstOrDefault(t => t.Id == turmaId);
-
-        if (aluno == null || turma == null)
+        try
         {
-            throw new InvalidOperationException("Aluno ou Turma não encontrada.");
-        }
+            Aluno aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
+            Turma turma = Turmas.FirstOrDefault(t => t.Id == turmaId);
 
-        if (turma.AlunosIds.Contains(alunoId))
+            if (aluno == null || turma == null)
+            {
+                throw new InvalidOperationException("Aluno ou Turma não encontrada.");
+            }
+
+            if (turma.AlunosIds.Contains(alunoId))
+            {
+                throw new InvalidOperationException("O aluno já está nesta turma.");
+            }
+
+            turma.AlunosIds.Add(alunoId);
+            SalvarDados();
+            return "Aluno adicionado com sucesso!";
+        }
+        catch (InvalidOperationException ex)
         {
-            throw new InvalidOperationException("O aluno já está nesta turma.");
+            return ex.Message; // Retorna a mensagem de erro
         }
-
-        turma.AlunosIds.Add(alunoId);
-        SalvarDados();
-        return true;
+        catch (Exception ex)
+        {
+            return $"Erro inesperado: {ex.Message}"; // Retorna a mensagem de erro genérica
+        }
     }
     public bool RemoverTurma(int id)
     {

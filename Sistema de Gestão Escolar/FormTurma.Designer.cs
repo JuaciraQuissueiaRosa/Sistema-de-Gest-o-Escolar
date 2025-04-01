@@ -129,7 +129,7 @@
             // 
             // btnRemoverTurma
             // 
-            btnRemoverTurma.Location = new Point(1012, 390);
+            btnRemoverTurma.Location = new Point(1027, 494);
             btnRemoverTurma.Name = "btnRemoverTurma";
             btnRemoverTurma.Size = new Size(159, 63);
             btnRemoverTurma.TabIndex = 13;
@@ -139,7 +139,7 @@
             // 
             // btnAdicionarTurma
             // 
-            btnAdicionarTurma.Location = new Point(1012, 295);
+            btnAdicionarTurma.Location = new Point(962, 405);
             btnAdicionarTurma.Name = "btnAdicionarTurma";
             btnAdicionarTurma.Size = new Size(156, 59);
             btnAdicionarTurma.TabIndex = 14;
@@ -158,7 +158,7 @@
             // 
             // btnEditarTurma
             // 
-            btnEditarTurma.Location = new Point(1012, 586);
+            btnEditarTurma.Location = new Point(908, 587);
             btnEditarTurma.Name = "btnEditarTurma";
             btnEditarTurma.Size = new Size(156, 59);
             btnEditarTurma.TabIndex = 18;
@@ -178,7 +178,7 @@
             // 
             // btnSalvarEdicaoTurma
             // 
-            btnSalvarEdicaoTurma.Location = new Point(1012, 486);
+            btnSalvarEdicaoTurma.Location = new Point(803, 498);
             btnSalvarEdicaoTurma.Name = "btnSalvarEdicaoTurma";
             btnSalvarEdicaoTurma.Size = new Size(159, 59);
             btnSalvarEdicaoTurma.TabIndex = 22;
@@ -233,7 +233,7 @@
             // 
             // btnAdicionarAluno
             // 
-            btnAdicionarAluno.Location = new Point(784, 519);
+            btnAdicionarAluno.Location = new Point(817, 688);
             btnAdicionarAluno.Name = "btnAdicionarAluno";
             btnAdicionarAluno.Size = new Size(159, 59);
             btnAdicionarAluno.TabIndex = 27;
