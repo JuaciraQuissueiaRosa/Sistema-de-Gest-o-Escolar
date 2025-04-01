@@ -221,6 +221,25 @@ public class GestorEscola
         }
     }
 
+    public bool AdicionarAlunoATurma(int alunoId, int turmaId)
+    {
+        Aluno aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
+        Turma turma = Turmas.FirstOrDefault(t => t.Id == turmaId);
+
+        if (aluno == null || turma == null)
+        {
+            throw new InvalidOperationException("Aluno ou Turma não encontrada.");
+        }
+
+        if (turma.AlunosIds.Contains(alunoId))
+        {
+            throw new InvalidOperationException("O aluno já está nesta turma.");
+        }
+
+        turma.AlunosIds.Add(alunoId);
+        SalvarDados();
+        return true;
+    }
     public bool RemoverTurma(int id)
     {
         for (int i = 0; i < Turmas.Count; i++)

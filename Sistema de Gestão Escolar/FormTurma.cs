@@ -1,4 +1,5 @@
 ﻿using Bibilioteca_Sistema_de_Gestão_Escolar;
+using ScottPlot.Drawing.Colormaps;
 using System.Drawing.Drawing2D;
 
 namespace Sistema_de_Gestão_Escolar
@@ -18,7 +19,7 @@ namespace Sistema_de_Gestão_Escolar
 
         }
 
-     
+
         private void btnRemoverTurma_Click(object sender, EventArgs e)
         {
             try
@@ -242,12 +243,16 @@ namespace Sistema_de_Gestão_Escolar
             lstTurmas.Columns.Add("Turno", 300);
             lstTurmas.Columns.Add("Disciplinas", 1000);
             lstTurmas.Columns.Add("Professores", 300);
-     
+            lstTurmas.Columns.Add("Alunos", 300);
+
 
             // Configurar o modo de exibição do ListView para exibir em detalhes
             lstTurmas.View = View.Details;
             lstTurmas.FullRowSelect = true;// Seleção da linha inteira
             lstTurmas.GridLines = true;
+
+            // Atualizar a lista de turmas com alunos
+            AtualizarListaAlunosTurma();
 
         }
 
@@ -425,7 +430,7 @@ namespace Sistema_de_Gestão_Escolar
         }
 
 
-      
+
 
         private void btnSalvarEdicaoTurma_Click(object sender, EventArgs e)
         {
@@ -550,11 +555,85 @@ namespace Sistema_de_Gestão_Escolar
             cmbCursoTurma.SelectedIndex = -1;
         }
 
+        private void btnAdicionarAluno_Click(object sender, EventArgs e)
+        {
+            if (!int.TryParse(txtAlunosTurma.Text, out int alunoId) || !int.TryParse(txtIdTurma.Text, out int turmaId))
+            {
+                MessageBox.Show("Erro: IDs inválidos!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (gestor.AdicionarAlunoATurma(alunoId, turmaId))
+            {
+                AtualizarListaAlunosTurma();
+                MessageBox.Show("Aluno adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Erro ao adicionar aluno à turma.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
 
+        private void AtualizarListaAlunosTurma()
+        {
+            // Verificar se o campo txtIdTurma.Text não está vazio e é um número válido
+            if (int.TryParse(txtIdTurma.Text, out int turmaId))
+            {
+                // Buscar a turma com o ID fornecido
+                Turma turma = gestor.Turmas.FirstOrDefault(t => t.Id == turmaId);
 
+                if (turma != null)
+                {
+                    // Criar uma lista para armazenar os nomes dos alunos
+                    List<string> alunosNome = new List<string>();
 
+                    // Verificar se a turma tem alunos
+                    if (turma.AlunosIds.Count > 0)
+                    {
+                        // Para cada ID de aluno, buscar o aluno correspondente e adicionar ao nome
+                        foreach (int alunoId in turma.AlunosIds)
+                        {
+                            Aluno aluno = gestor.Alunos.FirstOrDefault(a => a.Id == alunoId);
+                            if (aluno != null)
+                            {
+                                alunosNome.Add(aluno.Nome); // Adiciona o nome do aluno
+                            }
+                        }
+                    }
 
-  
-    }
+                    // Criar uma string com todos os nomes dos alunos separados por vírgula
+                    string alunosNomeConcat = string.Join(", ", alunosNome);
+
+                    // Criar um novo item para a turma com todos os dados, incluindo os alunos
+                    ListViewItem item = new ListViewItem(new[]
+                    {
+                turma.Id.ToString(),           // ID
+                turma.Curso,                   // Curso
+                turma.AnoLetivo,               // Ano Letivo
+                turma.Turno,                   // Turno
+                "",                            // Deixe a coluna "Disciplinas" vazia ou preenchida se necessário
+                "",                            // Deixe a coluna "Professores" vazia ou preenchida se necessário
+                alunosNomeConcat              // Alunos (os nomes dos alunos concatenados por vírgula)
+            });
+
+                    // Adicionar o item à ListView
+                    lstTurmas.Items.Add(item);
+                }
+                else
+                {
+                    // Caso a turma não seja encontrada
+                    MessageBox.Show("Turma não encontrada.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // Se o ID da turma não for válido
+                MessageBox.Show("ID da turma inválido. Por favor, insira um número válido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
 }
+    }
+

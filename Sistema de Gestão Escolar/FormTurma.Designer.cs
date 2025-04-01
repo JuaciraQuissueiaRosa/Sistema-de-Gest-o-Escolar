@@ -48,6 +48,7 @@
             lblProfessores = new Label();
             lblDisciplinas = new Label();
             lstTurmas = new ListView();
+            btnAdicionarAluno = new Button();
             SuspendLayout();
             // 
             // lblIdTurma
@@ -230,11 +231,22 @@
             lstTurmas.UseCompatibleStateImageBehavior = false;
             lstTurmas.SelectedIndexChanged += lstTurmas_SelectedIndexChanged;
             // 
+            // btnAdicionarAluno
+            // 
+            btnAdicionarAluno.Location = new Point(784, 519);
+            btnAdicionarAluno.Name = "btnAdicionarAluno";
+            btnAdicionarAluno.Size = new Size(159, 59);
+            btnAdicionarAluno.TabIndex = 27;
+            btnAdicionarAluno.Text = "Adicionar Aluno a turma";
+            btnAdicionarAluno.UseVisualStyleBackColor = true;
+            btnAdicionarAluno.Click += btnAdicionarAluno_Click;
+            // 
             // FormTurma
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1208, 796);
+            Controls.Add(btnAdicionarAluno);
             Controls.Add(lstTurmas);
             Controls.Add(lblDisciplinas);
             Controls.Add(lstProfessoresTurma);
@@ -286,5 +298,6 @@
         private Label lblProfessores;
         private Label lblDisciplinas;
         private ListView lstTurmas;
+        private Button btnAdicionarAluno;
     }
 }

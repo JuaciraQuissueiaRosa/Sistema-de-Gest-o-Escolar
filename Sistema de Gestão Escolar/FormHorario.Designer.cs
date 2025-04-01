@@ -67,7 +67,7 @@
             cmbTurma.FormattingEnabled = true;
             cmbTurma.Location = new Point(417, 90);
             cmbTurma.Name = "cmbTurma";
-            cmbTurma.Size = new Size(151, 28);
+            cmbTurma.Size = new Size(234, 28);
             cmbTurma.TabIndex = 2;
             // 
             // cmbDisciplina
@@ -75,7 +75,7 @@
             cmbDisciplina.FormattingEnabled = true;
             cmbDisciplina.Location = new Point(417, 246);
             cmbDisciplina.Name = "cmbDisciplina";
-            cmbDisciplina.Size = new Size(151, 28);
+            cmbDisciplina.Size = new Size(234, 28);
             cmbDisciplina.TabIndex = 3;
             // 
             // cmbProfessor
@@ -83,7 +83,7 @@
             cmbProfessor.FormattingEnabled = true;
             cmbProfessor.Location = new Point(417, 171);
             cmbProfessor.Name = "cmbProfessor";
-            cmbProfessor.Size = new Size(151, 28);
+            cmbProfessor.Size = new Size(234, 28);
             cmbProfessor.TabIndex = 4;
             // 
             // cmbDiaSemana
@@ -91,7 +91,7 @@
             cmbDiaSemana.FormattingEnabled = true;
             cmbDiaSemana.Location = new Point(417, 322);
             cmbDiaSemana.Name = "cmbDiaSemana";
-            cmbDiaSemana.Size = new Size(151, 28);
+            cmbDiaSemana.Size = new Size(234, 28);
             cmbDiaSemana.TabIndex = 5;
             // 
             // lstHorarios
