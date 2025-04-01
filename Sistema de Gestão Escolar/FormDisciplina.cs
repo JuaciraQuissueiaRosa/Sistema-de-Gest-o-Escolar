@@ -106,19 +106,51 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                if (lstDisciplinas.SelectedItems.Count == 0) return;
+                if (lstDisciplinas.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show("Erro: Selecione uma disciplina para remover!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
+                // Obter o ID da disciplina selecionada
                 ListViewItem itemSelecionado = lstDisciplinas.SelectedItems[0];
                 int idDisciplina = int.Parse(itemSelecionado.SubItems[0].Text);
                 var disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == idDisciplina);
 
-                if (disciplina != null)
+                if (disciplina == null)
                 {
-                    gestor.RemoverDisciplina(disciplina.Id);
-                    gestor.SalvarDados();
-                    AtualizarListaDisciplinas();
-                    MessageBox.Show("Disciplina removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Erro: Disciplina não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
+
+                // Verificar se a disciplina está vinculada a alguma turma antes de remover
+                if (gestor.Turmas.Any(t => t.DisciplinasIds.Contains(disciplina.Id)))
+                {
+                    MessageBox.Show("Erro: A disciplina está associada a uma turma. Remova a associação antes de excluir.",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Confirmação antes de excluir
+                DialogResult resultado = MessageBox.Show($"Tem certeza que deseja remover a disciplina \"{disciplina.Nome}\"?",
+                    "Confirmar remoção", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (resultado == DialogResult.No)
+                    return;
+
+                // Remover disciplina da lista
+                bool removida = gestor.RemoverDisciplina(disciplina.Id);
+                if (!removida)
+                {
+                    MessageBox.Show("Erro: A disciplina não pôde ser removida!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Salvar mudanças e atualizar lista
+                gestor.SalvarDados();
+                AtualizarListaDisciplinas();
+
+                MessageBox.Show("Disciplina removida com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

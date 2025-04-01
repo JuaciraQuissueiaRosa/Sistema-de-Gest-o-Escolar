@@ -185,7 +185,7 @@ namespace Sistema_de_Gestão_Escolar
                     lstProfessores.Columns.Add("Contato", 185);
                     lstProfessores.Columns.Add("Email", 250);
                     lstProfessores.Columns.Add("Área", 200);
-                    lstProfessores.Columns.Add("Disciplinas", 200);
+                    lstProfessores.Columns.Add("Disciplinas", 500);
                 }
 
                 // Atualizar lista de professores ao abrir o formulário

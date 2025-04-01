@@ -49,7 +49,7 @@
             // lblIdProfessor
             // 
             lblIdProfessor.AutoSize = true;
-            lblIdProfessor.Location = new Point(71, 44);
+            lblIdProfessor.Location = new Point(32, 44);
             lblIdProfessor.Name = "lblIdProfessor";
             lblIdProfessor.Size = new Size(114, 20);
             lblIdProfessor.TabIndex = 0;
@@ -58,7 +58,7 @@
             // lblNomeProfessor
             // 
             lblNomeProfessor.AutoSize = true;
-            lblNomeProfessor.Location = new Point(71, 115);
+            lblNomeProfessor.Location = new Point(32, 115);
             lblNomeProfessor.Name = "lblNomeProfessor";
             lblNomeProfessor.Size = new Size(140, 20);
             lblNomeProfessor.TabIndex = 1;
@@ -67,7 +67,7 @@
             // lblContatoProfessor
             // 
             lblContatoProfessor.AutoSize = true;
-            lblContatoProfessor.Location = new Point(71, 183);
+            lblContatoProfessor.Location = new Point(32, 183);
             lblContatoProfessor.Name = "lblContatoProfessor";
             lblContatoProfessor.Size = new Size(65, 20);
             lblContatoProfessor.TabIndex = 2;
@@ -76,7 +76,7 @@
             // lblEmailProfessor
             // 
             lblEmailProfessor.AutoSize = true;
-            lblEmailProfessor.Location = new Point(71, 234);
+            lblEmailProfessor.Location = new Point(32, 234);
             lblEmailProfessor.Name = "lblEmailProfessor";
             lblEmailProfessor.Size = new Size(49, 20);
             lblEmailProfessor.TabIndex = 3;
@@ -85,7 +85,7 @@
             // lblAreaEnsino
             // 
             lblAreaEnsino.AutoSize = true;
-            lblAreaEnsino.Location = new Point(71, 295);
+            lblAreaEnsino.Location = new Point(30, 295);
             lblAreaEnsino.Name = "lblAreaEnsino";
             lblAreaEnsino.Size = new Size(111, 20);
             lblAreaEnsino.TabIndex = 4;
@@ -93,21 +93,21 @@
             // 
             // txtNomeProfessor
             // 
-            txtNomeProfessor.Location = new Point(214, 115);
+            txtNomeProfessor.Location = new Point(175, 115);
             txtNomeProfessor.Name = "txtNomeProfessor";
             txtNomeProfessor.Size = new Size(158, 27);
             txtNomeProfessor.TabIndex = 5;
             // 
             // txtIdProfessor
             // 
-            txtIdProfessor.Location = new Point(214, 44);
+            txtIdProfessor.Location = new Point(175, 44);
             txtIdProfessor.Name = "txtIdProfessor";
             txtIdProfessor.Size = new Size(125, 27);
             txtIdProfessor.TabIndex = 6;
             // 
             // txtEmailProfessor
             // 
-            txtEmailProfessor.Location = new Point(142, 231);
+            txtEmailProfessor.Location = new Point(103, 231);
             txtEmailProfessor.Name = "txtEmailProfessor";
             txtEmailProfessor.Size = new Size(236, 27);
             txtEmailProfessor.TabIndex = 7;
@@ -136,14 +136,14 @@
             // 
             cmbAreaEnsino.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbAreaEnsino.FormattingEnabled = true;
-            cmbAreaEnsino.Location = new Point(188, 295);
+            cmbAreaEnsino.Location = new Point(147, 295);
             cmbAreaEnsino.Name = "cmbAreaEnsino";
             cmbAreaEnsino.Size = new Size(244, 28);
             cmbAreaEnsino.TabIndex = 13;
             // 
             // mtbContatoProfessor
             // 
-            mtbContatoProfessor.Location = new Point(142, 180);
+            mtbContatoProfessor.Location = new Point(103, 180);
             mtbContatoProfessor.Mask = "+351 000 000 000";
             mtbContatoProfessor.Name = "mtbContatoProfessor";
             mtbContatoProfessor.Size = new Size(165, 27);
@@ -151,7 +151,7 @@
             // 
             // btnEditarProfessor
             // 
-            btnEditarProfessor.Location = new Point(197, 470);
+            btnEditarProfessor.Location = new Point(197, 477);
             btnEditarProfessor.Name = "btnEditarProfessor";
             btnEditarProfessor.Size = new Size(142, 59);
             btnEditarProfessor.TabIndex = 16;
@@ -161,7 +161,7 @@
             // 
             // btnConsultarProfessor
             // 
-            btnConsultarProfessor.Location = new Point(47, 470);
+            btnConsultarProfessor.Location = new Point(43, 477);
             btnConsultarProfessor.Name = "btnConsultarProfessor";
             btnConsultarProfessor.Size = new Size(129, 59);
             btnConsultarProfessor.TabIndex = 15;
@@ -171,7 +171,7 @@
             // 
             // btnSalvarEdicaoProfessor
             // 
-            btnSalvarEdicaoProfessor.Location = new Point(527, 494);
+            btnSalvarEdicaoProfessor.Location = new Point(491, 470);
             btnSalvarEdicaoProfessor.Name = "btnSalvarEdicaoProfessor";
             btnSalvarEdicaoProfessor.Size = new Size(151, 73);
             btnSalvarEdicaoProfessor.TabIndex = 17;
@@ -181,9 +181,9 @@
             // 
             // lstProfessores
             // 
-            lstProfessores.Location = new Point(545, 44);
+            lstProfessores.Location = new Point(491, 29);
             lstProfessores.Name = "lstProfessores";
-            lstProfessores.Size = new Size(598, 401);
+            lstProfessores.Size = new Size(745, 401);
             lstProfessores.TabIndex = 18;
             lstProfessores.UseCompatibleStateImageBehavior = false;
             lstProfessores.SelectedIndexChanged += lstProfessores_SelectedIndexChanged;
@@ -192,7 +192,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1245, 604);
+            ClientSize = new Size(1313, 604);
             Controls.Add(lstProfessores);
             Controls.Add(btnSalvarEdicaoProfessor);
             Controls.Add(btnEditarProfessor);

@@ -242,24 +242,30 @@ public class GestorEscola
     }
     public bool RemoverTurma(int id)
     {
-        for (int i = 0; i < Turmas.Count; i++)
         {
-            if (Turmas[i].Id == id)
+            Turma turma = Turmas.FirstOrDefault(t => t.Id == id);
+            if (turma == null)
             {
-                // Verificar se há alunos matriculados antes de remover a turma
-                if (Turmas[i].AlunosIds.Count > 0)
-                {
-                    return false; // Retorna falso se houver alunos matriculados
-                }
-
-                // Remover a turma da lista
-                Turmas.RemoveAt(i);
-                SalvarDados();
-                return true; // Retorna verdadeiro se a remoção for bem-sucedida
+                return false; // Turma não encontrada
             }
-        }
 
-        return false; // Retorna falso se a turma não for encontrada
+            // 🚨 Verifica se há alunos matriculados
+            if (Alunos.Any(a => a.TurmaId == id))
+            {
+                return false; // Há alunos ainda vinculados à turma
+            }
+
+            // 🚨 Remove a turma da lista
+            bool removida = Turmas.Remove(turma);
+
+            if (removida)
+            {
+                SalvarDados(); // Garante que a remoção foi salva
+            }
+
+            return removida;
+          
+        }
     }
 
     // ----------------- CRUD PARA PROFESSORES -----------------
