@@ -148,10 +148,20 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
+
+
                 string periodoLetivo = txtPeriodoNota.Text.Trim();
                 if (string.IsNullOrEmpty(periodoLetivo) || VerificarEstadoAnoLetivo(periodoLetivo) == "Encerrado")
                 {
                     MessageBox.Show("Erro: O ano letivo já foi encerrado. Não é possível adicionar ou alterar notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+
+                // Validar o formato do ano letivo
+                if (!gestor.ValidarAnoLetivo(periodoLetivo))
+                {
+                    MessageBox.Show("Erro: O ano letivo deve estar no formato 'AAAA/AAAA'!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -476,6 +486,14 @@ namespace Sistema_de_Gestão_Escolar
                 if (string.IsNullOrEmpty(periodoLetivo) || VerificarEstadoAnoLetivo(periodoLetivo) == "Encerrado")
                 {
                     MessageBox.Show("Erro: O ano letivo já foi encerrado. Não é possível editar notas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+
+                // Validar o formato do ano letivo
+                if (!gestor.ValidarAnoLetivo(periodoLetivo))
+                {
+                    MessageBox.Show("Erro: O ano letivo deve estar no formato 'AAAA/AAAA'!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
