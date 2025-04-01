@@ -349,7 +349,7 @@ namespace Sistema_de_Gestão_Escolar
                     MessageBox.Show("Erro: O professor não tem permissão para gerir notas nesta disciplina!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
+              
                 Nota notaExistente = gestor.Notas.FirstOrDefault(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.PeriodoLetivo == periodoLetivo);
                 if (notaExistente == null)
                 {
