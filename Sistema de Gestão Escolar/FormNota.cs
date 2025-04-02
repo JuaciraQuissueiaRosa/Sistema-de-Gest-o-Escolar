@@ -31,6 +31,7 @@ namespace Sistema_de_Gestão_Escolar
             lstNotas.Columns.Add("Nota", 100);
             lstNotas.Columns.Add("Período Letivo", 150);
             lstNotas.Columns.Add("Turma", 300);
+            lstNotas.Columns.Add("Média final", 80);
 
             // Configurações do ListView
             lstNotas.View = View.Details; // Exibir detalhes com colunas
@@ -196,9 +197,12 @@ namespace Sistema_de_Gestão_Escolar
                     item.SubItems.Add(nota.DisciplinaId.ToString());
                     item.SubItems.Add(nomeDisciplina);
                     item.SubItems.Add(tipoAvaliacao);
-                    item.SubItems.Add(nota.ValorNota.ToString());
+                    item.SubItems.Add(nota.ValorNota.ToString("F2"));
                     item.SubItems.Add(nota.PeriodoLetivo);
+                  
                     item.SubItems.Add(turmaInfo);
+                    item.SubItems.Add(nota.Media.ToString("F2"));
+
 
                     item.Tag = nota; // 🔥 Guardamos o objeto Nota diretamente!
 

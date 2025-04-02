@@ -9,6 +9,8 @@
 
         public string TipoAvaliacao { get; set; } // Teste, Trabalho, Exame
 
+        public double Media { get; set; }
+
         public Nota(int alunoId, int disciplinaId, double valorNota, string periodoLetivo, string tipoAvaliacao)
         {
             AlunoId = alunoId;

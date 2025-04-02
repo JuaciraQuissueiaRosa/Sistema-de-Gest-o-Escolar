@@ -405,9 +405,16 @@ public class GestorEscola
             throw new Exception("Notas não podem ser adicionadas após o término do período letivo.");
 
         Notas.Add(nota);
+
+        // Salvar os dados com a nova nota incluída
+        SalvarDados();
+
+        // Agora que a nota foi adicionada, recalcular a média final
+        nota.Media = CalcularMedia(nota.AlunoId, nota.DisciplinaId);
+
+        // Salvar novamente os dados para armazenar a média atualizada
         SalvarDados();
     }
-
     public bool RemoverNota(int alunoId, int disciplinaId, string periodoLetivo)
     {
         Nota nota = Notas.FirstOrDefault(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.PeriodoLetivo == periodoLetivo);
@@ -428,19 +435,27 @@ public class GestorEscola
         }
 
         // Encontrar a nota correspondente ao aluno, disciplina e período letivo
-        Nota notaExistente = Notas.FirstOrDefault(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.PeriodoLetivo == periodoLetivo);
+        Nota notaExistente = Notas.FirstOrDefault(n => n.AlunoId == alunoId &&
+                                                       n.DisciplinaId == disciplinaId &&
+                                                       n.PeriodoLetivo == periodoLetivo);
 
         if (notaExistente != null)
         {
             // Atualizar a nota
             notaExistente.ValorNota = novaNota;
-            SalvarDados(); // Salvar os dados após a edição
+
+            // Recalcular a média final dessa disciplina para o aluno
+            double novaMedia = CalcularMedia(alunoId, disciplinaId);
+            notaExistente.Media = novaMedia;
+
+            // Salvar os dados atualizados
+            SalvarDados();
+
             return true; // Retorna true se a edição foi bem-sucedida
         }
 
         return false; // Retorna false se a nota não foi encontrada
     }
-
     public bool ProfessorPodeGerirNota(int professorId, int disciplinaId)
     {
         // Verifica se a disciplina existe
@@ -452,6 +467,18 @@ public class GestorEscola
 
         // Verifica se o professor está associado à disciplina
         return disciplina.ProfessoresIds.Contains(professorId);
+    }
+
+    public double CalcularMedia(int alunoId, int disciplinaId)
+    {
+        var notas = Notas.Where(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId).ToList();
+
+        if (!notas.Any())
+            return 0.0; // Se não houver notas, a média é zero
+
+        double mediaFinal = notas.Average(n => n.ValorNota);
+
+        return Math.Round(mediaFinal, 2); // Arredonda para duas casas decimais
     }
     // ----------------- CRUD PARA EVENTOS -----------------
     // --- Métodos para Eventos ---
