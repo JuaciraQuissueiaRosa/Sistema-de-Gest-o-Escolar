@@ -208,19 +208,6 @@ public class GestorEscola
         return false; // Retorna falso se a turma não for encontrada
     }
 
-    public void MudarAlunoDeTurma(int alunoId, int novaTurmaId)
-    {
-        Aluno aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
-        if (aluno != null)
-        {
-            aluno.TurmaId = novaTurmaId;
-            SalvarDados();
-        }
-        else
-        {
-            throw new Exception("Aluno não encontrado.");
-        }
-    }
   
 
     public string AdicionarAlunoATurma(int alunoId, int turmaId)
@@ -246,7 +233,9 @@ public class GestorEscola
         // Salvar os dados
         SalvarDados();
 
-     
+      
+
+
 
         return "Aluno adicionado com sucesso!";
     }

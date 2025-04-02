@@ -12,7 +12,8 @@ namespace Sistema_de_Gestão_Escolar
         {
             InitializeComponent();
             this.gestor = gestor;
-            AtualizarListaTurmas();
+            AtualizarListaTurmas(); // Primeiro, carrega os dados da ListView
+          
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -655,7 +656,7 @@ namespace Sistema_de_Gestão_Escolar
                 // Verificar se há uma turma selecionada
                 if (lstTurmas.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show("Erro: Selecione uma turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Nenhuma Turma existente!", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 

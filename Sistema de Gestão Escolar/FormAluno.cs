@@ -53,6 +53,14 @@ namespace Sistema_de_Gestão_Escolar
                     return;
                 }
 
+                // ✅ Verificar preenchimento dos campos
+                string morada= txtMoradaAluno.Text.Trim();
+                if (string.IsNullOrEmpty(morada))
+                {
+                    MessageBox.Show("Erro: O nome do aluno não pode estar vazio!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 string contato = txtContatoAluno.Text.Trim();
                 if (!ValidarContato(contato))
                 {
