@@ -237,7 +237,7 @@ namespace Sistema_de_Gestão_Escolar
 
                 CarregarDisciplinasDisponiveis();
                 AtualizarListaTurmas();
-               
+             
 
             }
             catch (Exception ex)
@@ -277,6 +277,7 @@ namespace Sistema_de_Gestão_Escolar
 
             // Atualizar a lista de turmas com alunos
             AtualizarListaAlunosTurma();
+
 
         }
 
@@ -656,7 +657,7 @@ namespace Sistema_de_Gestão_Escolar
                 // Verificar se há uma turma selecionada
                 if (lstTurmas.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show("Nenhuma Turma existente!", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    lstTurmas.Items.Clear();
                     return;
                 }
 
