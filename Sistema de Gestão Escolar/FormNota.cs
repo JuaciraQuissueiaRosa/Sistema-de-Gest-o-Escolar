@@ -31,7 +31,7 @@ namespace Sistema_de_Gestão_Escolar
             lstNotas.Columns.Add("Nota", 100);
             lstNotas.Columns.Add("Período Letivo", 150);
             lstNotas.Columns.Add("Turma", 300);
-            lstNotas.Columns.Add("Média final", 80);
+            lstNotas.Columns.Add("Média final", 100);
 
             // Configurações do ListView
             lstNotas.View = View.Details; // Exibir detalhes com colunas
