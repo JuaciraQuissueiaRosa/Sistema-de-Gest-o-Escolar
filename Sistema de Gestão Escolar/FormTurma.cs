@@ -657,7 +657,7 @@ namespace Sistema_de_Gestão_Escolar
                 // Verificar se há uma turma selecionada
                 if (lstTurmas.SelectedItems.Count == 0)
                 {
-                    lstTurmas.Items.Clear();
+                    MessageBox.Show("Entre, visualize ou crie turmas", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
