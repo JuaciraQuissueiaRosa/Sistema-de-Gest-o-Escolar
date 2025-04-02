@@ -3,6 +3,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Numerics;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 public class GestorEscola
 {
@@ -220,35 +221,34 @@ public class GestorEscola
             throw new Exception("Aluno não encontrado.");
         }
     }
+  
+
     public string AdicionarAlunoATurma(int alunoId, int turmaId)
     {
-        try
-        {
-            Aluno aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
-            Turma turma = Turmas.FirstOrDefault(t => t.Id == turmaId);
+        var aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
+        var turma = Turmas.FirstOrDefault(t => t.Id == turmaId);
 
-            if (aluno == null || turma == null)
-            {
-                throw new InvalidOperationException("Aluno ou Turma não encontrada.");
-            }
+        if (aluno == null)
+            return "Erro: Aluno não encontrado!";
 
-            if (turma.AlunosIds.Contains(alunoId))
-            {
-                throw new InvalidOperationException("O aluno já está nesta turma.");
-            }
+        if (turma == null)
+            return "Erro: Turma não encontrada!";
 
-            turma.AlunosIds.Add(alunoId);
-            SalvarDados();
-            return "Aluno adicionado com sucesso!";
-        }
-        catch (InvalidOperationException ex)
-        {
-            return ex.Message; // Retorna a mensagem de erro
-        }
-        catch (Exception ex)
-        {
-            return $"Erro inesperado: {ex.Message}"; // Retorna a mensagem de erro genérica
-        }
+        if (turma.AlunosIds.Contains(alunoId))
+            return "Erro: O aluno já está nesta turma!";
+
+        // Adicionar o aluno à turma
+        turma.AlunosIds.Add(alunoId);
+
+        // Associar o aluno à turma
+        aluno.TurmaId = turmaId;
+
+        // Salvar os dados
+        SalvarDados();
+
+     
+
+        return "Aluno adicionado com sucesso!";
     }
     public bool RemoverTurma(int id)
     {

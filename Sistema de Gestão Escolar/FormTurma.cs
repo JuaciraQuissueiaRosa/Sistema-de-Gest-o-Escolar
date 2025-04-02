@@ -177,23 +177,21 @@ namespace Sistema_de_Gestão_Escolar
 
                 foreach (var turma in gestor.Turmas)
                 {
-                    // Cria um novo item para a ListView
-                    var item = new ListViewItem(turma.Id.ToString());
+                    // Obter nomes dos alunos da turma
+                    var alunosNomes = gestor.Alunos
+                        .Where(a => turma.AlunosIds.Contains(a.Id))
+                        .Select(a => a.Nome)
+                        .DefaultIfEmpty("Nenhum aluno")
+                        .Aggregate((atual, proximo) => $"{atual}, {proximo}");
 
-                    // Adiciona os subitens para Curso, Ano Letivo, Turno, Disciplinas e Professores
-                    item.SubItems.Add(turma.Curso);
-                    item.SubItems.Add(turma.AnoLetivo);
-                    item.SubItems.Add(turma.Turno);
-
-                    // Disciplinas
+                    // Obter nomes das disciplinas da turma
                     var disciplinasTexto = gestor.Disciplinas
                         .Where(d => turma.DisciplinasIds.Contains(d.Id))
                         .Select(d => d.Nome)
                         .DefaultIfEmpty("Nenhuma")
                         .Aggregate((atual, proximo) => $"{atual}, {proximo}");
-                    item.SubItems.Add(disciplinasTexto);
 
-                    // Professores
+                    // Obter nomes dos professores associados às disciplinas
                     var professoresTexto = gestor.Disciplinas
                         .Where(d => turma.DisciplinasIds.Contains(d.Id))
                         .SelectMany(d => d.ProfessoresIds)
@@ -201,9 +199,17 @@ namespace Sistema_de_Gestão_Escolar
                         .Select(idProf => gestor.Professores.FirstOrDefault(p => p.Id == idProf)?.Nome ?? "Desconhecido")
                         .DefaultIfEmpty("Nenhum")
                         .Aggregate((atual, proximo) => $"{atual}, {proximo}");
+
+                    // Criar o item da ListView
+                    var item = new ListViewItem(turma.Id.ToString());
+                    item.SubItems.Add(turma.Curso);
+                    item.SubItems.Add(turma.AnoLetivo);
+                    item.SubItems.Add(turma.Turno);
+                    item.SubItems.Add(alunosNomes);
+                    item.SubItems.Add(disciplinasTexto);
                     item.SubItems.Add(professoresTexto);
 
-                    // Adiciona o item à ListView
+                    // Adicionar o item atualizado na ListView
                     lstTurmas.Items.Add(item);
                 }
             }
@@ -258,9 +264,9 @@ namespace Sistema_de_Gestão_Escolar
             lstTurmas.Columns.Add("Curso", 250);            // Coluna Curso
             lstTurmas.Columns.Add("Ano Letivo", 300);      // Coluna Ano Letivo
             lstTurmas.Columns.Add("Turno", 300);
-            lstTurmas.Columns.Add("Disciplinas", 1000);
-            lstTurmas.Columns.Add("Professores", 300);
-            lstTurmas.Columns.Add("Alunos", 300);
+            lstTurmas.Columns.Add("Alunos", 1000);
+            lstTurmas.Columns.Add("Disciplinas", 300);
+            lstTurmas.Columns.Add("Professores", 1000);
 
 
             // Configurar o modo de exibição do ListView para exibir em detalhes
@@ -301,7 +307,7 @@ namespace Sistema_de_Gestão_Escolar
             button.FlatAppearance.BorderSize = 0;
         }
 
-
+   
         private void AtualizarFormAluno()
         {
             try
@@ -628,14 +634,10 @@ namespace Sistema_de_Gestão_Escolar
                 return;
             }
 
-            string resultado = gestor.AdicionarAlunoATurma(alunoId, turmaId); // Agora recebe uma string
+            string resultado = gestor.AdicionarAlunoATurma(alunoId, turmaId);
 
             if (resultado == "Aluno adicionado com sucesso!")
             {
-                gestor.SalvarDados();
-                AtualizarListaAlunosTurma();
-                AtualizarListaTurmas();
-
                 MessageBox.Show(resultado, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
@@ -647,70 +649,60 @@ namespace Sistema_de_Gestão_Escolar
 
         private void AtualizarListaAlunosTurma()
         {
-            // Verificar se há uma turma selecionada
-            if (lstTurmas.SelectedItems.Count == 0)
+
+            try
             {
-                MessageBox.Show("Erro: Selecione uma turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Obter o ID da turma selecionada
-            int idTurma = int.Parse(lstTurmas.SelectedItems[0].SubItems[0].Text);
-
-            // Buscar a turma no gestor
-            Turma turma = gestor.Turmas.FirstOrDefault(t => t.Id == idTurma);
-
-            if (turma == null)
-            {
-                MessageBox.Show("Erro: Turma não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // Obter nomes dos alunos
-            string alunosNome = string.Join(", ", turma.AlunosIds.Select(alunoId =>
-            {
-                Aluno aluno = gestor.Alunos.FirstOrDefault(a => a.Id == alunoId);
-                return aluno?.Nome ?? "Aluno Desconhecido";
-            }));
-
-            // Obter nomes das disciplinas
-            string disciplinasNome = string.Join(", ", turma.DisciplinasIds.Select(disciplinaId =>
-            {
-                Disciplina disciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
-                return disciplina?.Nome ?? "Disciplina Não Definida";
-            }));
-
-            // Obter nomes dos professores
-            string professoresNome = string.Join(", ", turma.DisciplinasIds
-                .SelectMany(disciplinaId =>
-                    gestor.Disciplinas.FirstOrDefault(d => d.Id == disciplinaId)?.ProfessoresIds ?? new List<int>())
-                .Distinct()
-                .Select(professorId =>
+                // Verificar se há uma turma selecionada
+                if (lstTurmas.SelectedItems.Count == 0)
                 {
-                    Professor professor = gestor.Professores.FirstOrDefault(p => p.Id == professorId);
-                    return professor?.Nome ?? "Professor Não Definido";
-                }));
+                    MessageBox.Show("Erro: Selecione uma turma!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-            // Criar um novo item na ListView com os dados da turma
-            ListViewItem item = new ListViewItem(new[]
-            {
-        turma.Id.ToString(),      // ID
-        turma.Curso,              // Curso
-        turma.AnoLetivo,          // Ano Letivo
-        turma.Turno,              // Turno
-        alunosNome,               // Alunos
-        disciplinasNome,          // Disciplinas
-        professoresNome           // Professores
-    });
+                // Obter e validar o ID da turma selecionada
+                if (!int.TryParse(lstTurmas.SelectedItems[0].SubItems[0].Text, out int idTurma))
+                {
+                    MessageBox.Show("Erro: ID da turma inválido!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-            // Atualizar a ListView
-            var itemAntigo = lstTurmas.Items.Cast<ListViewItem>().FirstOrDefault(i => i.Text == turma.Id.ToString());
-            if (itemAntigo != null)
-            {
-                lstTurmas.Items.Remove(itemAntigo);  // Remove item antigo
+                // Buscar a turma no gestor
+                Turma turma = gestor.Turmas.FirstOrDefault(t => t.Id == idTurma);
+                if (turma == null)
+                {
+                    MessageBox.Show("Erro: Turma não encontrada!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Obter nomes dos alunos
+                string alunosNome = turma.AlunosIds
+                    .Select(alunoId => gestor.Alunos.FirstOrDefault(a => a.Id == alunoId)?.Nome ?? "Aluno Desconhecido")
+                    .Aggregate((a, b) => a + ", " + b);
+
+                // Criar um novo item na ListView com os dados atualizados da turma
+                ListViewItem item = new ListViewItem(new[]
+                {
+            turma.Id.ToString(),
+            turma.Curso,
+            turma.AnoLetivo,
+            turma.Turno,
+            alunosNome
+        });
+
+                // Remover item antigo, se existir, para evitar duplicatas
+                ListViewItem itemAntigo = lstTurmas.Items.Cast<ListViewItem>().FirstOrDefault(i => i.Text == turma.Id.ToString());
+                if (itemAntigo != null)
+                {
+                    lstTurmas.Items.Remove(itemAntigo);
+                }
+
+                // Adicionar novo item atualizado
+                lstTurmas.Items.Add(item);
             }
-
-            lstTurmas.Items.Add(item);  // Adiciona o novo item
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
     }

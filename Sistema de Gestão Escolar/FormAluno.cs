@@ -222,43 +222,43 @@ namespace Sistema_de_Gestão_Escolar
         {
             try
             {
-                // Limpar a ListView antes de atualizar
                 lstAlunos.Items.Clear();
 
-                // Verificar se há alunos cadastrados
                 if (!gestor.Alunos.Any())
                 {
-                    var item = new ListViewItem("Nenhum aluno cadastrado.");
-                    lstAlunos.Items.Add(item);
+                    lstAlunos.Items.Add(new ListViewItem("Nenhum aluno cadastrado."));
                     return;
                 }
 
-                // Adicionar dados na ListView
                 foreach (var aluno in gestor.Alunos)
                 {
-                    var nomeTurma = gestor.Turmas.FirstOrDefault(t => t.Id == aluno.TurmaId)?.Curso ?? "Turma não encontrada";
+                    // Encontrar a turma do aluno
+                    var turma = gestor.Turmas.FirstOrDefault(t => t.Id == aluno.TurmaId);
+                    string nomeTurma = turma != null ? turma.Curso : "Sem Turma";
+
+                    // Buscar o histórico de notas do aluno
                     var historicoNotas = gestor.Notas
                         .Where(n => n.AlunoId == aluno.Id)
                         .Select(n =>
                         {
                             var nomeDisciplina = gestor.Disciplinas.FirstOrDefault(d => d.Id == n.DisciplinaId)?.Nome ?? "Disciplina não encontrada";
-                            return $"ID: {n.DisciplinaId} | {nomeDisciplina}: {n.ValorNota} ({n.PeriodoLetivo})";
+                            return $"{nomeDisciplina}: {n.ValorNota} ({n.PeriodoLetivo})";
                         })
                         .DefaultIfEmpty("Sem notas registradas")
                         .Aggregate((atual, proximo) => $"{atual} | {proximo}");
 
-                    // Criar um novo item de ListView com os dados formatados
+                    // Criar um item da ListView com os dados do aluno
                     var item = new ListViewItem(aluno.Id.ToString());
                     item.SubItems.Add(aluno.Nome);
                     item.SubItems.Add(aluno.DataNascimento.ToShortDateString());
                     item.SubItems.Add(aluno.Contato);
                     item.SubItems.Add(aluno.Morada);
-                    item.SubItems.Add($"{aluno.TurmaId} - {nomeTurma}");
+                    item.SubItems.Add(aluno.Email);
+                    item.SubItems.Add(nomeTurma);
                     item.SubItems.Add(historicoNotas);
-                    // Atribuir o ID do aluno ao Tag do item para que possamos recuperá-lo depois
                     item.Tag = aluno.Id;
 
-                    // Adicionar o item à ListView
+                    // Adicionar o item atualizado na ListView
                     lstAlunos.Items.Add(item);
                 }
             }
@@ -366,6 +366,7 @@ namespace Sistema_de_Gestão_Escolar
             lstAlunos.Columns.Add("Data de Nascimento", 300);
             lstAlunos.Columns.Add("Contato", 300);
             lstAlunos.Columns.Add("Morada", 300);
+            lstAlunos.Columns.Add("Email", 300);
             lstAlunos.Columns.Add("Curso", 300);
             lstAlunos.Columns.Add("Histórico Escolar", 1000);
 
