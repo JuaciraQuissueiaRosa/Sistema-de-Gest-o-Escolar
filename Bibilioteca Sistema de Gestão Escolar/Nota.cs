@@ -18,6 +18,7 @@
             ValorNota = valorNota;
             PeriodoLetivo = periodoLetivo;
             TipoAvaliacao = tipoAvaliacao;
+           
         }
     }
 

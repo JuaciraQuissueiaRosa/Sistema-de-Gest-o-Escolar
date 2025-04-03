@@ -1,11 +1,13 @@
 ﻿using Bibilioteca_Sistema_de_Gestão_Escolar;
+using System.Numerics;
 
 public class GestorPersistencia
 {
     private const string PastaDados = "Dados";
 
+  
     private string CaminhoArquivo(string nomeArquivo) => Path.Combine(PastaDados, nomeArquivo);
-
+   
     public (List<Aluno>, List<Professor>, List<Disciplina>, List<Turma>, List<Nota>, List<Evento>, List<Horario> ) CarregarDados()
     {
         List<Aluno> alunos = new List<Aluno>();
@@ -87,7 +89,7 @@ public class GestorPersistencia
                 }
             }
         }
-
+        // Carregar notas
         // Carregar notas
         if (File.Exists(CaminhoArquivo("notas.txt")))
         {
@@ -102,7 +104,8 @@ public class GestorPersistencia
                 }
             }
         }
-
+    
+  
         // Carregar eventos
         if (File.Exists(CaminhoArquivo("eventos.txt")))
         {
@@ -199,7 +202,7 @@ public class GestorPersistencia
         {
             foreach (var nota in notas)
             {
-                sw.WriteLine($"{nota.AlunoId};{nota.DisciplinaId};{nota.ValorNota};{nota.PeriodoLetivo};{nota.TipoAvaliacao}");
+                sw.WriteLine($"{nota.AlunoId};{nota.DisciplinaId};{nota.ValorNota};{nota.PeriodoLetivo};{nota.TipoAvaliacao} {nota.Media}");
             }
         }
 

@@ -24,6 +24,7 @@ public class GestorEscola
     // 🔹 Carregar dados ao iniciar o programa
     public GestorEscola()
     {
+     
         var dados = persistencia.CarregarDados();
         Alunos = dados.Item1;
         Professores = dados.Item2;
