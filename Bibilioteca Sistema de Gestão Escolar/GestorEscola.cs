@@ -398,7 +398,6 @@ public class GestorEscola
     }
 
     // ----------------- CRUD PARA NOTAS -----------------
-
     public void AdicionarNota(Nota nota)
     {
         if (VerificarSePeriodoEncerrado(nota.PeriodoLetivo))
@@ -406,13 +405,19 @@ public class GestorEscola
 
         Notas.Add(nota);
 
-        // Salvar os dados com a nova nota incluída
+        // Salvar os dados antes de calcular a média
         SalvarDados();
 
-        // Agora que a nota foi adicionada, recalcular a média final
-        nota.Media = CalcularMedia(nota.AlunoId, nota.DisciplinaId);
+        // Calcular a média e salvar na nota
+        double mediaFinal = CalcularMedia(nota.AlunoId, nota.DisciplinaId);
 
-        // Salvar novamente os dados para armazenar a média atualizada
+        // Atualizar todas as notas do aluno na disciplina com a nova média
+        foreach (var n in Notas.Where(n => n.AlunoId == nota.AlunoId && n.DisciplinaId == nota.DisciplinaId))
+        {
+            n.Media = mediaFinal;
+        }
+
+        // Salvar novamente para persistir a média
         SalvarDados();
     }
     public bool RemoverNota(int alunoId, int disciplinaId, string periodoLetivo)
@@ -428,13 +433,11 @@ public class GestorEscola
     }
     public bool EditarNota(int alunoId, int disciplinaId, string periodoLetivo, double novaNota)
     {
-        // Verificar se o período letivo foi encerrado
         if (VerificarSePeriodoEncerrado(periodoLetivo))
         {
             throw new Exception("Notas não podem ser editadas após o término do período letivo.");
         }
 
-        // Encontrar a nota correspondente ao aluno, disciplina e período letivo
         Nota notaExistente = Notas.FirstOrDefault(n => n.AlunoId == alunoId &&
                                                        n.DisciplinaId == disciplinaId &&
                                                        n.PeriodoLetivo == periodoLetivo);
@@ -446,7 +449,12 @@ public class GestorEscola
 
             // Recalcular a média final dessa disciplina para o aluno
             double novaMedia = CalcularMedia(alunoId, disciplinaId);
-            notaExistente.Media = novaMedia;
+
+            // Atualizar TODAS as notas desse aluno na disciplina com a nova média
+            foreach (var nota in Notas.Where(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId))
+            {
+                nota.Media = novaMedia;
+            }
 
             // Salvar os dados atualizados
             SalvarDados();
