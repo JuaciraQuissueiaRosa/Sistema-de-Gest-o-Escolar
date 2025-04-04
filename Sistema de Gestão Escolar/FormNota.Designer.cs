@@ -135,7 +135,7 @@
             // lblProfessorResponsavel
             // 
             lblProfessorResponsavel.AutoSize = true;
-            lblProfessorResponsavel.Location = new Point(765, 509);
+            lblProfessorResponsavel.Location = new Point(738, 507);
             lblProfessorResponsavel.Name = "lblProfessorResponsavel";
             lblProfessorResponsavel.Size = new Size(159, 20);
             lblProfessorResponsavel.TabIndex = 11;
@@ -145,9 +145,9 @@
             // 
             cmbProfessorNota.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProfessorNota.FormattingEnabled = true;
-            cmbProfessorNota.Location = new Point(947, 506);
+            cmbProfessorNota.Location = new Point(903, 504);
             cmbProfessorNota.Name = "cmbProfessorNota";
-            cmbProfessorNota.Size = new Size(172, 28);
+            cmbProfessorNota.Size = new Size(231, 28);
             cmbProfessorNota.TabIndex = 12;
             // 
             // cmbTipoAvaliacao
