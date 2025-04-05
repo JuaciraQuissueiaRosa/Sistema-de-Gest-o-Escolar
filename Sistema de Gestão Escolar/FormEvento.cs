@@ -38,7 +38,8 @@ namespace Sistema_de_Gestão_Escolar
             lstEventos.FullRowSelect = true;
             lstEventos.Columns.Add("Data", 100);
             lstEventos.Columns.Add("Nome", 150);
-            lstEventos.Columns.Add("Participantes", 250);
+        
+            lstEventos.Columns.Add("Participantes", 1000);
         }
         private void btnRemoverEvento_Click(object sender, EventArgs e)
         {
@@ -68,7 +69,7 @@ namespace Sistema_de_Gestão_Escolar
 
             eventoSelecionado = (Evento)lstEventos.SelectedItems[0].Tag;
             txtNomeEvento.Text = eventoSelecionado.Nome;
-            txtDescricaoEvento.Text = eventoSelecionado.Descricao;
+       
             dtpDataEvento.Value = eventoSelecionado.Data;
 
             AtualizarListaEventos();
@@ -88,7 +89,7 @@ namespace Sistema_de_Gestão_Escolar
             DateTime novaData = dtpDataEvento.Value;
 
             // Chamar o método EditarEvento
-            bool sucesso = gestor.EditarEvento(eventoSelecionado.Id, novoNome, novaDescricao, novaData);
+            bool sucesso = gestor.EditarEvento(eventoSelecionado.Id, novoNome, novaData);
 
             if (sucesso)
             {
@@ -105,10 +106,10 @@ namespace Sistema_de_Gestão_Escolar
         {
             int id = gestor.Eventos.Count + 1;
             string nome = txtNomeEvento.Text.Trim();
-            string descricao = txtDescricaoEvento.Text.Trim();
+          
             DateTime data = dtpDataEvento.Value;
 
-            gestor.AdicionarEvento(id, nome, descricao, data);
+            gestor.AdicionarEvento(id, nome, data);
             AtualizarListaEventos();
             MessageBox.Show("Evento cadastrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -192,7 +193,7 @@ namespace Sistema_de_Gestão_Escolar
         private void LimparCampos()
         {
             txtNomeEvento.Text = "";
-            txtDescricaoEvento.Text = "";
+
             dtpDataEvento.Value = DateTime.Now;
             lstAlunos.Items.Clear();
             lstProfessores.Items.Clear();
@@ -290,7 +291,7 @@ namespace Sistema_de_Gestão_Escolar
 
             eventoSelecionado = (Evento)lstEventos.SelectedItems[0].Tag;
             txtNomeEvento.Text = eventoSelecionado.Nome;
-            txtDescricaoEvento.Text = eventoSelecionado.Descricao;
+    
             dtpDataEvento.Value = eventoSelecionado.Data;
 
             AtualizarListaAlunos();

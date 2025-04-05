@@ -677,12 +677,12 @@ public class GestorEscola
     /// <param name="data"></param>
     /// <exception cref="Exception"></exception>
     // 📌 Adicionar Evento
-    public void AdicionarEvento(int id, string nome, string descricao, DateTime data)
+    public void AdicionarEvento(int id, string nome, DateTime data)
     {
         if (Eventos.Any(e => e.Id == id))
             throw new Exception("Já existe um evento com este ID.");
 
-        Evento novoEvento = new Evento(id, nome, descricao, data);
+        Evento novoEvento = new Evento(id, nome, data);
         Eventos.Add(novoEvento);
         SalvarDados();
     }
@@ -697,14 +697,14 @@ public class GestorEscola
     /// <param name="novaData"></param>
     /// <returns></returns>
 
-    public bool EditarEvento(int id, string novoNome, string novaDescricao, DateTime novaData)
+    public bool EditarEvento(int id, string novoNome,DateTime novaData)
     {
         Evento evento = Eventos.FirstOrDefault(e => e.Id == id);
         if (evento == null)
             return false;
 
         evento.Nome = novoNome;
-        evento.Descricao = novaDescricao;
+       
         evento.Data = novaData;
 
         SalvarDados();

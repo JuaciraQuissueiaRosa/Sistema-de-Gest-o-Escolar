@@ -132,18 +132,18 @@
             lblDataInicial.AutoSize = true;
             lblDataInicial.Location = new Point(539, 382);
             lblDataInicial.Name = "lblDataInicial";
-            lblDataInicial.Size = new Size(105, 20);
+            lblDataInicial.Size = new Size(106, 20);
             lblDataInicial.TabIndex = 12;
-            lblDataInicial.Text = "Data de início:";
+            lblDataInicial.Text = "Hora de início:";
             // 
             // lblDatafinal
             // 
             lblDatafinal.AutoSize = true;
             lblDatafinal.Location = new Point(648, 472);
             lblDatafinal.Name = "lblDatafinal";
-            lblDatafinal.Size = new Size(77, 20);
+            lblDatafinal.Size = new Size(78, 20);
             lblDatafinal.TabIndex = 13;
-            lblDatafinal.Text = "Data final:";
+            lblDatafinal.Text = "Hora final:";
             // 
             // FormHorario
             // 
