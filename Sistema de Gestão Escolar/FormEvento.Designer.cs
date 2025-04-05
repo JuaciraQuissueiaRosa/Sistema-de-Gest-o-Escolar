@@ -32,8 +32,6 @@
             btnRemoverEvento = new Button();
             txtNomeEvento = new TextBox();
             lblNomeEvento = new Label();
-            lblDescricaoEvento = new Label();
-            txtDescricaoEvento = new TextBox();
             lblDataEvento = new Label();
             dtpDataEvento = new DateTimePicker();
             btnEditarEvento = new Button();
@@ -68,40 +66,24 @@
             // 
             // txtNomeEvento
             // 
-            txtNomeEvento.Location = new Point(840, 105);
+            txtNomeEvento.Location = new Point(529, 133);
             txtNomeEvento.Name = "txtNomeEvento";
-            txtNomeEvento.Size = new Size(226, 27);
+            txtNomeEvento.Size = new Size(290, 27);
             txtNomeEvento.TabIndex = 5;
             // 
             // lblNomeEvento
             // 
             lblNomeEvento.AutoSize = true;
-            lblNomeEvento.Location = new Point(840, 67);
+            lblNomeEvento.Location = new Point(593, 95);
             lblNomeEvento.Name = "lblNomeEvento";
             lblNomeEvento.Size = new Size(124, 20);
             lblNomeEvento.TabIndex = 6;
             lblNomeEvento.Text = "Nome do Evento:";
             // 
-            // lblDescricaoEvento
-            // 
-            lblDescricaoEvento.AutoSize = true;
-            lblDescricaoEvento.Location = new Point(593, 142);
-            lblDescricaoEvento.Name = "lblDescricaoEvento";
-            lblDescricaoEvento.Size = new Size(77, 20);
-            lblDescricaoEvento.TabIndex = 7;
-            lblDescricaoEvento.Text = "Descrição:";
-            // 
-            // txtDescricaoEvento
-            // 
-            txtDescricaoEvento.Location = new Point(593, 174);
-            txtDescricaoEvento.Name = "txtDescricaoEvento";
-            txtDescricaoEvento.Size = new Size(226, 27);
-            txtDescricaoEvento.TabIndex = 8;
-            // 
             // lblDataEvento
             // 
             lblDataEvento.AutoSize = true;
-            lblDataEvento.Location = new Point(829, 279);
+            lblDataEvento.Location = new Point(582, 307);
             lblDataEvento.Name = "lblDataEvento";
             lblDataEvento.Size = new Size(115, 20);
             lblDataEvento.TabIndex = 9;
@@ -109,7 +91,7 @@
             // 
             // dtpDataEvento
             // 
-            dtpDataEvento.Location = new Point(829, 322);
+            dtpDataEvento.Location = new Point(582, 350);
             dtpDataEvento.Name = "dtpDataEvento";
             dtpDataEvento.Size = new Size(250, 27);
             dtpDataEvento.TabIndex = 10;
@@ -193,7 +175,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1132, 850);
+            ClientSize = new Size(945, 850);
             Controls.Add(lblProfessores);
             Controls.Add(lblAlunos);
             Controls.Add(lstEventos);
@@ -204,8 +186,6 @@
             Controls.Add(btnEditarEvento);
             Controls.Add(dtpDataEvento);
             Controls.Add(lblDataEvento);
-            Controls.Add(txtDescricaoEvento);
-            Controls.Add(lblDescricaoEvento);
             Controls.Add(lblNomeEvento);
             Controls.Add(txtNomeEvento);
             Controls.Add(btnRemoverEvento);
@@ -223,8 +203,6 @@
         private Button btnRemoverEvento;
         private TextBox txtNomeEvento;
         private Label lblNomeEvento;
-        private Label lblDescricaoEvento;
-        private TextBox txtDescricaoEvento;
         private Label lblDataEvento;
         private DateTimePicker dtpDataEvento;
         private Button btnEditarEvento;

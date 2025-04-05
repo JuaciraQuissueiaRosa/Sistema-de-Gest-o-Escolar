@@ -115,7 +115,7 @@ public class GestorPersistencia
                 if (partes.Length >= 4)
                 {
                     var evento = new Evento(
-                        int.Parse(partes[0]), partes[1], DateTime.Parse(partes[3])
+                        int.Parse(partes[0]), partes[1], DateTime.Parse(partes[2])
                     );
 
                     if (partes.Length > 4)
