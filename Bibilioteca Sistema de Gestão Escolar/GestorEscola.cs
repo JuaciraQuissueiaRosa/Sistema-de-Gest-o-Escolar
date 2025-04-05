@@ -7,6 +7,8 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class GestorEscola
 {
+
+    // instãncia do gestor persistência para que se carregue e salve os dados introduzidos
     private GestorPersistencia persistencia = new GestorPersistencia();
 
     // Listas para armazenar os dados das entidades
@@ -18,10 +20,11 @@ public class GestorEscola
     public List<Nota> Notas { get; set; } = new List<Nota>();
     public List<Evento> Eventos { get; set; } = new List<Evento>();
 
-   
 
 
-    // 🔹 Carregar dados ao iniciar o programa
+    /// <summary>
+    ///  // 🔹 Carregar dados 
+    /// </summary>
     public GestorEscola()
     {
      
@@ -36,6 +39,9 @@ public class GestorEscola
       
     }
 
+    /// <summary>
+    ///Método para salvar os dados
+    /// </summary>
     public void SalvarDados()
     {
         persistencia.SalvarDados(Alunos, Professores, Disciplinas, Turmas, Notas, Eventos, Horarios);
@@ -47,6 +53,11 @@ public class GestorEscola
     //--------------------------metodo para gerir horarios
 
 
+    /// <summary>
+    /// Metodo que adiciona horário
+    /// </summary>
+    /// <param name="horario"></param>
+    /// <exception cref="Exception"></exception>
     public void AdicionarHorario(Horario horario)
     {
         if (VerificarConflitoHorario(horario))
@@ -55,11 +66,20 @@ public class GestorEscola
         Horarios.Add(horario);
     }
 
+    /// <summary>
+    /// Metodo que remove horário
+    /// </summary>
+    /// <param name="id"></param>
     public void RemoverHorario(int id)
     {
         Horarios.RemoveAll(h => h.Id == id);
     }
 
+    /// <summary>
+    /// Metodo que verifica conflito de horários
+    /// </summary>
+    /// <param name="novoHorario"></param>
+    /// <returns></returns>
     public bool VerificarConflitoHorario(Horario novoHorario)
     {
         return Horarios.Any(h =>
@@ -70,7 +90,11 @@ public class GestorEscola
     }
 
    
-
+    /// <summary>
+    /// Metodo para editar horario
+    /// </summary>
+    /// <param name="horarioAtualizado"></param>
+    /// <exception cref="Exception"></exception>
     public void EditarHorario(Horario horarioAtualizado)
     {
         for (int i = 0; i < Horarios.Count; i++)
@@ -83,9 +107,17 @@ public class GestorEscola
         }
         throw new Exception("Horário não encontrado.");
     }
-    //-------------------Metodo para Criar métodos para gerar pautas de notas por aluno e turma,  Calcular médias e estatísticas de desempenho
 
-    // 📌 Gera a pauta de notas de um aluno
+
+    //-------------------Metodo para Criar métodos para gerar pautas de notas por aluno e turma, calcular médias e estatísticas de desempenho
+
+ 
+
+    /// <summary>
+    ///  Gera a pauta de notas de um aluno
+    /// </summary>
+    /// <param name="alunoId"></param>
+    /// <returns></returns>
     public string GerarPautaAluno(int alunoId)
     {
         var aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
@@ -105,8 +137,13 @@ public class GestorEscola
         return pauta;
     }
 
+    /// <summary>
+    ///   Gera um relatório de desempenho da turma
+    /// </summary>
+    /// <param name="turmaId"></param>
+    /// <returns></returns>
 
-    // 📌 Gera um relatório de desempenho da turma
+
     public string GerarRelatorioTurma(int turmaId)
     {
         var turma = Turmas.FirstOrDefault(t => t.Id == turmaId);
@@ -137,12 +174,22 @@ public class GestorEscola
 
 // ----------------- CRUD PARA ALUNOS -----------------
 
+    /// <summary>
+    /// METODO PARA ADICIONAR ALUNO
+    /// </summary>
+    /// <param name="aluno"></param>
      public void AdicionarAluno(Aluno aluno)
      {
         Alunos.Add(aluno);
         SalvarDados();
      }
 
+
+    /// <summary>
+    /// METODO PARA REMOVER ALUNO
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public bool RemoverAluno(int id)
     {
         Aluno aluno = Alunos.FirstOrDefault(a => a.Id == id);
@@ -155,7 +202,16 @@ public class GestorEscola
         return false;
     }
 
-
+    /// <summary>
+    /// MÉTODO PARA ATUALIZAR ALUNO
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="novoNome"></param>
+    /// <param name="novoContato"></param>
+    /// <param name="dataDeNascimento"></param>
+    /// <param name="email"></param>
+    /// <param name="morada"></param>
+    /// <exception cref="Exception"></exception>
     public void AtualizarAluno(int id, string novoNome, string novoContato, DateTime dataDeNascimento, string email, string morada)
     {
         Aluno aluno = Alunos.FirstOrDefault(a => a.Id == id);
@@ -174,6 +230,11 @@ public class GestorEscola
         }
     }
 
+    /// <summary>
+    /// METODO PARA ADICIONAR ALUNO A TURMA DISPONIVEL PELO FORM ALUNO: botão 
+    /// </summary>
+    /// <param name="novaTurma"></param>
+    /// <returns></returns>
 
     // Método para adicionar uma nova turma
     public bool AdicionarTurma(Turma novaTurma)
@@ -190,8 +251,15 @@ public class GestorEscola
         return true;
     }
 
-
-    // Método para editar uma turma existente
+    /// <summary>
+    /// Método para editar uma turma existente
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="novoCurso"></param>
+    /// <param name="novoAnoLetivo"></param>
+    /// <param name="novoTurno"></param>
+    /// <returns></returns>
+   
     public bool EditarTurma(int id, string novoCurso, string novoAnoLetivo, string novoTurno)
     {
         // Encontrar a turma com o ID especificado
@@ -209,8 +277,13 @@ public class GestorEscola
         return false; // Retorna falso se a turma não for encontrada
     }
 
-  
 
+    /// <summary>
+    /// MÉTODO PARA ADICIONAR ALUNO A TURMA
+    /// </summary>
+    /// <param name="alunoId"></param>
+    /// <param name="turmaId"></param>
+    /// <returns></returns>
     public string AdicionarAlunoATurma(int alunoId, int turmaId)
     {
         var aluno = Alunos.FirstOrDefault(a => a.Id == alunoId);
@@ -240,6 +313,14 @@ public class GestorEscola
 
         return "Aluno adicionado com sucesso!";
     }
+
+    /// <summary>
+    /// METODO PARA REMOVER TURMA
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+
+  
     public bool RemoverTurma(int id)
     {
         {
@@ -270,12 +351,23 @@ public class GestorEscola
 
     // ----------------- CRUD PARA PROFESSORES -----------------
 
+
+    /// <summary>
+    /// Metodo para adicionar professor
+    /// </summary>
+    /// <param name="professor"></param>
     public void AdicionarProfessor(Professor professor)
     {
         Professores.Add(professor);
         SalvarDados();
     }
 
+
+    /// <summary>
+    /// Metodo para remover professor
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public bool RemoverProfessor(int id)
     {
         if (!Disciplinas.Any(d => d.ProfessoresIds.Contains(id)))
@@ -287,6 +379,15 @@ public class GestorEscola
         return false;
     }
 
+    /// <summary>
+    /// Metodo para editar professor
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="novoNome"></param>
+    /// <param name="novaAreaEnsino"></param>
+    /// <param name="novoContato"></param>
+    /// <param name="novoEmail"></param>
+    /// <returns></returns>
     public bool EditarProfessor(int id, string novoNome, string novaAreaEnsino, string novoContato, string novoEmail)
     {
         for (int i = 0; i < Professores.Count; i++)
@@ -314,6 +415,12 @@ public class GestorEscola
 
     // ----------------- CRUD PARA DISCIPLINAS -----------------
 
+
+    /// <summary>
+    /// Metodo para adicionar disciplina
+    /// </summary>
+    /// <param name="disciplina"></param>
+    /// <returns></returns>
     public bool AdicionarDisciplina(Disciplina disciplina)
     {
         if (Disciplinas.Any(d => d.Nome.Equals(disciplina.Nome, StringComparison.OrdinalIgnoreCase)))
@@ -326,6 +433,13 @@ public class GestorEscola
         return true;
     }
 
+    /// <summary>
+    /// Metodo para editar disciplina
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="novoNome"></param>
+    /// <param name="novosProfessoresIds"></param>
+    /// <returns></returns>
 
     public bool EditarDisciplina(int id, string novoNome, List<int> novosProfessoresIds)
     {
@@ -353,6 +467,12 @@ public class GestorEscola
 
         return false; // Retorna false se a disciplina não for encontrada
     }
+
+    /// <summary>
+    /// Metodo para remover disciplina
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public bool RemoverDisciplina(int id)
     {
         for (int i = 0; i < Disciplinas.Count; i++)
@@ -387,7 +507,11 @@ public class GestorEscola
         return false; // Retorna falso se a disciplina não for encontrada
     }
 
-
+    /// <summary>
+    /// Metodo para vincular professor a uma disciplina
+    /// </summary>
+    /// <param name="disciplinaId"></param>
+    /// <param name="professorId"></param>
     public void AssociarProfessorADisciplina(int disciplinaId, int professorId)
     {
         Disciplina disciplina = Disciplinas.FirstOrDefault(d => d.Id == disciplinaId);
@@ -399,6 +523,12 @@ public class GestorEscola
     }
 
     // ----------------- CRUD PARA NOTAS -----------------
+
+    /// <summary>
+    /// Método para adicionar notas
+    /// </summary>
+    /// <param name="nota"></param>
+    /// <exception cref="Exception"></exception>
     public void AdicionarNota(Nota nota)
     {
         if (VerificarSePeriodoEncerrado(nota.PeriodoLetivo))
@@ -421,6 +551,14 @@ public class GestorEscola
         // Salvar novamente para persistir a média
         SalvarDados();
     }
+
+    /// <summary>
+    /// Método para remover nota
+    /// </summary>
+    /// <param name="alunoId"></param>
+    /// <param name="disciplinaId"></param>
+    /// <param name="periodoLetivo"></param>
+    /// <returns></returns>
     public bool RemoverNota(int alunoId, int disciplinaId, string periodoLetivo)
     {
         Nota nota = Notas.FirstOrDefault(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId && n.PeriodoLetivo == periodoLetivo);
@@ -432,6 +570,16 @@ public class GestorEscola
         }
         return false;
     }
+
+    /// <summary>
+    /// Método para editar nota
+    /// </summary>
+    /// <param name="alunoId"></param>
+    /// <param name="disciplinaId"></param>
+    /// <param name="periodoLetivo"></param>
+    /// <param name="novaNota"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public bool EditarNota(int alunoId, int disciplinaId, string periodoLetivo, double novaNota)
     {
         if (VerificarSePeriodoEncerrado(periodoLetivo))
@@ -465,6 +613,12 @@ public class GestorEscola
 
         return false; // Retorna false se a nota não foi encontrada
     }
+
+    /// <summary>
+    /// Método para verificar se o professor disponível a lançar nota leciona à disciplina/// </summary>
+    /// <param name="professorId"></param>
+    /// <param name="disciplinaId"></param>
+    /// <returns></returns>
     public bool ProfessorPodeGerirNota(int professorId, int disciplinaId)
     {
         // Verifica se a disciplina existe
@@ -478,6 +632,12 @@ public class GestorEscola
         return disciplina.ProfessoresIds.Contains(professorId);
     }
 
+    /// <summary>
+    /// Método criado para calcular média da nota
+    /// </summary>
+    /// <param name="alunoId"></param>
+    /// <param name="disciplinaId"></param>
+    /// <returns></returns>
     public double CalcularMedia(int alunoId, int disciplinaId)
     {
         var notas = Notas.Where(n => n.AlunoId == alunoId && n.DisciplinaId == disciplinaId).ToList();
@@ -488,9 +648,34 @@ public class GestorEscola
         double mediaFinal = notas.Average(n => n.ValorNota);
 
         return Math.Round(mediaFinal, 2); // Arredonda para duas casas decimais
+
+    }
+    /// <summary>
+    /// Método para verificar se o ano letivo foi encerrado 
+    /// </summary>
+    /// <param name="periodoLetivo"></param>
+    /// <returns></returns>
+
+    public bool VerificarSePeriodoEncerrado(string periodoLetivo)
+    {
+        string[] partes = periodoLetivo.Split('/');
+        if (partes.Length == 2 && int.TryParse(partes[1], out int anoFinal))
+        {
+            return anoFinal < DateTime.Now.Year;
+        }
+        return false;
     }
     // ----------------- CRUD PARA EVENTOS -----------------
-    // --- Métodos para Eventos ---
+
+
+    /// <summary>
+    /// Metodo para adicionar evento
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="nome"></param>
+    /// <param name="descricao"></param>
+    /// <param name="data"></param>
+    /// <exception cref="Exception"></exception>
     // 📌 Adicionar Evento
     public void AdicionarEvento(int id, string nome, string descricao, DateTime data)
     {
@@ -502,7 +687,16 @@ public class GestorEscola
         SalvarDados();
     }
 
-    // 📌 Editar Evento
+
+    /// <summary>
+    ///  Metodo para editar evento
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="novoNome"></param>
+    /// <param name="novaDescricao"></param>
+    /// <param name="novaData"></param>
+    /// <returns></returns>
+
     public bool EditarEvento(int id, string novoNome, string novaDescricao, DateTime novaData)
     {
         Evento evento = Eventos.FirstOrDefault(e => e.Id == id);
@@ -517,6 +711,11 @@ public class GestorEscola
         return true;
     }
 
+    /// <summary>
+    /// Metodo para remover evento
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     // 📌 Remover Evento
     public bool RemoverEvento(int id)
     {
@@ -531,49 +730,16 @@ public class GestorEscola
 
   
 
-    // ----------------- MÉTODOS AUXILIARES -----------------
 
-    public bool VerificarSePeriodoEncerrado(string periodoLetivo)
-    {
-        string[] partes = periodoLetivo.Split('/');
-        if (partes.Length == 2 && int.TryParse(partes[1], out int anoFinal))
-        {
-            return anoFinal < DateTime.Now.Year;
-        }
-        return false;
-    }
+    //---------------------------------METODOS AUXILIARES----------------------------
+    /// <summary>
+    /// Método para verificar se o professor pode lecionar uma disciplina
+    /// </summary>
+    /// <param name="professorId"></param>
+    /// <param name="disciplinaId"></param>
+    /// <param name="mensagemErro"></param>
+    /// <returns></returns>
 
-    public bool ValidarAnoLetivo(string anoLetivo)
-    {
-        try
-        {
-            // Verificar se o formato está correto: "AAAA/AAAA"
-            string[] anos = anoLetivo.Split('/');
-
-            if (anos.Length != 2)
-            {
-                return false; // Deve ter exatamente dois anos separados por "/"
-            }
-
-            // Verificar se ambos os anos são números inteiros
-            if (!int.TryParse(anos[0], out int anoInicio) || !int.TryParse(anos[1], out int anoFim))
-            {
-                return false;
-            }
-
-            // O primeiro ano deve ser menor que o segundo (exemplo: 2023/2024)
-            return anoInicio < anoFim;
-        }
-        catch
-        {
-            return false; // Em caso de erro, retorna falso sem quebrar o sistema
-        }
-
-     
-    }
-
-  
-    // Método para verificar se o professor pode lecionar uma disciplina
     public bool PodeLecionarDisciplina(int professorId, int disciplinaId, out string mensagemErro)
     {
         mensagemErro = string.Empty; // Inicializar a mensagem de erro como vazia
@@ -620,5 +786,40 @@ public class GestorEscola
             return false;
         }
     }
+
+    /// <summary>
+    /// Metodo para validar ano letivo 
+    /// </summary>
+    /// <param name="anoLetivo"></param>
+    /// <returns></returns>
+    public bool ValidarAnoLetivo(string anoLetivo)
+    {
+        try
+        {
+            // Verificar se o formato está correto: "AAAA/AAAA"
+            string[] anos = anoLetivo.Split('/');
+
+            if (anos.Length != 2)
+            {
+                return false; // Deve ter exatamente dois anos separados por "/"
+            }
+
+            // Verificar se ambos os anos são números inteiros
+            if (!int.TryParse(anos[0], out int anoInicio) || !int.TryParse(anos[1], out int anoFim))
+            {
+                return false;
+            }
+
+            // O primeiro ano deve ser menor que o segundo (exemplo: 2023/2024)
+            return anoInicio < anoFim;
+        }
+        catch
+        {
+            return false; // Em caso de erro, retorna falso sem quebrar o sistema
+        }
+
+
+    }
+
 
 }

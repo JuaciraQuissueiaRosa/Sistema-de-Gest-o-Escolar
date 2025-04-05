@@ -119,6 +119,10 @@ namespace Sistema_de_Gestão_Escolar
 
 
         }
+
+        /// <summary>
+        /// Atualiza listView Professores
+        /// </summary>
         private void AtualizarListaProfessores()
         {
             try
@@ -225,7 +229,11 @@ namespace Sistema_de_Gestão_Escolar
             button.FlatAppearance.BorderSize = 0;
         }
 
-
+        /// <summary>
+        /// Metodo para validar email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         private bool ValidarEmail(string email) =>
       Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
 
@@ -395,6 +403,9 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
+        /// <summary>
+        /// Metodo criado para limpar os campos
+        /// </summary>
         private void LimpaCampos()
         {
             txtNomeProfessor.Clear();

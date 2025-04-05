@@ -57,7 +57,7 @@ namespace Sistema_de_Gestão_Escolar
                 string morada= txtMoradaAluno.Text.Trim();
                 if (string.IsNullOrEmpty(morada))
                 {
-                    MessageBox.Show("Erro: O nome do aluno não pode estar vazio!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erro: A morada do aluno não pode estar vazia!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -226,6 +226,9 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
+        /// <summary>
+        /// Atualiza lista de alunos
+        /// </summary>
         private void AtualizarListaAlunos()
         {
             try
@@ -276,12 +279,20 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
+        /// <summary>
+        /// Valida o email introduzido
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         private bool ValidarEmail(string email)
         {
             string padraoEmail = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             return Regex.IsMatch(email, padraoEmail);
         }
 
+        /// <summary>
+        /// Limpa os campos
+        /// </summary>
         private void LimpaCampos()
         {
             txtIdAluno.Clear();
@@ -291,6 +302,12 @@ namespace Sistema_de_Gestão_Escolar
             txtEmailAluno.Clear();
             txtTurmaAluno.Clear();
         }
+
+
+        /// <summary>
+        /// Carrega turmas disponíveis
+        /// </summary>
+        /// <param name="turmaAtualId"></param>
 
         private void CarregarTurmasDisponiveis(int turmaAtualId)
         {
@@ -318,6 +335,9 @@ namespace Sistema_de_Gestão_Escolar
         }
 
      
+        /// <summary>
+        /// Atualiza combobox turmas
+        /// </summary>
 
         public void AtualizarComboBoxTurmas()
         {
@@ -384,6 +404,7 @@ namespace Sistema_de_Gestão_Escolar
 
         }
 
+
         private void SetRoundButton(Button button)
         {
             // Cria um caminho gráfico para o botão
@@ -401,7 +422,11 @@ namespace Sistema_de_Gestão_Escolar
             button.FlatAppearance.BorderSize = 0;
         }
 
-
+        /// <summary>
+        /// Valida contato introduzido
+        /// </summary>
+        /// <param name="contato"></param>
+        /// <returns></returns>
         private bool ValidarContato(string contato)
         {
 
@@ -589,6 +614,11 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
+        /// <summary>
+        /// Calcula idade
+        /// </summary>
+        /// <param name="dataNascimento"></param>
+        /// <returns></returns>
         private int CalcularIdade(DateTime dataNascimento)
         {
             int idade = DateTime.Now.Year - dataNascimento.Year;

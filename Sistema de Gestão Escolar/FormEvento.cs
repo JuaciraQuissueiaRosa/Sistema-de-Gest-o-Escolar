@@ -27,7 +27,11 @@ namespace Sistema_de_Gestão_Escolar
             CarregarDados();
         }
 
-        // 🔄 Configura a ListView para eventos
+     
+
+        /// <summary>
+        /// Configura a ListView para eventos
+        /// </summary>
         private void ConfigurarListView()
         {
             lstEventos.View = View.Details;
@@ -108,15 +112,14 @@ namespace Sistema_de_Gestão_Escolar
             AtualizarListaEventos();
             MessageBox.Show("Evento cadastrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+
+
+
     
-
-
-
-
-        //-------------------------------------------
-
-        // 🔄 Atualizar lista de eventos
-        // 🔄 Atualiza a ListView de eventos
+        /// <summary>
+        ///  Atualiza a ListView de eventos
+        /// </summary>
         private void AtualizarListaEventos()
         {
             lstEventos.Items.Clear();
@@ -143,6 +146,10 @@ namespace Sistema_de_Gestão_Escolar
         }
 
 
+        /// <summary>
+        /// Atualiza List view Alunos
+        /// </summary>
+
         private void AtualizarListaAlunos()
         {
             lstAlunos.Items.Clear();
@@ -155,6 +162,10 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
+
+        /// <summary>
+        /// Atualiza list view professores
+        /// </summary>
         private void AtualizarListaProfessores()
         {
             lstProfessores.Items.Clear();
@@ -166,16 +177,18 @@ namespace Sistema_de_Gestão_Escolar
                 }
             }
         }
-        // 🔄 Carregar Alunos e Professores disponíveis
-        // 📥 Carrega os dados iniciais na lista de alunos e professores
+        /// <summary>
+        /// 📥 Carrega os dados iniciais na lista de alunos e professores
+        /// </summary>
         private void CarregarDados()
         {
             AtualizarListaAlunos();
             AtualizarListaProfessores();
         }
 
-        // 🗑 Limpar campos
-        // 🗑 Limpa os campos do formulário
+        /// <summary>
+        ///  Limpa os campos do formulário
+        /// </summary>
         private void LimparCampos()
         {
             txtNomeEvento.Text = "";

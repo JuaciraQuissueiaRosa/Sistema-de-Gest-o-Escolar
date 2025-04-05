@@ -163,7 +163,9 @@ namespace Sistema_de_Gestão_Escolar
 
         }
 
-
+        /// <summary>
+        /// Atualiza listtView Turmas
+        /// </summary>
         private void AtualizarListaTurmas()
         {
             try
@@ -282,6 +284,9 @@ namespace Sistema_de_Gestão_Escolar
         }
 
 
+        /// <summary>
+        /// Carrega professores por serem vinculados as turmas
+        /// </summary>
         private void CarregarProfessoresNaListBox()
         {
             lstProfessoresTurma.Items.Clear();
@@ -310,6 +315,9 @@ namespace Sistema_de_Gestão_Escolar
         }
 
    
+        /// <summary>
+        /// Comunica com o formulário Aluno
+        /// </summary>
         private void AtualizarFormAluno()
         {
             try
@@ -323,6 +331,9 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
+        /// <summary>
+        /// Carrega disciplinas disponiveis na listView
+        /// </summary>
         private void CarregarDisciplinasDisponiveis()
         {
             try
@@ -618,7 +629,9 @@ namespace Sistema_de_Gestão_Escolar
                 MessageBox.Show($"Erro ao carregar turma para edição: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Limpa os campos
+        /// </summary>
         private void LimpaCampos()
         {
             // Atualiza os campos com as informações da turma selecionada
@@ -648,6 +661,9 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
+      /// <summary>
+      /// Atualiza ListView Turmas
+      /// </summary>
 
         private void AtualizarListaAlunosTurma()
         {

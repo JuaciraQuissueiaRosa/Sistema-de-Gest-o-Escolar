@@ -28,7 +28,9 @@ namespace Sistema_de_Gestão_Escolar
         }
 
 
-
+        /// <summary>
+        /// Metodo para carregar dados
+        /// </summary>
         private void CarregarDados()
         {
             // Carrega alunos no ComboBox

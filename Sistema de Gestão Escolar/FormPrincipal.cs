@@ -9,7 +9,7 @@ namespace Sistema_de_Gestão_Escolar
         public FormPrincipal()
         {
             InitializeComponent();
-            gestor = new GestorEscola(); // Criar apenas um gestor para compartilhar entre os formulários
+            gestor = new GestorEscola(); // Criar apenas um gestor para partilhar entre os formulários
         }
         private void FormPrincipal_Load(object sender, EventArgs e)
         {

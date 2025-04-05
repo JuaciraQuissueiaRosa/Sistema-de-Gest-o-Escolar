@@ -9,7 +9,7 @@
         public Credito()
         {
             Autor = "Juacira Rosa";
-            DataCriacao = "00/03/2024";
+            DataCriacao = "06/04/2024";
             Versao = "1.0.0";
         }
     }

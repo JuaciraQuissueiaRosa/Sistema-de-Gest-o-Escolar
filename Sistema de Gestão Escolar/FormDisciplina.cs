@@ -158,7 +158,9 @@ namespace Sistema_de_Gestão_Escolar
             }
         }
 
-
+        /// <summary>
+        /// Atualiza listView disciplinas
+        /// </summary>
         private void AtualizarListaDisciplinas()
         {
             lstDisciplinas.Items.Clear();

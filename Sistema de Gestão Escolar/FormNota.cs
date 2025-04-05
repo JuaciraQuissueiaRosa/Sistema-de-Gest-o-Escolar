@@ -179,6 +179,11 @@ namespace Sistema_de_Gestão_Escolar
                 MessageBox.Show("Erro inesperado: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+        /// <summary>
+        /// Atualiza listView Notas
+        /// </summary>
         private void AtualizarListaNotas()
         {
             try
@@ -261,6 +266,9 @@ namespace Sistema_de_Gestão_Escolar
 
         }
 
+        /// <summary>
+        /// Limpa os campos
+        /// </summary>
         private void LimpaCampos()
         {
             txtAlunoIdNota.Clear();
@@ -286,6 +294,12 @@ namespace Sistema_de_Gestão_Escolar
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
         }
+
+        /// <summary>
+        /// Verifica se o ano letivo
+        /// </summary>
+        /// <param name="anoLetivo"></param>
+        /// <returns></returns>
 
         private string VerificarEstadoAnoLetivo(string anoLetivo)
         {
