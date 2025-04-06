@@ -85,7 +85,7 @@ namespace Sistema_de_Gestão_Escolar
 
             // Coletar os novos valores do formulário
             string novoNome = txtNomeEvento.Text.Trim();
-            string novaDescricao = txtDescricaoEvento.Text.Trim();
+       
             DateTime novaData = dtpDataEvento.Value;
 
             // Chamar o método EditarEvento
